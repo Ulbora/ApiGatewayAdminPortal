@@ -26,6 +26,7 @@
 package services
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -54,6 +55,77 @@ type RedirectURIResponse struct {
 	Success bool  `json:"success"`
 	ID      int64 `json:"id"`
 	Code    int   `json:"code"`
+}
+
+//AddRedirectURI AddRedirectURI
+func (r *RedirectURIService) AddRedirectURI(rd *RedirectURI) *RedirectURIResponse {
+	var rtn = new(RedirectURIResponse)
+	var addURL = r.Host + "/rs/clientRedirectUri/add"
+	aJSON, err := json.Marshal(rd)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		req, rErr := http.NewRequest("POST", addURL, bytes.NewBuffer(aJSON))
+		if rErr != nil {
+			fmt.Print("request err: ")
+			fmt.Println(rErr)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+r.Token)
+			req.Header.Set("clientId", r.ClientID)
+			//req.Header.Set("userId", c.UserID)
+			//req.Header.Set("hashed", c.Hashed)
+			req.Header.Set("apiKey", r.APIKey)
+			client := &http.Client{}
+			resp, cErr := client.Do(req)
+			if cErr != nil {
+				fmt.Print("Redirect URI Add err: ")
+				fmt.Println(cErr)
+			} else {
+				defer resp.Body.Close()
+				//fmt.Print("resp: ")
+				//fmt.Println(resp)
+				decoder := json.NewDecoder(resp.Body)
+				error := decoder.Decode(&rtn)
+				if error != nil {
+					log.Println(error.Error())
+				}
+				rtn.Code = resp.StatusCode
+			}
+		}
+	}
+	return rtn
+}
+
+// GetRedirectURIList get GetRedirectURIList list
+func (r *RedirectURIService) GetRedirectURIList(clientID string) *[]RedirectURI {
+	var rtn = make([]RedirectURI, 0)
+	var gURL = r.Host + "/rs/clientRedirectUri/list/" + clientID
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("GET", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("clientId", r.ClientID)
+		req.Header.Set("Authorization", "Bearer "+r.Token)
+		req.Header.Set("apiKey", r.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("Redirect URI list Service read err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+		}
+	}
+	return &rtn
 }
 
 // DeleteRedirectURI delete DeleteRedirectURI

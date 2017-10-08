@@ -24,3 +24,140 @@
 */
 
 package services
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+)
+
+//GrantTypeService GrantTypeService
+type GrantTypeService struct {
+	Token    string
+	ClientID string
+	APIKey   string
+	UserID   string
+	Hashed   string
+	Host     string
+}
+
+//GrantType GrantType
+type GrantType struct {
+	ID        int64  `json:"id"`
+	ClientID  int64  `json:"clientId"`
+	GrantType string `json:"grantType"`
+}
+
+//GrantTypeResponse resp
+type GrantTypeResponse struct {
+	Success bool  `json:"success"`
+	ID      int64 `json:"id"`
+	Code    int   `json:"code"`
+}
+
+//AddGrantType AddGrantType
+func (g *GrantTypeService) AddGrantType(rd *GrantType) *GrantTypeResponse {
+	var rtn = new(GrantTypeResponse)
+	var addURL = g.Host + "/rs/clientGrantType/add"
+	aJSON, err := json.Marshal(rd)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		req, rErr := http.NewRequest("POST", addURL, bytes.NewBuffer(aJSON))
+		if rErr != nil {
+			fmt.Print("request err: ")
+			fmt.Println(rErr)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+g.Token)
+			req.Header.Set("clientId", g.ClientID)
+			//req.Header.Set("userId", c.UserID)
+			//req.Header.Set("hashed", c.Hashed)
+			req.Header.Set("apiKey", g.APIKey)
+			client := &http.Client{}
+			resp, cErr := client.Do(req)
+			if cErr != nil {
+				fmt.Print("GrantType Add err: ")
+				fmt.Println(cErr)
+			} else {
+				defer resp.Body.Close()
+				//fmt.Print("resp: ")
+				//fmt.Println(resp)
+				decoder := json.NewDecoder(resp.Body)
+				error := decoder.Decode(&rtn)
+				if error != nil {
+					log.Println(error.Error())
+				}
+				rtn.Code = resp.StatusCode
+			}
+		}
+	}
+	return rtn
+}
+
+// GetGrantTypeList get GetGrantTypeList list
+func (g *GrantTypeService) GetGrantTypeList(clientID string) *[]GrantType {
+	var rtn = make([]GrantType, 0)
+	var gURL = g.Host + "/rs/clientGrantType/list/" + clientID
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("GET", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("clientId", g.ClientID)
+		req.Header.Set("Authorization", "Bearer "+g.Token)
+		req.Header.Set("apiKey", g.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("GrantType list Service read err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+		}
+	}
+	return &rtn
+}
+
+// DeleteGrantType delete DeleteGrantType
+func (g *GrantTypeService) DeleteGrantType(id string) *GrantTypeResponse {
+	var rtn = new(GrantTypeResponse)
+	var gURL = g.Host + "/rs/clientGrantType/delete/" + id
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("DELETE", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", "Bearer "+g.Token)
+		req.Header.Set("clientId", g.ClientID)
+		//req.Header.Set("userId", r.UserID)
+		//req.Header.Set("hashed", r.Hashed)
+		req.Header.Set("apiKey", g.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("GrantType Service delete err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+			rtn.Code = resp.StatusCode
+		}
+	}
+	return rtn
+}
