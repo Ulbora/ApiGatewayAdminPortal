@@ -56,9 +56,9 @@ type Client struct {
 
 //ClientResponse resp
 type ClientResponse struct {
-	Success bool  `json:"success"`
-	ID      int64 `json:"id"`
-	Code    int   `json:"code"`
+	Success  bool  `json:"success"`
+	ClientID int64 `json:"clientId"`
+	Code     int   `json:"code"`
 }
 
 //AddClient add template
@@ -84,7 +84,49 @@ func (c *ClientService) AddClient(client *Client) *ClientResponse {
 			client := &http.Client{}
 			resp, cErr := client.Do(req)
 			if cErr != nil {
-				fmt.Print("Template Add err: ")
+				fmt.Print("Client Add err: ")
+				fmt.Println(cErr)
+			} else {
+				defer resp.Body.Close()
+				//fmt.Print("resp: ")
+				//fmt.Println(resp)
+				decoder := json.NewDecoder(resp.Body)
+				error := decoder.Decode(&rtn)
+				if error != nil {
+					log.Println(error.Error())
+				}
+				rtn.Code = resp.StatusCode
+			}
+		}
+	}
+	return rtn
+}
+
+//UpdateClient update UpdateClient
+func (c *ClientService) UpdateClient(client *Client) *ClientResponse {
+	var rtn = new(ClientResponse)
+	var upURL = c.Host + "/rs/client/update"
+
+	//fmt.Println(content.Text)
+	aJSON, err := json.Marshal(client)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		req, rErr := http.NewRequest("PUT", upURL, bytes.NewBuffer(aJSON))
+		if rErr != nil {
+			fmt.Print("request err: ")
+			fmt.Println(rErr)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+c.Token)
+			req.Header.Set("clientId", c.ClientID)
+			//req.Header.Set("userId", c.UserID)
+			//req.Header.Set("hashed", c.Hashed)
+			req.Header.Set("apiKey", c.APIKey)
+			client := &http.Client{}
+			resp, cErr := client.Do(req)
+			if cErr != nil {
+				fmt.Print("Client Service Update err: ")
 				fmt.Println(cErr)
 			} else {
 				defer resp.Body.Close()
@@ -95,6 +137,100 @@ func (c *ClientService) AddClient(client *Client) *ClientResponse {
 				}
 				rtn.Code = resp.StatusCode
 			}
+		}
+	}
+	return rtn
+}
+
+// GetClient get GetClient
+func (c *ClientService) GetClient(clientID string) *Client {
+	var rtn = new(Client)
+	var gURL = c.Host + "/rs/client/get/" + clientID
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("GET", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("clientId", c.ClientID)
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+		req.Header.Set("apiKey", c.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("Client Service read err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+		}
+	}
+	return rtn
+}
+
+// GetClientList get client list
+func (c *ClientService) GetClientList() *[]Client {
+	var rtn = make([]Client, 0)
+	var gURL = c.Host + "/rs/client/list"
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("GET", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("clientId", c.ClientID)
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+		req.Header.Set("apiKey", c.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("client list Service read err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+		}
+	}
+	return &rtn
+}
+
+// DeleteClient delete DeleteClient
+func (c *ClientService) DeleteClient(id string) *ClientResponse {
+	var rtn = new(ClientResponse)
+	var gURL = c.Host + "/rs/client/delete/" + id
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("DELETE", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+		req.Header.Set("clientId", c.ClientID)
+		//req.Header.Set("userId", r.UserID)
+		//req.Header.Set("hashed", r.Hashed)
+		req.Header.Set("apiKey", c.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("redirect uri Service delete err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+			rtn.Code = resp.StatusCode
 		}
 	}
 	return rtn

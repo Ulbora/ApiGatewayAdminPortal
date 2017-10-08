@@ -27,6 +27,7 @@ package services
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 )
 
@@ -45,12 +46,71 @@ func TestClientService_AddClient(t *testing.T) {
 	cc.Email = "ken@ken.com"
 	cc.Enabled = true
 	cc.Name = "A Big Company"
-	cc.ClientID = 7
 	cc.RedirectURIs = uris
 	res := c.AddClient(&cc)
 	fmt.Print("res: ")
 	fmt.Println(res)
-	CID = res.ID
+	CID = res.ClientID
+	if res.Success != true {
+		t.Fail()
+	}
+}
+
+func TestClientService_UpdateClient(t *testing.T) {
+	var c ClientService
+	c.ClientID = "403"
+	c.Host = "http://localhost:3000"
+	c.Token = tempToken
+	var cc Client
+	cc.Email = "ken@ken1.com"
+	cc.Enabled = true
+	cc.Name = "A Really Big Company"
+	cc.WebSite = "http://www.ulbora.com"
+	cc.ClientID = CID
+	res := c.UpdateClient(&cc)
+	fmt.Print("res: ")
+	fmt.Println(res)
+	if res.Success != true {
+		t.Fail()
+	}
+}
+
+func TestClientService_GetClient(t *testing.T) {
+	var c ClientService
+	c.ClientID = "403"
+	c.Host = "http://localhost:3000"
+	c.Token = tempToken
+	res := c.GetClient(strconv.FormatInt(CID, 10))
+	fmt.Print("res: ")
+	fmt.Println(res)
+	if res.Enabled != true {
+		t.Fail()
+	}
+}
+
+func TestClientService_GetClientList(t *testing.T) {
+	var c ClientService
+	c.ClientID = "403"
+	c.Host = "http://localhost:3000"
+	c.Token = tempToken
+	res := c.GetClientList()
+	fmt.Print("res list: ")
+	fmt.Println(res)
+	fmt.Print("len: ")
+	fmt.Println(len(*res))
+	if res == nil || len(*res) == 0 {
+		t.Fail()
+	}
+}
+
+func TestClientService_DeleteClient(t *testing.T) {
+	var c ClientService
+	c.ClientID = "403"
+	c.Host = "http://localhost:3000"
+	c.Token = tempToken
+	res := c.DeleteClient(strconv.FormatInt(CID, 10))
+	fmt.Print("res deleted: ")
+	fmt.Println(res)
 	if res.Success != true {
 		t.Fail()
 	}

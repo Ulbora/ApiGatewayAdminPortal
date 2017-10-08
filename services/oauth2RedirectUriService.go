@@ -25,9 +25,67 @@
 
 package services
 
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+)
+
+//RedirectURIService RedirectURIService
+type RedirectURIService struct {
+	Token    string
+	ClientID string
+	APIKey   string
+	UserID   string
+	Hashed   string
+	Host     string
+}
+
 //RedirectURI RedirectURI
 type RedirectURI struct {
 	ID       int64  `json:"id"`
 	ClientID int64  `json:"clientId"`
 	URI      string `json:"uri"`
+}
+
+//RedirectURIResponse resp
+type RedirectURIResponse struct {
+	Success bool  `json:"success"`
+	ID      int64 `json:"id"`
+	Code    int   `json:"code"`
+}
+
+// DeleteRedirectURI delete DeleteRedirectURI
+func (r *RedirectURIService) DeleteRedirectURI(id string) *RedirectURIResponse {
+	var rtn = new(RedirectURIResponse)
+	var gURL = r.Host + "/rs/clientRedirectUri/delete/" + id
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("DELETE", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", "Bearer "+r.Token)
+		req.Header.Set("clientId", r.ClientID)
+		//req.Header.Set("userId", r.UserID)
+		//req.Header.Set("hashed", r.Hashed)
+		req.Header.Set("apiKey", r.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("redirect uri Service delete err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+			rtn.Code = resp.StatusCode
+		}
+	}
+	return rtn
 }
