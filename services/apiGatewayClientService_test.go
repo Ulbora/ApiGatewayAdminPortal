@@ -27,46 +27,42 @@ package services
 
 import (
 	"fmt"
-	"strconv"
 	"testing"
 )
 
-var CID int64
+var GwCid int64
+var GwCidStr string
 
-func TestClientService_AddClient(t *testing.T) {
-	var c ClientService
+func TestGatewayClientService_AddClient(t *testing.T) {
+	GwCid = 55445588844444444
+	GwCidStr = "55445588844444444"
+	var c GatewayClientService
 	c.ClientID = "403"
-	c.Host = "http://localhost:3000"
+	c.Host = "http://localhost:3011"
 	c.Token = tempToken
-	var uri RedirectURI
-	uri.URI = "http://googole.com"
-	var uris []RedirectURI
-	uris = append(uris, uri)
-	var cc Client
-	cc.Email = "ken@ken.com"
+	var cc GatewayClient
+	cc.ClientID = GwCid
+	cc.APIKey = "55511111155"
 	cc.Enabled = true
-	cc.Name = "A Big Company"
-	cc.RedirectURIs = uris
+	cc.Level = "small"
 	res := c.AddClient(&cc)
 	fmt.Print("res: ")
 	fmt.Println(res)
-	CID = res.ClientID
 	if res.Success != true {
 		t.Fail()
 	}
 }
 
-func TestClientService_UpdateClient(t *testing.T) {
-	var c ClientService
+func TestGatewayClientService_UpdateClient(t *testing.T) {
+	var c GatewayClientService
 	c.ClientID = "403"
-	c.Host = "http://localhost:3000"
+	c.Host = "http://localhost:3011"
 	c.Token = tempToken
-	var cc Client
-	cc.Email = "ken@ken1.com"
-	cc.Enabled = true
-	cc.Name = "A Really Big Company"
-	cc.WebSite = "http://www.ulbora.com"
-	cc.ClientID = CID
+	var cc GatewayClient
+	cc.ClientID = GwCid
+	cc.APIKey = "12344444"
+	cc.Enabled = false
+	cc.Level = "small"
 	res := c.UpdateClient(&cc)
 	fmt.Print("res: ")
 	fmt.Println(res)
@@ -75,43 +71,42 @@ func TestClientService_UpdateClient(t *testing.T) {
 	}
 }
 
-func TestClientService_GetClient(t *testing.T) {
-	var c ClientService
+func TestGatewayClientService_GetClient(t *testing.T) {
+	var c GatewayClientService
 	c.ClientID = "403"
-	c.Host = "http://localhost:3000"
+	c.Host = "http://localhost:3011"
 	c.Token = tempToken
-	fmt.Print("CID: ")
-	fmt.Println(CID)
-	res := c.GetClient(strconv.FormatInt(CID, 10))
+
+	res := c.GetClient(GwCidStr)
 	fmt.Print("res: ")
 	fmt.Println(res)
-	if res.Enabled != true {
+	if res.Enabled == true || res.ClientID != GwCid {
 		t.Fail()
 	}
 }
 
-func TestClientService_GetClientList(t *testing.T) {
-	var c ClientService
+func TestGatewayClientService_GetClientList(t *testing.T) {
+	var c GatewayClientService
 	c.ClientID = "403"
-	c.Host = "http://localhost:3000"
+	c.Host = "http://localhost:3011"
 	c.Token = tempToken
+
 	res := c.GetClientList()
-	fmt.Print("res list: ")
+	fmt.Print("res: ")
 	fmt.Println(res)
-	fmt.Print("len: ")
-	fmt.Println(len(*res))
-	if res == nil || len(*res) == 0 {
+	if len(*res) == 0 {
 		t.Fail()
 	}
 }
 
-func TestClientService_DeleteClient(t *testing.T) {
-	var c ClientService
+func TestGatewayClientService_DeleteClient(t *testing.T) {
+	var c GatewayClientService
 	c.ClientID = "403"
-	c.Host = "http://localhost:3000"
+	c.Host = "http://localhost:3011"
 	c.Token = tempToken
-	res := c.DeleteClient(strconv.FormatInt(CID, 10))
-	fmt.Print("res deleted: ")
+
+	res := c.DeleteClient(GwCidStr)
+	fmt.Print("res: ")
 	fmt.Println(res)
 	if res.Success != true {
 		t.Fail()

@@ -24,3 +24,348 @@
 */
 
 package services
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+)
+
+//UserService service
+type UserService struct {
+	Token    string
+	ClientID string
+	APIKey   string
+	UserID   string
+	Hashed   string
+	Host     string
+}
+
+//User user
+type User struct {
+	Username     string `json:"username"`
+	Password     string `json:"password"`
+	Enabled      bool   `json:"enabled"`
+	EmailAddress string `json:"emailAddress"`
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	RoleID       int64  `json:"roleId"`
+	ClientID     string `json:"clientId"`
+}
+
+//UserPW user
+type UserPW struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	ClientID string `json:"clientId"`
+}
+
+//UserDis user
+type UserDis struct {
+	Username string `json:"username"`
+	Enabled  bool   `json:"enabled"`
+	ClientID string `json:"clientId"`
+}
+
+//UserInfo user
+type UserInfo struct {
+	Username     string `json:"username"`
+	EmailAddress string `json:"emailAddress"`
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	ClientID     string `json:"clientId"`
+}
+
+//UserResponse resp
+type UserResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Code    int    `json:"code"`
+}
+
+//AddUser add
+func (u *UserService) AddUser(user *User) *UserResponse {
+	var rtn = new(UserResponse)
+	var addURL = u.Host + "/rs/user/add"
+	aJSON, err := json.Marshal(user)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		req, rErr := http.NewRequest("POST", addURL, bytes.NewBuffer(aJSON))
+		if rErr != nil {
+			fmt.Print("request err: ")
+			fmt.Println(rErr)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+u.Token)
+			req.Header.Set("clientId", u.ClientID)
+			//req.Header.Set("userId", c.UserID)
+			//req.Header.Set("hashed", c.Hashed)
+			req.Header.Set("apiKey", u.APIKey)
+			client := &http.Client{}
+			resp, cErr := client.Do(req)
+			if cErr != nil {
+				fmt.Print("user Add err: ")
+				fmt.Println(cErr)
+			} else {
+				defer resp.Body.Close()
+				//fmt.Print("resp: ")
+				//fmt.Println(resp)
+				decoder := json.NewDecoder(resp.Body)
+				error := decoder.Decode(&rtn)
+				if error != nil {
+					log.Println(error.Error())
+				}
+				rtn.Code = resp.StatusCode
+			}
+		}
+	}
+	return rtn
+}
+
+//UpdateUserPW update
+func (u *UserService) UpdateUserPW(user *UserPW) *UserResponse {
+	var rtn = new(UserResponse)
+	var upURL = u.Host + "/rs/user/update"
+
+	//fmt.Println(content.Text)
+	aJSON, err := json.Marshal(user)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		req, rErr := http.NewRequest("PUT", upURL, bytes.NewBuffer(aJSON))
+		if rErr != nil {
+			fmt.Print("request err: ")
+			fmt.Println(rErr)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+u.Token)
+			req.Header.Set("clientId", u.ClientID)
+			//req.Header.Set("userId", c.UserID)
+			//req.Header.Set("hashed", c.Hashed)
+			req.Header.Set("apiKey", u.APIKey)
+			client := &http.Client{}
+			resp, cErr := client.Do(req)
+			if cErr != nil {
+				fmt.Print("User Service Update err: ")
+				fmt.Println(cErr)
+			} else {
+				defer resp.Body.Close()
+				decoder := json.NewDecoder(resp.Body)
+				error := decoder.Decode(&rtn)
+				if error != nil {
+					log.Println(error.Error())
+				}
+				rtn.Code = resp.StatusCode
+			}
+		}
+	}
+	return rtn
+}
+
+//UpdateUserDisable update
+func (u *UserService) UpdateUserDisable(user *UserDis) *UserResponse {
+	var rtn = new(UserResponse)
+	var upURL = u.Host + "/rs/user/update"
+
+	//fmt.Println(content.Text)
+	aJSON, err := json.Marshal(user)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		req, rErr := http.NewRequest("PUT", upURL, bytes.NewBuffer(aJSON))
+		if rErr != nil {
+			fmt.Print("request err: ")
+			fmt.Println(rErr)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+u.Token)
+			req.Header.Set("clientId", u.ClientID)
+			//req.Header.Set("userId", c.UserID)
+			//req.Header.Set("hashed", c.Hashed)
+			req.Header.Set("apiKey", u.APIKey)
+			client := &http.Client{}
+			resp, cErr := client.Do(req)
+			if cErr != nil {
+				fmt.Print("User Service Update err: ")
+				fmt.Println(cErr)
+			} else {
+				defer resp.Body.Close()
+				decoder := json.NewDecoder(resp.Body)
+				error := decoder.Decode(&rtn)
+				if error != nil {
+					log.Println(error.Error())
+				}
+				rtn.Code = resp.StatusCode
+			}
+		}
+	}
+	return rtn
+}
+
+//UpdateUserInfo update
+func (u *UserService) UpdateUserInfo(user *UserInfo) *UserResponse {
+	var rtn = new(UserResponse)
+	var upURL = u.Host + "/rs/user/update"
+
+	//fmt.Println(content.Text)
+	aJSON, err := json.Marshal(user)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		req, rErr := http.NewRequest("PUT", upURL, bytes.NewBuffer(aJSON))
+		if rErr != nil {
+			fmt.Print("request err: ")
+			fmt.Println(rErr)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+u.Token)
+			req.Header.Set("clientId", u.ClientID)
+			//req.Header.Set("userId", c.UserID)
+			//req.Header.Set("hashed", c.Hashed)
+			req.Header.Set("apiKey", u.APIKey)
+			client := &http.Client{}
+			resp, cErr := client.Do(req)
+			if cErr != nil {
+				fmt.Print("User Service Update err: ")
+				fmt.Println(cErr)
+			} else {
+				defer resp.Body.Close()
+				decoder := json.NewDecoder(resp.Body)
+				error := decoder.Decode(&rtn)
+				if error != nil {
+					log.Println(error.Error())
+				}
+				rtn.Code = resp.StatusCode
+			}
+		}
+	}
+	return rtn
+}
+
+// GetUser get
+func (u *UserService) GetUser(username string, clientID string) *User {
+	var rtn = new(User)
+	var gURL = u.Host + "/rs/user/get/" + username + "/" + clientID
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("GET", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("clientId", u.ClientID)
+		req.Header.Set("Authorization", "Bearer "+u.Token)
+		req.Header.Set("apiKey", u.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("user Service read err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+		}
+	}
+	return rtn
+}
+
+// GetUserList get user list
+func (u *UserService) GetUserList() *[]User {
+	var rtn = make([]User, 0)
+	var gURL = u.Host + "/rs/user/list"
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("GET", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("clientId", u.ClientID)
+		req.Header.Set("Authorization", "Bearer "+u.Token)
+		req.Header.Set("apiKey", u.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("user list Service read err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+		}
+	}
+	return &rtn
+}
+
+// SearchUserList search by client
+func (u *UserService) SearchUserList(clientID string) *[]User {
+	var rtn = make([]User, 0)
+	var gURL = u.Host + "/rs/user/search/" + clientID
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("GET", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("clientId", u.ClientID)
+		req.Header.Set("Authorization", "Bearer "+u.Token)
+		req.Header.Set("apiKey", u.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("user Service read err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+		}
+	}
+	return &rtn
+}
+
+// DeleteUser delete
+func (u *UserService) DeleteUser(username string, clientID string) *UserResponse {
+	var rtn = new(UserResponse)
+	var gURL = u.Host + "/rs/user/delete/" + username + "/" + clientID
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("DELETE", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", "Bearer "+u.Token)
+		req.Header.Set("clientId", u.ClientID)
+		//req.Header.Set("userId", r.UserID)
+		//req.Header.Set("hashed", r.Hashed)
+		req.Header.Set("apiKey", u.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("user delete err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+			rtn.Code = resp.StatusCode
+		}
+	}
+	return rtn
+}
