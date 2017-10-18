@@ -44,18 +44,26 @@ var token *oauth2.Token
 var credentialToken *oauth2.Token
 
 var templates = template.Must(template.ParseFiles("./static/index.html", "./static/header.html",
-	"./static/footer.html", "./static/navbar.html"))
+	"./static/footer.html", "./static/navbar.html", "./static/claims.html"))
 
-var username string
+//var username string
 
 func main() {
+	//gob.Register(oauth2.Token)
 	s.MaxAge = sessingTimeToLive
 	s.Name = userSession
 	if os.Getenv("SESSION_SECRET_KEY") != "" {
 		s.SessionKey = os.Getenv("SESSION_SECRET_KEY")
+	} else {
+		s.SessionKey = "115722gggg14ddfg4567"
 	}
 	router := mux.NewRouter()
+
 	router.HandleFunc("/", handleIndex)
+	router.HandleFunc("/claims", handleClaims)
+	router.HandleFunc("/tokenHandler", handleToken)
+	router.HandleFunc("/login", handleLogin)
+	router.HandleFunc("/logout", handleLogout)
 
 	// admin resources
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))

@@ -1,0 +1,21 @@
+.top-header {
+  background: #1B1C1D;
+  padding: 2px 0 0 0;
+}
+.client-main {
+  width: 100%;
+  padding: 1% 1% 1% 1%;
+}
+.side-menu {
+  float: left;
+}
+.page-content {
+  float: left;
+  width: 80%;
+  padding: 0 0 0 2%;
+}
+.login {
+  width: 100%;
+  margin: 10% 0 0 0;
+  text-align: center;
+}
