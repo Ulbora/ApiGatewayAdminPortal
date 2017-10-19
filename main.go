@@ -46,7 +46,7 @@ var tokenMap map[string]*oauth2.Token
 var credentialToken *oauth2.Token
 
 var templates = template.Must(template.ParseFiles("./static/index.html", "./static/header.html",
-	"./static/footer.html", "./static/navbar.html", "./static/claims.html"))
+	"./static/footer.html", "./static/navbar.html", "./static/clients.html"))
 
 //var username string
 
@@ -65,7 +65,7 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", handleIndex)
-	router.HandleFunc("/claims", handleClaims)
+	router.HandleFunc("/clients", handleClients)
 	router.HandleFunc("/tokenHandler", handleToken)
 	router.HandleFunc("/login", handleLogin)
 	router.HandleFunc("/logout", handleLogout)

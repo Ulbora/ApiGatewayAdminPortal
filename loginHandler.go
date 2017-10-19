@@ -38,6 +38,7 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 
 // login handler
 func handleLogout(w http.ResponseWriter, r *http.Request) {
+	removeToken(w, r)
 	cookie := &http.Cookie{
 		Name:   "ugw-user-session",
 		Value:  "",
@@ -103,11 +104,11 @@ func handleToken(res http.ResponseWriter, req *http.Request) {
 				var accKey = generateTokenKey()
 				session.Values["accessTokenKey"] = accKey
 				tokenMap[accKey] = resp
-				fmt.Print("session id: ")
-				fmt.Println(session.ID)
+				//fmt.Print("session id: ")
+				//fmt.Println(session.ID)
 				err := session.Save(req, res)
 				fmt.Println(err)
-				http.Redirect(res, req, "/claims", http.StatusFound)
+				http.Redirect(res, req, "/clients", http.StatusFound)
 
 				// decode token and get user id
 			}

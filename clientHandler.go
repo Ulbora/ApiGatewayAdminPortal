@@ -31,7 +31,7 @@ import (
 )
 
 // user handlers-----------------------------------------------------
-func handleClaims(w http.ResponseWriter, r *http.Request) {
+func handleClients(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("url: ")
 	fmt.Println(r.URL)
 	fmt.Println(r.Host)
@@ -70,7 +70,7 @@ func handleClaims(w http.ResponseWriter, r *http.Request) {
 		authorize(w, r)
 	} else {
 		session.Values["userLoggenIn"] = true
-		templates.ExecuteTemplate(w, "claims.html", nil)
+		templates.ExecuteTemplate(w, "clients.html", nil)
 	}
 
 }

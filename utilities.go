@@ -195,13 +195,15 @@ func getRefreshToken(w http.ResponseWriter, r *http.Request) {
 	if resp != nil && resp.AccessToken != "" {
 		fmt.Print("new token: ")
 		fmt.Println(resp.AccessToken)
-		token = resp
+		//token = resp
 		session, err := s.GetSession(r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		} else {
 			session.Values["userLoggenIn"] = true
 			session.Save(r, w)
+			tokenKey := session.Values["accessTokenKey"]
+			tokenMap[tokenKey.(string)] = resp
 			//http.Redirect(res, req, "/admin/main", http.StatusFound)
 
 			// decode token and get user id
@@ -257,4 +259,14 @@ func getToken(w http.ResponseWriter, r *http.Request) *oauth2.Token {
 		token = tokenMap[tokenKey.(string)]
 	}
 	return token
+}
+
+func removeToken(w http.ResponseWriter, r *http.Request) {
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	tokenKey := session.Values["accessTokenKey"]
+	delete(tokenMap, tokenKey.(string))
 }
