@@ -59,9 +59,13 @@ func handleClaims(w http.ResponseWriter, r *http.Request) {
 	}
 
 	loggedIn := session.Values["userLoggenIn"]
+	// tokenKey := session.Values["accessTokenKey"]
+	// token := tokenMap[tokenKey.(string)]
 	//tkn := session.Values["accessToken"]
+	token := getToken(w, r)
 	fmt.Print("in main page. Logged in: ")
 	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
 	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
 		authorize(w, r)
 	} else {

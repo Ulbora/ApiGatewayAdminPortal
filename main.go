@@ -40,7 +40,9 @@ import (
 )
 
 var s usession.Session
-var token *oauth2.Token
+
+//var token *oauth2.Token
+var tokenMap map[string]*oauth2.Token
 var credentialToken *oauth2.Token
 
 var templates = template.Must(template.ParseFiles("./static/index.html", "./static/header.html",
@@ -57,6 +59,9 @@ func main() {
 	} else {
 		s.SessionKey = "115722gggg14ddfg4567"
 	}
+
+	tokenMap = make(map[string]*oauth2.Token)
+
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", handleIndex)

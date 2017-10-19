@@ -25,11 +25,61 @@ and open the template in the editor.
             <form class="ui form">
                 <div class="field">
                     <label>Client Name</label>
-                    <input type="text" name="first-name" placeholder="First Name">
-                </div>  
+                    <input type="text" name="Enter Name" placeholder="First Name">
+                </div>
                 <button class="ui button" type="submit">Search</button>
             </form>
         </div>
+    </div>
+    <div class="claims-table">
+        <table class="ui selectable celled table">
+            <thead>
+                <tr>
+                    <th>Client ID</th>
+                    <th>Name</th>
+                    <th>Web Site</th>
+                    <th>Enabled</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>33</td>
+                    <td>Bob</td>
+                    <td>None</td>
+                    <td class="positive">Enabled</td>
+                </tr>
+                <tr>
+                    <td>55</td>
+                    <td>Sam</td>
+                    <td>www.google.com</td>
+                    <td class="positive">Enabled</td>
+                </tr>
+                <tr>
+                    <td>123</td>
+                    <td>Google</td>
+                    <td>None</td>
+                    <td class="positive">Enabled</td>
+                </tr>
+                <tr>
+                    <td>888</td>
+                    <td>Action Inc</td>
+                    <td>None</td>
+                    <td class="positive">Enabled</td>
+                </tr>
+                <tr class="warning">
+                    <td>8288</td>
+                    <td>Jamie</td>
+                    <td>www.google.com</td>
+                    <td class="warning">Disabled</td>
+                </tr>
+                <tr>
+                    <td>8884</td>
+                    <td>Sams Inc</td>
+                    <td>None</td>
+                    <td class="positive">Enabled</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 

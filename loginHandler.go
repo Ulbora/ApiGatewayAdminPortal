@@ -93,14 +93,16 @@ func handleToken(res http.ResponseWriter, req *http.Request) {
 		fmt.Println(len(resp.AccessToken))
 		if resp != nil && resp.AccessToken != "" {
 			//fmt.Println(resp.AccessToken)
-			token = resp
+			//token = resp
 			session, err := s.GetSession(req)
 			if err != nil {
 				fmt.Println(err)
 				http.Error(res, err.Error(), http.StatusInternalServerError)
 			} else {
 				session.Values["userLoggenIn"] = true
-				///////session.Values["accessToken"] = resp.AccessToken
+				var accKey = generateTokenKey()
+				session.Values["accessTokenKey"] = accKey
+				tokenMap[accKey] = resp
 				fmt.Print("session id: ")
 				fmt.Println(session.ID)
 				err := session.Save(req, res)

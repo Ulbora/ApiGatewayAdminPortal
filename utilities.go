@@ -26,8 +26,10 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"os"
+	"time"
 
 	oauth2 "github.com/Ulbora/go-oauth2-client"
 	"github.com/dgrijalva/jwt-go"
@@ -152,9 +154,10 @@ func getChallengeHost() string {
 	return rtn
 }
 
-func getHashedUser() string {
+func getHashedUser(w http.ResponseWriter, r *http.Request) string {
 	var rtn string
 	//fmt.Println(token.AccessToken)
+	token := getToken(w, r)
 	tk, err := jwt.Parse(token.AccessToken, func(parsedToken *jwt.Token) (interface{}, error) {
 		return parsedToken, nil
 	})
@@ -178,6 +181,7 @@ func getHashedUser() string {
 
 func getRefreshToken(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("getting refresh token")
+	token := getToken(w, r)
 	var tn oauth2.AuthCodeToken
 	tn.OauthHost = getOauthHost()
 	tn.ClientID = getAuthCodeClient()
@@ -220,4 +224,37 @@ func getCredentialsToken() {
 		//fmt.Println(resp.AccessToken)
 		credentialToken = resp
 	}
+}
+
+func generateTokenKey() string {
+	return RandStringRunes(9)
+}
+
+//**************Random Generator******************************
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+//RandStringRunes RandStringRunes
+func RandStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
+
+func getToken(w http.ResponseWriter, r *http.Request) *oauth2.Token {
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	var token *oauth2.Token
+	if tokenKey := session.Values["accessTokenKey"]; tokenKey != nil {
+		token = tokenMap[tokenKey.(string)]
+	}
+	return token
 }
