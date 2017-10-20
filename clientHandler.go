@@ -35,33 +35,13 @@ func handleClients(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("url: ")
 	fmt.Println(r.URL)
 	fmt.Println(r.Host)
-	//vars := mux.Vars(r)
-	//page := vars["content"]
-	//if page == "" {
-	//	page = "home"
-	//}
-	//var c services.ContentService
-	//c.ClientID = getAuthCodeClient()
-	//c.APIKey = getGatewayAPIKey()
-	//c.Host = getContentHost()
-	//h, res := c.GetContentListCategory(getAuthCodeClient(), page)
-	//var pg = new(pageContent)
-	//pg.Cont = res
-	//pg.MetaAuthor = h.MetaAuthor
-	//pg.MetaKeyWords = h.MetaKeyWords
-	//pg.MetaDesc = h.MetaDesc
-	//pg.Title = h.Title
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-
 	loggedIn := session.Values["userLoggenIn"]
-	// tokenKey := session.Values["accessTokenKey"]
-	// token := tokenMap[tokenKey.(string)]
-	//tkn := session.Values["accessToken"]
 	token := getToken(w, r)
 	fmt.Print("in main page. Logged in: ")
 	fmt.Println(loggedIn)
