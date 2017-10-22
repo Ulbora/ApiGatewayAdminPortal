@@ -9,7 +9,7 @@
       "suppressTaskName": false,
       "isBuildCommand": true,
       "args": [          
-        "UlboraCmsV3/services",
+        "ApiGatewayAdminPortal/services",
         "github.com/gorilla/mux",
         "github.com/gorilla/sessions",
         "github.com/Ulbora/go-better-sessions",

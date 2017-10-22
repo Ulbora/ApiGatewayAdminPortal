@@ -33,3 +33,12 @@ $(function () {
   ;
 });
 
+
+
+$(function () {
+    $('.ui.radio.checkbox')
+    .checkbox()
+  ;
+});
+
+

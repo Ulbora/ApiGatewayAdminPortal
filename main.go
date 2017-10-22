@@ -46,7 +46,8 @@ var tokenMap map[string]*oauth2.Token
 var credentialToken *oauth2.Token
 
 var templates = template.Must(template.ParseFiles("./static/index.html", "./static/header.html",
-	"./static/footer.html", "./static/navbar.html", "./static/clients.html"))
+	"./static/footer.html", "./static/navbar.html", "./static/clients.html", "./static/addClient.html",
+	"./static/editClient.html"))
 
 //var username string
 
@@ -66,6 +67,11 @@ func main() {
 
 	router.HandleFunc("/", handleIndex)
 	router.HandleFunc("/clients", handleClients)
+	router.HandleFunc("/addClient", handleAddClient)
+	router.HandleFunc("/editClient/{clientId}", handleEditClient)
+	router.HandleFunc("/newClient", handleNewClient)
+	router.HandleFunc("/updateClient", handleUpdateClient)
+
 	router.HandleFunc("/tokenHandler", handleToken)
 	router.HandleFunc("/login", handleLogin)
 	router.HandleFunc("/logout", handleLogout)

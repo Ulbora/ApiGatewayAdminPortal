@@ -202,6 +202,47 @@ func (c *ClientService) GetClientList() *[]Client {
 	return &rtn
 }
 
+//SearchClient SearchClient
+func (c *ClientService) SearchClient(client *Client) *[]Client {
+	var rtn = make([]Client, 0)
+	var addURL = c.Host + "/rs/client/search"
+	aJSON, err := json.Marshal(client)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		req, rErr := http.NewRequest("POST", addURL, bytes.NewBuffer(aJSON))
+		if rErr != nil {
+			fmt.Print("request err: ")
+			fmt.Println(rErr)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", "Bearer "+c.Token)
+			req.Header.Set("clientId", c.ClientID)
+			//req.Header.Set("userId", c.UserID)
+			//req.Header.Set("hashed", c.Hashed)
+			req.Header.Set("apiKey", c.APIKey)
+			client := &http.Client{}
+			resp, cErr := client.Do(req)
+			if cErr != nil {
+				fmt.Print("Client search err: ")
+				fmt.Println(cErr)
+			} else {
+				defer resp.Body.Close()
+				//fmt.Print("search resp: ")
+				//fmt.Println(resp)
+				decoder := json.NewDecoder(resp.Body)
+				error := decoder.Decode(&rtn)
+				if error != nil {
+					log.Println(error.Error())
+				}
+				//rtn.Code = resp.StatusCode
+			}
+		}
+	}
+	return &rtn
+}
+
 // DeleteClient delete DeleteClient
 func (c *ClientService) DeleteClient(id string) *ClientResponse {
 	var rtn = new(ClientResponse)

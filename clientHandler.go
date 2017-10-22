@@ -26,8 +26,13 @@
 package main
 
 import (
+	services "ApiGatewayAdminPortal/services"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 // user handlers-----------------------------------------------------
@@ -46,11 +51,241 @@ func handleClients(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("in main page. Logged in: ")
 	fmt.Println(loggedIn)
 	//fmt.Println(token.AccessToken)
+	var res *[]services.Client
 	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
 		authorize(w, r)
 	} else {
 		session.Values["userLoggenIn"] = true
-		templates.ExecuteTemplate(w, "clients.html", nil)
+		clientName := r.FormValue("clientName")
+		fmt.Print("clientName: ")
+		fmt.Println(clientName)
+
+		if clientName != "" {
+			var c services.ClientService
+			token := getToken(w, r)
+			c.ClientID = getAuthCodeClient()
+			c.Host = getOauthHost()
+			c.Token = token.AccessToken
+			var cc services.Client
+			cc.Name = clientName
+			res = c.SearchClient(&cc)
+		}
+		templates.ExecuteTemplate(w, "clients.html", &res)
 	}
 
+}
+
+func handleAddClient(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		templates.ExecuteTemplate(w, "addClient.html", nil)
+	}
+
+}
+
+func handleEditClient(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("in main page. Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		session.Values["userLoggenIn"] = true
+		vars := mux.Vars(r)
+		clientID := vars["clientId"]
+
+		if clientID != "" {
+			var c services.ClientService
+			token := getToken(w, r)
+			c.ClientID = getAuthCodeClient()
+			c.Host = getOauthHost()
+			c.Token = token.AccessToken
+
+			res := c.GetClient(clientID)
+			templates.ExecuteTemplate(w, "editClient.html", &res)
+		}
+	}
+}
+
+func handleNewClient(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("in main page. Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		clientName := r.FormValue("clientName")
+		fmt.Print("clientName: ")
+		fmt.Println(clientName)
+
+		webSite := r.FormValue("webSite")
+		fmt.Print("webSite: ")
+		fmt.Println(webSite)
+
+		emailAddress := r.FormValue("emailAddress")
+		fmt.Print("emailAddress: ")
+		fmt.Println(emailAddress)
+
+		redirectURLStr := r.FormValue("redirectURLs")
+		redirectURLStr = strings.Replace(redirectURLStr, " ", "", -1)
+		fmt.Print("redirectURLStr: ")
+		fmt.Println(redirectURLStr)
+		redirectURLs := strings.Split(redirectURLStr, ",")
+		fmt.Println(redirectURLs)
+		enabled := r.FormValue("enabled")
+		fmt.Print("enabled: ")
+		fmt.Println(enabled)
+
+		var c services.ClientService
+		token := getToken(w, r)
+		c.ClientID = getAuthCodeClient()
+		c.Host = getOauthHost()
+		c.Token = token.AccessToken
+
+		var cc services.Client
+		cc.Name = clientName
+		cc.Email = emailAddress
+		if enabled == "yes" {
+			cc.Enabled = true
+		} else {
+			cc.Enabled = false
+		}
+		cc.WebSite = webSite
+
+		var uris []services.RedirectURI
+		for i := range redirectURLs {
+			var uri services.RedirectURI
+			uri.URI = redirectURLs[i]
+			uris = append(uris, uri)
+		}
+		cc.RedirectURIs = uris
+		//cc.Secret = generateClientSecret()
+		res := c.AddClient(&cc)
+		if res.Success == true {
+			http.Redirect(w, r, "/clients", http.StatusFound)
+		} else {
+			http.Redirect(w, r, "/addClient", http.StatusFound)
+		}
+	}
+}
+
+func handleUpdateClient(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("in main page. Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		clientIDStr := r.FormValue("clientId")
+		clientID, errID := strconv.ParseInt(clientIDStr, 10, 0)
+		if errID != nil {
+			fmt.Print(errID)
+		}
+		fmt.Print("clientId: ")
+		fmt.Println(clientID)
+
+		clientName := r.FormValue("clientName")
+		fmt.Print("clientName: ")
+		fmt.Println(clientName)
+
+		secret := r.FormValue("secret")
+		fmt.Print("secret: ")
+		fmt.Println(secret)
+
+		webSite := r.FormValue("webSite")
+		fmt.Print("webSite: ")
+		fmt.Println(webSite)
+
+		emailAddress := r.FormValue("emailAddress")
+		fmt.Print("emailAddress: ")
+		fmt.Println(emailAddress)
+
+		// redirectURLStr := r.FormValue("redirectURLs")
+		// fmt.Print("redirectURLStr: ")
+		// fmt.Println(redirectURLStr)
+		// redirectURLs := strings.Split(redirectURLStr, ",")
+		//fmt.Println(redirectURLs)
+		enabled := r.FormValue("enabled")
+		fmt.Print("enabled: ")
+		fmt.Println(enabled)
+
+		var c services.ClientService
+		token := getToken(w, r)
+		c.ClientID = getAuthCodeClient()
+		c.Host = getOauthHost()
+		c.Token = token.AccessToken
+
+		var cc services.Client
+		cc.ClientID = clientID
+		cc.Secret = secret
+		cc.Name = clientName
+		cc.Email = emailAddress
+		if enabled == "yes" {
+			cc.Enabled = true
+		} else {
+			cc.Enabled = false
+		}
+		cc.WebSite = webSite
+
+		// var uris []services.RedirectURI
+		// for i := range redirectURLs {
+		// 	var uri services.RedirectURI
+		// 	uri.URI = redirectURLs[i]
+		// 	uris = append(uris, uri)
+		// }
+		// cc.RedirectURIs = uris
+		//cc.Secret = generateClientSecret()
+		res := c.UpdateClient(&cc)
+		if res.Success == true {
+			http.Redirect(w, r, "/clients", http.StatusFound)
+		} else {
+			fmt.Println(res)
+			http.Redirect(w, r, "/editClient/"+clientIDStr, http.StatusFound)
+		}
+	}
+	//if res.Success == true {
+	//http.Redirect(w, r, "/clients", http.StatusFound)
+	//} else {
+	//http.Redirect(w, r, "/admin/addContent", http.StatusFound)
+	//}
 }

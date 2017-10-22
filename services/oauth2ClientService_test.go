@@ -90,6 +90,21 @@ func TestClientService_GetClient(t *testing.T) {
 	}
 }
 
+func TestClientService_SearchClient(t *testing.T) {
+	var c ClientService
+	c.ClientID = "403"
+	c.Host = "http://localhost:3000"
+	c.Token = tempToken
+	var cc Client
+	cc.Name = "Big"
+	res := c.SearchClient(&cc)
+	fmt.Print("searched res: ")
+	fmt.Println(res)
+	if res == nil || len(*res) == 0 {
+		t.Fail()
+	}
+}
+
 func TestClientService_GetClientList(t *testing.T) {
 	var c ClientService
 	c.ClientID = "403"

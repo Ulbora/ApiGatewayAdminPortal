@@ -232,6 +232,10 @@ func generateTokenKey() string {
 	return RandStringRunes(9)
 }
 
+// func generateClientSecret() string {
+// 	return RandStringRunes(50)
+// }
+
 //**************Random Generator******************************
 func init() {
 	rand.Seed(time.Now().UnixNano())
