@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+{{template "header"}}
+
+<body>
+    {{template "navbar" .}}
+    <div class="side-menu">
+        <div class="ui vertical menu">
+            <a class="teal item" href="/editClient/{{.Client.ClientID}}">
+                Client
+            </a>
+            <a class="active item" href="/oauth2/{{.Client.ClientID}}">
+                Security
+            </a>
+            <a class="item" href="/clientRedirectUrls/{{.Client.ClientID}}">
+                -- Redirect URLs
+            </a>
+            <a class="item" href="/clientGrantTypes/{{.Client.ClientID}}">
+                -- Grant Types
+            </a>
+            <a class="item" href="/clientRoles/{{.Client.ClientID}}">
+                -- Roles
+            </a>
+            <a class="item" href="/clientAllowedUrls/{{.Client.ClientID}}">
+                -- Allowed URLs
+            </a>
+            <a class="item" href="/gateway/{{.Client.ClientID}}">
+                ApiGateway
+            </a>
+        </div>
+    </div>
+    <div class="client-edit-form">
+        <form class="ui form">
+            <h4 class="ui dividing header">Client Information</h4>
+            <div class="field">
+                <div class="two fields">
+                    <div class="field">
+                        <label>Name</label>
+                        <input type="text" value="{{.Client.Name}}" disabled>
+                    </div>
+                    <div class="field">
+                        <label>ClientID</label>
+                        <input type="text" value="{{.Client.ClientID}}" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Client Secret</label>
+                <input type="text" value="{{.Client.Secret}}" disabled>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

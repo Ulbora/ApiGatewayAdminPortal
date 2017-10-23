@@ -2,13 +2,13 @@
 <div class="top-header">
     <div class="ui inverted segment">
         <div class="ui inverted secondary pointing menu">
-            <a class="active item" href="/clients">
-                Client
+            <a class="{{.ClientActive}} item" href="/clients">
+                Clients
             </a>
-            <a class="item">
+            <a class="{{.OauthActive}} item">
                 Oauth2
             </a>
-            <a class="item">
+            <a class="{{.GwActive}} item">
                 Gateway
             </a>
             <div class="right menu">

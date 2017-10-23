@@ -41,3 +41,10 @@
   width: 50%;
   padding: 0 0 0 2%;
 }
+.add-inner-form {
+  float: left;
+  margin: 3% 0 0 0;
+  padding: 1%;
+  width: 100%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+}

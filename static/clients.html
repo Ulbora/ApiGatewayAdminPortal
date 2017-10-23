@@ -8,7 +8,7 @@ and open the template in the editor.
 {{template "header"}}
 
 <body>
-    {{template "navbar"}}
+    {{template "navbar" .}}
     <div class="client-main">
         <div class="add-button">
             <form method="POST" class="ui form" action="/addClient">
@@ -25,7 +25,7 @@ and open the template in the editor.
             </form>
         </div>
     </div>
-    <div class="client-table">
+    <div class="client-table">           
         <table class="ui selectable celled table">
             <thead>
                 <tr>
@@ -36,7 +36,7 @@ and open the template in the editor.
                 </tr>
             </thead>
             <tbody>
-                {{range .}}
+                {{range .ClientList}}
                 <tr onclick="window.location.href='/editClient/{{.ClientID}}'">
                     <td>{{.ClientID}}</td>
                     <td>{{.Name}}</td>

@@ -35,6 +35,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type clientPage struct {
+	ClientActive string
+	OauthActive  string
+	GwActive     string
+	ClientList   *[]services.Client
+	Client       *services.Client
+}
+
 // user handlers-----------------------------------------------------
 func handleClients(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("url: ")
@@ -70,7 +78,10 @@ func handleClients(w http.ResponseWriter, r *http.Request) {
 			cc.Name = clientName
 			res = c.SearchClient(&cc)
 		}
-		templates.ExecuteTemplate(w, "clients.html", &res)
+		var page clientPage
+		page.ClientActive = "active"
+		page.ClientList = res
+		templates.ExecuteTemplate(w, "clients.html", &page)
 	}
 
 }
@@ -267,14 +278,6 @@ func handleUpdateClient(w http.ResponseWriter, r *http.Request) {
 		}
 		cc.WebSite = webSite
 
-		// var uris []services.RedirectURI
-		// for i := range redirectURLs {
-		// 	var uri services.RedirectURI
-		// 	uri.URI = redirectURLs[i]
-		// 	uris = append(uris, uri)
-		// }
-		// cc.RedirectURIs = uris
-		//cc.Secret = generateClientSecret()
 		res := c.UpdateClient(&cc)
 		if res.Success == true {
 			http.Redirect(w, r, "/clients", http.StatusFound)
@@ -283,9 +286,4 @@ func handleUpdateClient(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/editClient/"+clientIDStr, http.StatusFound)
 		}
 	}
-	//if res.Success == true {
-	//http.Redirect(w, r, "/clients", http.StatusFound)
-	//} else {
-	//http.Redirect(w, r, "/admin/addContent", http.StatusFound)
-	//}
 }
