@@ -38,10 +38,12 @@ type oauthPage struct {
 	OauthActive          string
 	GwActive             string
 	CanDeleteRedirectURI bool
+	ClientIsSelf         bool
 	ClientList           *[]services.Client
 	Client               *services.Client
 	RedirectURLs         *[]services.RedirectURI
 	GrantTypes           *[]services.GrantType
+	ClientRoles          *[]services.ClientRole
 }
 
 func handleOauth2(w http.ResponseWriter, r *http.Request) {

@@ -5,7 +5,7 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-{{template "header"}}
+{{template "header" .}}
 
 <body>
     {{template "navbar"}}
@@ -14,10 +14,10 @@ and open the template in the editor.
             <a class="active teal item">
                 Client
             </a>
-            <a class="item" href="/oauth2/{{.ClientID}}">
+            <a class="item" href="/oauth2/{{.Client.ClientID}}">
                 Security
             </a>
-            <a class="item" href="/gateway/{{.ClientID}}">
+            <a class="item" href="/gateway/{{.Client.ClientID}}">
                 ApiGateway
             </a>
         </div>
@@ -27,37 +27,38 @@ and open the template in the editor.
             <h4 class="ui dividing header">Edit Client</h4>
             <div class="field">
                 <label>Client ID</label>
-                <input type="text" name="clientIDDis" value="{{.ClientID}}" disabled>
-                <input type="hidden" name="clientId" value="{{.ClientID}}">
+                <input type="text" name="clientIDDis" value="{{.Client.ClientID}}" disabled>
+                <input type="hidden" name="clientId" value="{{.Client.ClientID}}">
             </div>
             <div class="field">
                 <label>Client Name</label>
-                <input type="text" name="clientName" placeholder="Client Name" value="{{.Name}}" required>
+                <input type="text" name="clientName" placeholder="Client Name" value="{{.Client.Name}}" required>
             </div>
             <div class="field">
                 <label>Client Secret</label>
-                <input type="text" name="SecretDis" value="{{.Secret}}" disabled>
-                <input type="hidden" name="secret" value="{{.Secret}}">
+                <input type="text" name="SecretDis" value="{{.Client.Secret}}" disabled>
+                <input type="hidden" name="secret" value="{{.Client.Secret}}">
             </div>
             <div class="field">
                 <label>Client Web Site</label>
-                <input type="text" name="webSite" placeholder="http://www.somesite.com" value="{{.WebSite}}" required>
+                <input type="text" name="webSite" placeholder="http://www.somesite.com" value="{{.Client.WebSite}}" required>
             </div>
             <div class="field">
                 <label>Email Address</label>
-                <input type="email" name="emailAddress" placeholder="someone@gmail.com" value="{{.Email}}" required>
+                <input type="email" name="emailAddress" placeholder="someone@gmail.com" value="{{.Client.Email}}" required>
             </div>
             <div class="field">
                 <label>Redirect URLs (comma seperated)</label>
-                {{range .RedirectURIs}}
+                {{range .Client.RedirectURIs}}
                 <input type="text" name="redirectURLs"  value="{{.URI}}" disabled> 
                 {{end}}
             </div>
+            {{if ne .ClientIsSelf true}}
             <div class="grouped fields">
                 <label for="enabled">Client Enabled:</label>
                 <div class="field">
                     <div class="ui radio checkbox">
-                        {{if .Enabled}}
+                        {{if .Client.Enabled}}
                         <input type="radio" name="enabled" checked="" tabindex="0" class="hidden" value="yes">
                         <label>Yes</label>
                         {{else}}
@@ -68,7 +69,7 @@ and open the template in the editor.
                 </div>
                 <div class="field">
                     <div class="ui radio checkbox">
-                        {{if .Enabled}}
+                        {{if .Client.Enabled}}
                         <input type="radio" name="enabled" tabindex="0" class="hidden" value="no">
                         <label>No</label>
                         {{else}}
@@ -78,6 +79,7 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
+            {{end}}
             <button class="ui button" type="submit">Submit</button>
         </form>
     </div>

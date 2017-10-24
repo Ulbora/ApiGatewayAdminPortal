@@ -96,3 +96,23 @@ var showGrantTypeModel = function(id, gt){
 var getGrantTypeId = function(){
     return grantTypeId;
 }
+
+
+
+var roleId;
+var clientRole;
+var showRoleModel = function(id, rl){  
+    roleId = id;
+    clientRole = rl;
+    $(function(){
+        $('.ui.modal').modal('show');
+    });
+    $(".ui.modal").modal({
+		closable: true
+    });
+    document.getElementById("cont").innerHTML = "Delete Client Role " + rl + "?";
+}
+
+var getRoleId = function(){
+    return roleId;
+}

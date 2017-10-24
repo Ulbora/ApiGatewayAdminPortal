@@ -34,7 +34,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func handleGrantType(w http.ResponseWriter, r *http.Request) {
+func handleRoles(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -60,27 +60,30 @@ func handleGrantType(w http.ResponseWriter, r *http.Request) {
 			c.ClientID = getAuthCodeClient()
 			c.Host = getOauthHost()
 			c.Token = token.AccessToken
-
 			res := c.GetClient(clientID)
+
 			//fmt.Println(res)
 			var page oauthPage
 			page.OauthActive = "active"
 			page.Client = res
 
-			var g services.GrantTypeService
-			g.ClientID = getAuthCodeClient()
-			g.Host = getOauthHost()
-			g.Token = token.AccessToken
-			res2 := g.GetGrantTypeList(clientID)
-			page.GrantTypes = res2
+			var r services.ClientRoleService
+			r.ClientID = getAuthCodeClient()
+			r.Host = getOauthHost()
+			r.Token = token.AccessToken
+			res2 := r.GetClientRoleList(clientID)
+			page.ClientRoles = res2
+			if getAuthCodeClient() == clientID {
+				page.ClientIsSelf = true
+			}
 
 			//fmt.Println(page)
-			templates.ExecuteTemplate(w, "grantTypes.html", &page)
+			templates.ExecuteTemplate(w, "roles.html", &page)
 		}
 	}
 }
 
-func handleGrantTypeAdd(w http.ResponseWriter, r *http.Request) {
+func handleRoleAdd(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -97,8 +100,8 @@ func handleGrantTypeAdd(w http.ResponseWriter, r *http.Request) {
 		authorize(w, r)
 	} else {
 
-		grantType := r.FormValue("grantType")
-		fmt.Println(grantType)
+		clientRole := r.FormValue("clientRole")
+		fmt.Println(clientRole)
 
 		clientIDStr := r.FormValue("clientId")
 		clientID, _ := strconv.ParseInt(clientIDStr, 10, 0)
@@ -109,17 +112,26 @@ func handleGrantTypeAdd(w http.ResponseWriter, r *http.Request) {
 
 		token := getToken(w, r)
 
-		var g services.GrantTypeService
-		g.ClientID = getAuthCodeClient()
-		g.Host = getOauthHost()
-		g.Token = token.AccessToken
-		if grantType != "" {
-			var gg services.GrantType
-			gg.ClientID = clientID
-			gg.GrantType = grantType
-			gres := g.AddGrantType(&gg)
-			if gres.Success != true {
-				fmt.Println(gres)
+		var r services.ClientRoleService
+		r.ClientID = getAuthCodeClient()
+		r.Host = getOauthHost()
+		r.Token = token.AccessToken
+		resTest := r.GetClientRoleList(clientIDStr)
+		var roleExists = false
+		for _, r := range *resTest {
+			if r.Role == clientRole {
+				roleExists = true
+				break
+			}
+		}
+		if clientRole != "" && roleExists != true {
+			var rr services.ClientRole
+			rr.ClientID = clientID
+			rr.Role = clientRole
+			rres := r.AddClientRole(&rr)
+			fmt.Println(rres)
+			if rres.Success != true {
+				fmt.Println(rres)
 			}
 		}
 
@@ -138,16 +150,18 @@ func handleGrantTypeAdd(w http.ResponseWriter, r *http.Request) {
 		//g.ClientID = getAuthCodeClient()
 		//g.Host = getOauthHost()
 		//g.Token = token.AccessToken
-		res2 := g.GetGrantTypeList(clientIDStr)
-		page.GrantTypes = res2
-
+		res2 := r.GetClientRoleList(clientIDStr)
+		page.ClientRoles = res2
+		if getAuthCodeClient() == clientIDStr {
+			page.ClientIsSelf = true
+		}
 		//fmt.Println(page)
-		templates.ExecuteTemplate(w, "grantTypes.html", &page)
+		templates.ExecuteTemplate(w, "roles.html", &page)
 
 	}
 }
 
-func handleGrantTypeDelete(w http.ResponseWriter, r *http.Request) {
+func handleRoleDelete(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -170,13 +184,13 @@ func handleGrantTypeDelete(w http.ResponseWriter, r *http.Request) {
 
 		if ID != "" && clientID != "" {
 			token := getToken(w, r)
-			var g services.GrantTypeService
-			g.ClientID = getAuthCodeClient()
-			g.Host = getOauthHost()
-			g.Token = token.AccessToken
-			gres := g.DeleteGrantType(ID)
-			if gres.Success != true {
-				fmt.Println(gres)
+			var r services.ClientRoleService
+			r.ClientID = getAuthCodeClient()
+			r.Host = getOauthHost()
+			r.Token = token.AccessToken
+			rres := r.DeleteClientRole(ID)
+			if rres.Success != true {
+				fmt.Println(rres)
 			}
 
 			var c services.ClientService
@@ -191,11 +205,13 @@ func handleGrantTypeDelete(w http.ResponseWriter, r *http.Request) {
 			page.OauthActive = "active"
 			page.Client = res
 
-			res2 := g.GetGrantTypeList(clientID)
-			page.GrantTypes = res2
-
+			res2 := r.GetClientRoleList(clientID)
+			page.ClientRoles = res2
+			if getAuthCodeClient() == clientID {
+				page.ClientIsSelf = true
+			}
 			//fmt.Println(page)
-			templates.ExecuteTemplate(w, "grantTypes.html", &page)
+			templates.ExecuteTemplate(w, "roles.html", &page)
 		}
 	}
 }

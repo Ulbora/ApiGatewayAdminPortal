@@ -135,7 +135,13 @@ func handleEditClient(w http.ResponseWriter, r *http.Request) {
 			c.Token = token.AccessToken
 
 			res := c.GetClient(clientID)
-			templates.ExecuteTemplate(w, "editClient.html", &res)
+			var page oauthPage
+			page.ClientActive = "active"
+			page.Client = res
+			if getAuthCodeClient() == clientID {
+				page.ClientIsSelf = true
+			}
+			templates.ExecuteTemplate(w, "editClient.html", &page)
 		}
 	}
 }
