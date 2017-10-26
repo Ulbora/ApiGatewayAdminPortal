@@ -44,6 +44,8 @@ type oauthPage struct {
 	RedirectURLs         *[]services.RedirectURI
 	GrantTypes           *[]services.GrantType
 	ClientRoles          *[]services.ClientRole
+	AllowedURIs          *[]services.AllowedURI
+	RoleURIs             *[]services.RoleURI
 }
 
 func handleOauth2(w http.ResponseWriter, r *http.Request) {

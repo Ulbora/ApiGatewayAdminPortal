@@ -48,7 +48,7 @@ var credentialToken *oauth2.Token
 var templates = template.Must(template.ParseFiles("./static/index.html", "./static/header.html",
 	"./static/footer.html", "./static/navbar.html", "./static/clients.html", "./static/addClient.html",
 	"./static/editClient.html", "./static/oauth2.html", "./static/redirectUrls.html", "./static/grantTypes.html",
-	"./static/roles.html"))
+	"./static/roles.html", "./static/allowedUris.html"))
 
 //var username string
 
@@ -86,6 +86,10 @@ func main() {
 	router.HandleFunc("/clientRoles/{clientId}", handleRoles)
 	router.HandleFunc("/addClientRole", handleRoleAdd)
 	router.HandleFunc("/deleteClientRoles/{id}/{clientId}", handleRoleDelete)
+
+	router.HandleFunc("/clientAllowedUris/{clientId}", handleAllowedUris)
+	router.HandleFunc("/addAllowedUri", handleAllowedUrisAdd)
+	router.HandleFunc("/deleteAllowedUri/{id}/{clientId}", handleAllowedUrisDelete)
 
 	//router.HandleFunc("/gateway/{clientId}", handleGateway)
 

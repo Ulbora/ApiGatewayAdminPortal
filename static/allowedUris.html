@@ -20,13 +20,13 @@ and open the template in the editor.
             <a class="item" href="/clientRedirectUrls/{{.Client.ClientID}}">
                 -- Redirect URLs
             </a>
-            <a class="active item" href="/clientGrantTypes/{{.Client.ClientID}}">
+            <a class="item" href="/clientGrantTypes/{{.Client.ClientID}}">
                 -- Grant Types
             </a>
             <a class="item" href="/clientRoles/{{.Client.ClientID}}">
                 -- Roles
             </a>
-            <a class="item" href="/clientAllowedUris/{{.Client.ClientID}}">
+            <a class="active item" href="/clientAllowedUris/{{.Client.ClientID}}">
                 -- Allowed URLs
             </a>
             <a class="item" href="/gateway/{{.Client.ClientID}}">
@@ -54,41 +54,31 @@ and open the template in the editor.
             <table class="ui selectable celled table">
                 <thead>
                     <tr>
-                        <th>Grant Type</th>
+                        <th>Allowed URI</th>
+                        <th>Role</th>
                         <th>Remove</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{range .GrantTypes}}
+                    {{range .AllowedURIs}}
                     <tr>
-                        {{if eq .GrantType "code"}}
-                        <td>Auth Code</td>
-                        {{else if eq .GrantType "implicit"}}
-                        <td>Implicit</td>
-                        {{else if eq .GrantType "client_credentials"}}
-                        <td>Client Credentials</td>
-                        {{end}}
-                        <td onclick="showGrantTypeModel({{.ID}},{{.GrantType}});">
-                            <i class="remove circle icon"></i>
-                        </td>
+                        <td onclick="unHideAllowedUri('{{.ID}}')"> <input id="{{.ID}}"  style="width: 100%; height: 30px;" type="text" value="{{.URI}}" disabled></td>   
+                        <td>Role</td>                    
+                        <td>
+                            <i id="del{{.ID}}" onclick="showModel({{.ID}},{{.URI}});" class="remove circle icon"></i>
+                            <button id="sub{{.ID}}"  class="ui button" style="display: none;" type="submit">Update</button>
+                        </td>                        
                     </tr>
                     {{end}}
                 </tbody>
             </table>
         </div>
         <div class="add-inner-form">
-            <form method="POST" class="ui form" action="/addGrantType">
-                <h4 class="ui dividing header">Add Grant Type</h4>
+            <form method="POST" class="ui form" action="/addAllowedUri">
+                <h4 class="ui dividing header">Add Redirect URL</h4>
                 <div class="field">
-                    <div class="field">
-                        <label>Grant Type</label>
-                        <select name="grantType" class="ui fluid dropdown">
-                            <option value="">----</option>
-                            <option value="code">Auth Code</option>
-                            <option value="implicit">Implicit</option>
-                            <option value="client_credentials">Client Credentials</option>
-                        </select>
-                    </div>
+                    <label>Redirect URL</label>
+                    <input type="text" name="redirectURL" placeholder="www.google.com" required>
                 </div>
                 <input type="hidden" name="clientId" value="{{.Client.ClientID}}">
                 <button class="ui button" type="submit">Add</button>
@@ -106,7 +96,7 @@ and open the template in the editor.
         </div>
         <div class="actions">
             <div class="ui black cancel button">Cancel</div>
-            <div onclick="location.href='/deleteGrantType/' + getGrantTypeId() +'/'+ {{.Client.ClientID}};" class="ui negative button">Delete</div>
+            <div onclick="location.href='/deleteRedirectUri/' + getRedirectUriId() +'/'+ {{.Client.ClientID}};" class="ui negative button">Delete</div>
         </div>
     </div>
 </body>

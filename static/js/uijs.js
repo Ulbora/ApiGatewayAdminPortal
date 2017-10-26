@@ -116,3 +116,9 @@ var showRoleModel = function(id, rl){
 var getRoleId = function(){
     return roleId;
 }
+
+var unHideAllowedUri = function(id){
+    document.getElementById(id).disabled = false
+    document.getElementById("del"+ id).style.display = 'none';
+    document.getElementById("sub"+ id).style.display = 'block';
+}
