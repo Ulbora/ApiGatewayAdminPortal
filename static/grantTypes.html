@@ -9,31 +9,7 @@ and open the template in the editor.
 
 <body>
     {{template "navbar" .}}
-    <div class="side-menu">
-        <div class="ui vertical menu">
-            <a class="teal item" href="/editClient/{{.Client.ClientID}}">
-                Client
-            </a>
-            <a class="item" href="/oauth2/{{.Client.ClientID}}">
-                Security
-            </a>
-            <a class="item" href="/clientRedirectUrls/{{.Client.ClientID}}">
-                -- Redirect URLs
-            </a>
-            <a class="active item" href="/clientGrantTypes/{{.Client.ClientID}}">
-                -- Grant Types
-            </a>
-            <a class="item" href="/clientRoles/{{.Client.ClientID}}">
-                -- Roles
-            </a>
-            <a class="item" href="/clientAllowedUris/{{.Client.ClientID}}">
-                -- Allowed URLs
-            </a>
-            <a class="item" href="/gateway/{{.Client.ClientID}}">
-                ApiGateway
-            </a>
-        </div>
-    </div>
+    {{template "secSideMenu" .}}
     <div class="client-edit-form">
         <form class="ui form">
             <h4 class="ui dividing header">Client Information</h4>

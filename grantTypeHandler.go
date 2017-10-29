@@ -73,6 +73,9 @@ func handleGrantType(w http.ResponseWriter, r *http.Request) {
 			g.Token = token.AccessToken
 			res2 := g.GetGrantTypeList(clientID)
 			page.GrantTypes = res2
+			var sm secSideMenu
+			sm.GrantTypeActive = "active"
+			page.SecSideMenu = &sm
 
 			//fmt.Println(page)
 			templates.ExecuteTemplate(w, "grantTypes.html", &page)
@@ -122,28 +125,7 @@ func handleGrantTypeAdd(w http.ResponseWriter, r *http.Request) {
 				fmt.Println(gres)
 			}
 		}
-
-		var c services.ClientService
-		c.ClientID = getAuthCodeClient()
-		c.Host = getOauthHost()
-		c.Token = token.AccessToken
-
-		res := c.GetClient(clientIDStr)
-		//fmt.Println(res)
-		var page oauthPage
-		page.OauthActive = "active"
-		page.Client = res
-
-		//var g services.GrantTypeService
-		//g.ClientID = getAuthCodeClient()
-		//g.Host = getOauthHost()
-		//g.Token = token.AccessToken
-		res2 := g.GetGrantTypeList(clientIDStr)
-		page.GrantTypes = res2
-
-		//fmt.Println(page)
-		templates.ExecuteTemplate(w, "grantTypes.html", &page)
-
+		http.Redirect(w, r, "/clientGrantTypes/"+clientIDStr, http.StatusFound)
 	}
 }
 
@@ -178,24 +160,7 @@ func handleGrantTypeDelete(w http.ResponseWriter, r *http.Request) {
 			if gres.Success != true {
 				fmt.Println(gres)
 			}
-
-			var c services.ClientService
-
-			c.ClientID = getAuthCodeClient()
-			c.Host = getOauthHost()
-			c.Token = token.AccessToken
-
-			res := c.GetClient(clientID)
-			//fmt.Println(res)
-			var page oauthPage
-			page.OauthActive = "active"
-			page.Client = res
-
-			res2 := g.GetGrantTypeList(clientID)
-			page.GrantTypes = res2
-
-			//fmt.Println(page)
-			templates.ExecuteTemplate(w, "grantTypes.html", &page)
 		}
+		http.Redirect(w, r, "/clientGrantTypes/"+clientID, http.StatusFound)
 	}
 }

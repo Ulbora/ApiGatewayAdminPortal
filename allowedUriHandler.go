@@ -119,6 +119,9 @@ func handleAllowedUris(w http.ResponseWriter, r *http.Request) {
 			//fmt.Print("roles: ")
 			//fmt.Println(newAres)
 			page.AllowedURIs = &newAres
+			var sm secSideMenu
+			sm.AllowedURIActive = "active"
+			page.SecSideMenu = &sm
 
 			//fmt.Println(page)
 			templates.ExecuteTemplate(w, "allowedUris.html", &page)

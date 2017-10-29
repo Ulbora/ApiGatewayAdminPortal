@@ -76,61 +76,9 @@ func handleRedirectURLs(w http.ResponseWriter, r *http.Request) {
 			if len(*res2) > 1 {
 				page.CanDeleteRedirectURI = true
 			}
-			//fmt.Println(page)
-			templates.ExecuteTemplate(w, "redirectUrls.html", &page)
-		}
-	}
-}
-
-func handleRedirectURLDelete(w http.ResponseWriter, r *http.Request) {
-	s.InitSessionStore(w, r)
-	session, err := s.GetSession(r)
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	loggedIn := session.Values["userLoggenIn"]
-	token := getToken(w, r)
-	fmt.Print("in main page. Logged in: ")
-	fmt.Println(loggedIn)
-	//fmt.Println(token.AccessToken)
-	//var res *[]services.Client
-	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
-		authorize(w, r)
-	} else {
-		session.Values["userLoggenIn"] = true
-		vars := mux.Vars(r)
-		ID := vars["id"]
-		clientID := vars["clientId"]
-
-		if ID != "" && clientID != "" {
-			token := getToken(w, r)
-			var r services.RedirectURIService
-			r.ClientID = getAuthCodeClient()
-			r.Host = getOauthHost()
-			r.Token = token.AccessToken
-			dres := r.DeleteRedirectURI(ID)
-			if dres.Success != true {
-				fmt.Println(dres)
-			}
-
-			var c services.ClientService
-
-			c.ClientID = getAuthCodeClient()
-			c.Host = getOauthHost()
-			c.Token = token.AccessToken
-
-			res := c.GetClient(clientID)
-			//fmt.Println(res)
-			var page oauthPage
-			page.OauthActive = "active"
-			page.Client = res
-
-			res2 := r.GetRedirectURIList(clientID)
-			page.RedirectURLs = res2
-			if len(*res2) > 1 {
-				page.CanDeleteRedirectURI = true
-			}
+			var sm secSideMenu
+			sm.RedirectURLActive = "active"
+			page.SecSideMenu = &sm
 			//fmt.Println(page)
 			templates.ExecuteTemplate(w, "redirectUrls.html", &page)
 		}
@@ -165,38 +113,54 @@ func handleRedirectURLAdd(w http.ResponseWriter, r *http.Request) {
 		session.Values["userLoggenIn"] = true
 
 		token := getToken(w, r)
-		var r services.RedirectURIService
-		r.ClientID = getAuthCodeClient()
-		r.Host = getOauthHost()
-		r.Token = token.AccessToken
+		var rl services.RedirectURIService
+		rl.ClientID = getAuthCodeClient()
+		rl.Host = getOauthHost()
+		rl.Token = token.AccessToken
 
 		var rr services.RedirectURI
 		rr.ClientID = clientID
 		rr.URI = redirectURL
-		ares := r.AddRedirectURI(&rr)
+		ares := rl.AddRedirectURI(&rr)
 		if ares.Success != true {
 			fmt.Println(ares)
 		}
+		http.Redirect(w, r, "/clientRedirectUrls/"+clientIDStr, http.StatusFound)
+	}
+}
 
-		var c services.ClientService
+func handleRedirectURLDelete(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("in main page. Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		session.Values["userLoggenIn"] = true
+		vars := mux.Vars(r)
+		ID := vars["id"]
+		clientID := vars["clientId"]
 
-		c.ClientID = getAuthCodeClient()
-		c.Host = getOauthHost()
-		c.Token = token.AccessToken
-
-		res := c.GetClient(clientIDStr)
-		//fmt.Println(res)
-		var page oauthPage
-		page.OauthActive = "active"
-		page.Client = res
-
-		res2 := r.GetRedirectURIList(clientIDStr)
-		page.RedirectURLs = res2
-		if len(*res2) > 1 {
-			page.CanDeleteRedirectURI = true
+		if ID != "" && clientID != "" {
+			token := getToken(w, r)
+			var rl services.RedirectURIService
+			rl.ClientID = getAuthCodeClient()
+			rl.Host = getOauthHost()
+			rl.Token = token.AccessToken
+			dres := rl.DeleteRedirectURI(ID)
+			if dres.Success != true {
+				fmt.Println(dres)
+			}
 		}
-		//fmt.Println(page)
-		templates.ExecuteTemplate(w, "redirectUrls.html", &page)
-
+		http.Redirect(w, r, "/clientRedirectUrls/"+clientID, http.StatusFound)
 	}
 }

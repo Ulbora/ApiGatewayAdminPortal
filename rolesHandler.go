@@ -76,6 +76,9 @@ func handleRoles(w http.ResponseWriter, r *http.Request) {
 			if getAuthCodeClient() == clientID {
 				page.ClientIsSelf = true
 			}
+			var sm secSideMenu
+			sm.RolesActive = "active"
+			page.SecSideMenu = &sm
 
 			//fmt.Println(page)
 			templates.ExecuteTemplate(w, "roles.html", &page)
@@ -112,14 +115,14 @@ func handleRoleAdd(w http.ResponseWriter, r *http.Request) {
 
 		token := getToken(w, r)
 
-		var r services.ClientRoleService
-		r.ClientID = getAuthCodeClient()
-		r.Host = getOauthHost()
-		r.Token = token.AccessToken
-		resTest := r.GetClientRoleList(clientIDStr)
+		var rs services.ClientRoleService
+		rs.ClientID = getAuthCodeClient()
+		rs.Host = getOauthHost()
+		rs.Token = token.AccessToken
+		resTest := rs.GetClientRoleList(clientIDStr)
 		var roleExists = false
-		for _, r := range *resTest {
-			if r.Role == clientRole {
+		for _, rl := range *resTest {
+			if rl.Role == clientRole {
 				roleExists = true
 				break
 			}
@@ -128,36 +131,13 @@ func handleRoleAdd(w http.ResponseWriter, r *http.Request) {
 			var rr services.ClientRole
 			rr.ClientID = clientID
 			rr.Role = clientRole
-			rres := r.AddClientRole(&rr)
+			rres := rs.AddClientRole(&rr)
 			fmt.Println(rres)
 			if rres.Success != true {
 				fmt.Println(rres)
 			}
 		}
-
-		var c services.ClientService
-		c.ClientID = getAuthCodeClient()
-		c.Host = getOauthHost()
-		c.Token = token.AccessToken
-
-		res := c.GetClient(clientIDStr)
-		//fmt.Println(res)
-		var page oauthPage
-		page.OauthActive = "active"
-		page.Client = res
-
-		//var g services.GrantTypeService
-		//g.ClientID = getAuthCodeClient()
-		//g.Host = getOauthHost()
-		//g.Token = token.AccessToken
-		res2 := r.GetClientRoleList(clientIDStr)
-		page.ClientRoles = res2
-		if getAuthCodeClient() == clientIDStr {
-			page.ClientIsSelf = true
-		}
-		//fmt.Println(page)
-		templates.ExecuteTemplate(w, "roles.html", &page)
-
+		http.Redirect(w, r, "/clientRoles/"+clientIDStr, http.StatusFound)
 	}
 }
 
@@ -184,34 +164,15 @@ func handleRoleDelete(w http.ResponseWriter, r *http.Request) {
 
 		if ID != "" && clientID != "" {
 			token := getToken(w, r)
-			var r services.ClientRoleService
-			r.ClientID = getAuthCodeClient()
-			r.Host = getOauthHost()
-			r.Token = token.AccessToken
-			rres := r.DeleteClientRole(ID)
+			var rl services.ClientRoleService
+			rl.ClientID = getAuthCodeClient()
+			rl.Host = getOauthHost()
+			rl.Token = token.AccessToken
+			rres := rl.DeleteClientRole(ID)
 			if rres.Success != true {
 				fmt.Println(rres)
 			}
-
-			var c services.ClientService
-
-			c.ClientID = getAuthCodeClient()
-			c.Host = getOauthHost()
-			c.Token = token.AccessToken
-
-			res := c.GetClient(clientID)
-			//fmt.Println(res)
-			var page oauthPage
-			page.OauthActive = "active"
-			page.Client = res
-
-			res2 := r.GetClientRoleList(clientID)
-			page.ClientRoles = res2
-			if getAuthCodeClient() == clientID {
-				page.ClientIsSelf = true
-			}
-			//fmt.Println(page)
-			templates.ExecuteTemplate(w, "roles.html", &page)
 		}
+		http.Redirect(w, r, "/clientRoles/"+clientID, http.StatusFound)
 	}
 }

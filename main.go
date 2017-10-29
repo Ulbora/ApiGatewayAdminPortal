@@ -48,7 +48,7 @@ var credentialToken *oauth2.Token
 var templates = template.Must(template.ParseFiles("./static/index.html", "./static/header.html",
 	"./static/footer.html", "./static/navbar.html", "./static/clients.html", "./static/addClient.html",
 	"./static/editClient.html", "./static/oauth2.html", "./static/redirectUrls.html", "./static/grantTypes.html",
-	"./static/roles.html", "./static/allowedUris.html"))
+	"./static/roles.html", "./static/allowedUris.html", "./static/secSideMenu.html"))
 
 //var username string
 
