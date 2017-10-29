@@ -117,6 +117,32 @@ var getRoleId = function(){
     return roleId;
 }
 
+
+var uriId;
+var clientUir;
+var allowedUriRoleId
+var showAllowedUriModel = function(id, ri, rid){  
+    uriId = id;
+    clientUir = ri;
+    allowedUriRoleId = rid;
+    $(function(){
+        $('.ui.modal').modal('show');
+    });
+    $(".ui.modal").modal({
+		closable: true
+    });
+    document.getElementById("cont").innerHTML = "Delete Client URI " + ri + "?";
+}
+
+var getAllowedUriId = function(){
+    return uriId;
+}
+
+var getAllowedUriRoleId = function(){
+    return allowedUriRoleId;
+}
+
+
 var unHideAllowedUri = function(id){
     document.getElementById(id).disabled = false
     document.getElementById("del"+ id).style.display = 'none';

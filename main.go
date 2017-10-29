@@ -89,7 +89,8 @@ func main() {
 
 	router.HandleFunc("/clientAllowedUris/{clientId}", handleAllowedUris)
 	router.HandleFunc("/addAllowedUri", handleAllowedUrisAdd)
-	router.HandleFunc("/deleteAllowedUri/{id}/{clientId}", handleAllowedUrisDelete)
+	router.HandleFunc("/editAllowedUri", handleAllowedUrisUpdate)
+	router.HandleFunc("/deleteAllowedUri/{id}/{roleId}/{clientId}", handleAllowedUrisDelete)
 
 	//router.HandleFunc("/gateway/{clientId}", handleGateway)
 

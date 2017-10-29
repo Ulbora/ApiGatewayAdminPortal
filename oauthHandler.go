@@ -44,7 +44,7 @@ type oauthPage struct {
 	RedirectURLs         *[]services.RedirectURI
 	GrantTypes           *[]services.GrantType
 	ClientRoles          *[]services.ClientRole
-	AllowedURIs          *[]services.AllowedURI
+	AllowedURIs          *[]allowedURIDisplay
 	RoleURIs             *[]services.RoleURI
 }
 

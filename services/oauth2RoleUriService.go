@@ -111,6 +111,7 @@ func (r *RoleURIService) GetRoleURIList(uID string) *[]RoleURI {
 		req.Header.Set("apiKey", r.APIKey)
 		client := &http.Client{}
 		resp, cErr := client.Do(req)
+		//fmt.Println(gURL)
 		if cErr != nil {
 			fmt.Print("RoleURI list Service read err: ")
 			fmt.Println(cErr)
@@ -118,6 +119,7 @@ func (r *RoleURIService) GetRoleURIList(uID string) *[]RoleURI {
 			defer resp.Body.Close()
 			decoder := json.NewDecoder(resp.Body)
 			error := decoder.Decode(&rtn)
+			//fmt.Println(rtn)
 			if error != nil {
 				log.Println(error.Error())
 			}
