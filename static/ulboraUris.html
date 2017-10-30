@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+{{template "header"}}
+
+<body>
+    {{template "navbar" .}} {{template "secSideMenu" .}}
+    <div class="client-edit-form">
+        <form class="ui form">
+            <h4 class="ui dividing header">Client Information</h4>
+            <div class="field">
+                <div class="two fields">
+                    <div class="field">
+                        <label>Name</label>
+                        <input type="text" value="{{.Client.Name}}" disabled>
+                    </div>
+                    <div class="field">
+                        <label>ClientID</label>
+                        <input type="text" value="{{.Client.ClientID}}" disabled>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="add-inner-form">
+            <form method="POST" class="ui form" action="/ulboraUrisAdd">
+                <h4 class="ui dividing header">Ulbora System URIs</h4>
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="oauth2" type="checkbox" tabindex="0" class="hidden">
+                        <label>Oauth2</label>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="apiGateway" type="checkbox" tabindex="0" class="hidden">
+                        <label>Api Gateway</label>
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="content" type="checkbox" tabindex="0" class="hidden">
+                        <label>Content Services</label>
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="customer" type="checkbox" tabindex="0" class="hidden">
+                        <label>Customer Services</label>
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="image" type="checkbox" tabindex="0" class="hidden">
+                        <label>Image Services</label>
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="mail" type="checkbox" tabindex="0" class="hidden">
+                        <label>Mail Services</label>
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="order" type="checkbox" tabindex="0" class="hidden">
+                        <label>Order Services</label>
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="product" type="checkbox" tabindex="0" class="hidden">
+                        <label>Product Services</label>
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="template" type="checkbox" tabindex="0" class="hidden">
+                        <label>Template Services</label>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+
+                <input type="hidden" name="clientId" value="{{.Client.ClientID}}">
+                <button class="ui button" type="submit">Add</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

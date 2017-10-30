@@ -41,6 +41,13 @@ $(function () {
   ;
 });
 
+
+$(function () {
+    $('.ui.checkbox')
+    .checkbox()
+  ;
+});
+
 var urlId;
 var urlName;
 var showModel = function(id, name){  

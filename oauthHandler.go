@@ -39,6 +39,7 @@ type secSideMenu struct {
 	RolesActive       string
 	AllowedURIActive  string
 	ClientActive      string
+	UlboraURIsActive  string
 }
 
 type oauthPage struct {
