@@ -69,6 +69,7 @@ func handleAllowedUris(w http.ResponseWriter, r *http.Request) {
 			c.Token = token.AccessToken
 
 			res := c.GetClient(clientID)
+
 			//fmt.Println(res)
 			var page oauthPage
 			page.OauthActive = "active"
@@ -79,13 +80,16 @@ func handleAllowedUris(w http.ResponseWriter, r *http.Request) {
 			r.Host = getOauthHost()
 			r.Token = token.AccessToken
 			rr := r.GetClientRoleList(clientID)
+
 			page.ClientRoles = rr
 			//fmt.Println(rr)
 			rMap := make(map[int64]int64)
+
 			var ru services.RoleURIService
 			ru.ClientID = getAuthCodeClient()
 			ru.Host = getOauthHost()
 			ru.Token = token.AccessToken
+
 			for _, rrr := range *rr {
 				//fmt.Print("start")
 				ruu := ru.GetRoleURIList(strconv.FormatInt(rrr.ID, 10))
@@ -105,7 +109,9 @@ func handleAllowedUris(w http.ResponseWriter, r *http.Request) {
 			a.Host = getOauthHost()
 			a.Token = token.AccessToken
 			ares := a.GetAllowedURIList(clientID)
+
 			var newAres []allowedURIDisplay
+
 			for _, ar := range *ares {
 				var ard allowedURIDisplay
 				ard.AssignedRole = rMap[ar.ID]
@@ -120,7 +126,7 @@ func handleAllowedUris(w http.ResponseWriter, r *http.Request) {
 			//fmt.Println(newAres)
 			page.AllowedURIs = &newAres
 			var sm secSideMenu
-			sm.AllowedURIActive = "active"
+			sm.AllowedURIActive = "active teal"
 			page.SecSideMenu = &sm
 
 			//fmt.Println(page)

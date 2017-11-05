@@ -40,6 +40,7 @@ type secSideMenu struct {
 	AllowedURIActive  string
 	ClientActive      string
 	UlboraURIsActive  string
+	UsersActive       string
 }
 
 type oauthPage struct {
@@ -56,6 +57,8 @@ type oauthPage struct {
 	ClientRoles          *[]services.ClientRole
 	AllowedURIs          *[]allowedURIDisplay
 	RoleURIs             *[]services.RoleURI
+	UserList             *[]services.User
+	User                 *services.User
 }
 
 func handleOauth2(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +94,7 @@ func handleOauth2(w http.ResponseWriter, r *http.Request) {
 			page.OauthActive = "active"
 			page.Client = res
 			var sm secSideMenu
-			sm.ClientActive = "active"
+			sm.ClientActive = "active teal"
 			page.SecSideMenu = &sm
 			//fmt.Println(page)
 			templates.ExecuteTemplate(w, "oauth2.html", &page)

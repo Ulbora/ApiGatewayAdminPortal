@@ -77,7 +77,7 @@ func handleRedirectURLs(w http.ResponseWriter, r *http.Request) {
 				page.CanDeleteRedirectURI = true
 			}
 			var sm secSideMenu
-			sm.RedirectURLActive = "active"
+			sm.RedirectURLActive = "active teal"
 			page.SecSideMenu = &sm
 			//fmt.Println(page)
 			templates.ExecuteTemplate(w, "redirectUrls.html", &page)

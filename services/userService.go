@@ -310,7 +310,7 @@ func (u *UserService) GetUserList() *[]User {
 func (u *UserService) SearchUserList(clientID string) *[]User {
 	var rtn = make([]User, 0)
 	var gURL = u.Host + "/rs/user/search/" + clientID
-	//fmt.Println(gURL)
+	fmt.Println(gURL)
 	req, rErr := http.NewRequest("GET", gURL, nil)
 	if rErr != nil {
 		fmt.Print("request err: ")
@@ -321,6 +321,8 @@ func (u *UserService) SearchUserList(clientID string) *[]User {
 		req.Header.Set("apiKey", u.APIKey)
 		client := &http.Client{}
 		resp, cErr := client.Do(req)
+		fmt.Print("userList res: ")
+		fmt.Println(resp)
 		if cErr != nil {
 			fmt.Print("user Service read err: ")
 			fmt.Println(cErr)

@@ -27,9 +27,11 @@ package main
 
 import (
 	services "ApiGatewayAdminPortal/services"
+	"ApiGatewayAdminPortal/ulborauris"
 	"fmt"
 	"net/http"
 	"strconv"
+	"sync"
 
 	"github.com/gorilla/mux"
 )
@@ -118,7 +120,7 @@ func handleUlboraUris(w http.ResponseWriter, r *http.Request) {
 			//fmt.Println(newAres)
 			//page.AllowedURIs = &newAres
 			var sm secSideMenu
-			sm.UlboraURIsActive = "active"
+			sm.UlboraURIsActive = "active teal"
 			page.SecSideMenu = &sm
 
 			//fmt.Println(page)
@@ -144,43 +146,97 @@ func handleUlboraUrisAdd(w http.ResponseWriter, r *http.Request) {
 		authorize(w, r)
 	} else {
 		session.Values["userLoggenIn"] = true
+		var uAdded = false
 
-		oauth2box := r.FormValue("oauth2")
-		fmt.Print("oauth2: ")
-		fmt.Println(oauth2box)
-		if oauth2box == "on" {
-			fmt.Println("oauth2 is on")
+		var usel ulborauris.UlboraSelection
+
+		oauth2 := r.FormValue("oauth2")
+		if oauth2 == "superUser" {
+			usel.Oauth2Super = true
+			uAdded = true
+		} else if oauth2 == "admin" {
+			usel.Oauth2 = true
+			uAdded = true
 		}
+		fmt.Print("oauth2: ")
+		fmt.Println(oauth2)
 
 		apiGateway := r.FormValue("apiGateway")
+		if apiGateway == "superUser" {
+			usel.APIGatewaySuper = true
+			uAdded = true
+		} else if apiGateway == "admin" {
+			usel.APIGateway = true
+			uAdded = true
+		}
 		fmt.Print("apiGateway: ")
 		fmt.Println(apiGateway)
 
 		content := r.FormValue("content")
+		if content == "on" {
+			usel.Content = true
+			uAdded = true
+		}
 		fmt.Print("content: ")
 		fmt.Println(content)
 
 		customer := r.FormValue("customer")
+		if customer == "admin" {
+			usel.CustomerAdmin = true
+			uAdded = true
+		} else if customer == "user" {
+			usel.CustomerUser = true
+			uAdded = true
+		}
 		fmt.Print("customer: ")
 		fmt.Println(customer)
 
 		image := r.FormValue("image")
+		if image == "admin" {
+			usel.ImageAdmin = true
+			uAdded = true
+		} else if image == "user" {
+			usel.ImageUser = true
+			uAdded = true
+		}
 		fmt.Print("image: ")
 		fmt.Println(image)
 
 		mail := r.FormValue("mail")
+		if mail == "on" {
+			usel.Mail = true
+			uAdded = true
+		}
 		fmt.Print("mail: ")
 		fmt.Println(mail)
 
 		order := r.FormValue("order")
+		if order == "admin" {
+			usel.OrderAdmin = true
+			uAdded = true
+		} else if order == "user" {
+			usel.OrderUser = true
+			uAdded = true
+		}
 		fmt.Print("order: ")
 		fmt.Println(order)
 
 		product := r.FormValue("product")
+		if product == "admin" {
+			usel.ProductAdmin = true
+			uAdded = true
+		} else if product == "user" {
+			usel.ProductUser = true
+			uAdded = true
+		}
 		fmt.Print("product: ")
 		fmt.Println(product)
 
 		template := r.FormValue("template")
+		if template == "on" {
+			usel.Template = true
+			uAdded = true
+		}
 		fmt.Print("template: ")
 		fmt.Println(template)
 
@@ -189,31 +245,76 @@ func handleUlboraUrisAdd(w http.ResponseWriter, r *http.Request) {
 		fmt.Print("clientId: ")
 		fmt.Println(clientID)
 
-		// if roleIDStr != "" && clientIDStr != "" {
-		// 	var au services.AllowedURIService
-		// 	au.ClientID = getAuthCodeClient()
-		// 	au.Host = getOauthHost()
-		// 	au.Token = token.AccessToken
-		// 	var auu services.AllowedURI
-		// 	auu.ClientID = clientID
-		// 	auu.URI = uri
-		// 	aures := au.AddAllowedURI(&auu)
-		// 	if aures.Success == true {
-		// 		var cr services.RoleURIService
-		// 		cr.ClientID = getAuthCodeClient()
-		// 		cr.Host = getOauthHost()
-		// 		cr.Token = token.AccessToken
+		if uAdded == true {
 
-		// 		var crr services.RoleURI
-		// 		crr.ClientRoleID = roleID
-		// 		crr.ClientAllowedURIID = aures.ID
-		// 		crres := cr.AddRoleURI(&crr)
-		// 		if crres.Success != true {
-		// 			fmt.Println(crres)
-		// 		}
-		// 	}
-		// 	//fmt.Println(aures)
-		// }
+			uuris := ulborauris.GetUlboraURIs(&usel)
+			fmt.Println(uuris)
+
+			var rs services.ClientRoleService
+			rs.ClientID = getAuthCodeClient()
+			rs.Host = getOauthHost()
+			rs.Token = token.AccessToken
+			rr := rs.GetClientRoleList(clientIDStr)
+
+			rMap := make(map[string]int64)
+
+			for _, rrr := range *rr {
+				rMap[rrr.Role] = rrr.ID
+			}
+			fmt.Println(rMap)
+
+			var au services.AllowedURIService
+			au.ClientID = getAuthCodeClient()
+			au.Host = getOauthHost()
+			au.Token = token.AccessToken
+			var insCnt = 0
+			var tmpUris = make([]ulborauris.UlborURIs, 0)
+			for _, uuri := range *uuris {
+				tmpUris = append(tmpUris, uuri)
+			}
+			var wg sync.WaitGroup
+			for i := range tmpUris {
+				wg.Add(1)
+				//fmt.Println(tmpUris[i].URI)
+				//var tu = tmpUris[i].URI
+				go func(val ulborauris.UlborURIs) {
+					//fmt.Print("in thread: ")
+					defer wg.Done()
+					//fmt.Println(val.URI)
+					insCnt++
+					if rMap[val.Role] != 0 {
+						var auu services.AllowedURI
+						auu.ClientID = clientID
+						auu.URI = val.URI
+						aures := au.AddAllowedURI(&auu)
+						if aures.Success != true {
+							fmt.Print("error inserting record:")
+							fmt.Println(val.URI)
+							fmt.Println(aures)
+						} else {
+							var crr services.RoleURI
+							crr.ClientRoleID = rMap[val.Role]
+							crr.ClientAllowedURIID = aures.ID
+							var cr services.RoleURIService
+							cr.ClientID = getAuthCodeClient()
+							cr.Host = getOauthHost()
+							cr.Token = token.AccessToken
+
+							crres := cr.AddRoleURI(&crr)
+							if crres.Success != true {
+								fmt.Println(crres)
+							}
+						}
+					}
+				}(tmpUris[i])
+			}
+			wg.Wait()
+
+			fmt.Print("cnt: ")
+			fmt.Println(insCnt)
+
+		}
+
 		http.Redirect(w, r, "/clientAllowedUris/"+clientIDStr, http.StatusFound)
 	}
 }

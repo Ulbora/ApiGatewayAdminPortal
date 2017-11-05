@@ -155,3 +155,23 @@ var unHideAllowedUri = function(id){
     document.getElementById("del"+ id).style.display = 'none';
     document.getElementById("sub"+ id).style.display = 'block';
 }
+
+var ulborUriAddBntDisable = function(){
+    document.getElementById("ulborUriAddBnt").disabled = false
+    document.getElementById("progBar").style.display = 'block';
+    $('#progBar')
+    .progress('increment')    
+  ;
+  setInterval(function(){
+    $('#progBar')
+    .progress('increment')    
+  ;
+  }, 500)
+}
+
+
+// $(function(){
+// 	$('#progBar')
+//     .progress('increment')    
+//   ;
+// });

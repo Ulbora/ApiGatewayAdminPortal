@@ -23,31 +23,18 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package ulborauri
+package ulborauris
 
 import (
 	"fmt"
 	"testing"
 )
 
-func TestGetUlboraURIs_oauth2(t *testing.T) {
-	var us UlboraSelection
-	us.Oauth2 = true
-	res := GetUlboraURIs(&us)
-	fmt.Print("uris: ")
-	fmt.Println(res)
-
-	fmt.Print("uris len: ")
-	fmt.Println(len(*res))
-
-	if len(*res) != 22 {
-		t.Fail()
-	}
-}
-
 func TestGetUlboraURIs_oauth2_super(t *testing.T) {
 	var us UlboraSelection
+
 	us.Oauth2Super = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -62,7 +49,9 @@ func TestGetUlboraURIs_oauth2_super(t *testing.T) {
 
 func TestGetUlboraURIs_apiGateway_super(t *testing.T) {
 	var us UlboraSelection
+
 	us.APIGatewaySuper = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -75,9 +64,28 @@ func TestGetUlboraURIs_apiGateway_super(t *testing.T) {
 	}
 }
 
+func TestGetUlboraURIs_oauth2(t *testing.T) {
+	var us UlboraSelection
+
+	us.Oauth2 = true
+
+	res := GetUlboraURIs(&us)
+	fmt.Print("uris: ")
+	fmt.Println(res)
+
+	fmt.Print("uris len: ")
+	fmt.Println(len(*res))
+
+	if len(*res) != 22 {
+		t.Fail()
+	}
+}
+
 func TestGetUlboraURIs_apiGateway(t *testing.T) {
 	var us UlboraSelection
+
 	us.APIGateway = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -92,7 +100,9 @@ func TestGetUlboraURIs_apiGateway(t *testing.T) {
 
 func TestGetUlboraURIs_content(t *testing.T) {
 	var us UlboraSelection
+
 	us.Content = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -107,7 +117,9 @@ func TestGetUlboraURIs_content(t *testing.T) {
 
 func TestGetUlboraURIs_customerAdmin(t *testing.T) {
 	var us UlboraSelection
+
 	us.CustomerAdmin = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -122,7 +134,9 @@ func TestGetUlboraURIs_customerAdmin(t *testing.T) {
 
 func TestGetUlboraURIs_customerUser(t *testing.T) {
 	var us UlboraSelection
+
 	us.CustomerUser = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -137,7 +151,9 @@ func TestGetUlboraURIs_customerUser(t *testing.T) {
 
 func TestGetUlboraURIs_imageAdmin(t *testing.T) {
 	var us UlboraSelection
+
 	us.ImageAdmin = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -152,7 +168,9 @@ func TestGetUlboraURIs_imageAdmin(t *testing.T) {
 
 func TestGetUlboraURIs_imageUser(t *testing.T) {
 	var us UlboraSelection
+
 	us.ImageUser = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -167,7 +185,9 @@ func TestGetUlboraURIs_imageUser(t *testing.T) {
 
 func TestGetUlboraURIs_mail(t *testing.T) {
 	var us UlboraSelection
+
 	us.Mail = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -182,7 +202,9 @@ func TestGetUlboraURIs_mail(t *testing.T) {
 
 func TestGetUlboraURIs_orderAdmin(t *testing.T) {
 	var us UlboraSelection
+
 	us.OrderAdmin = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -197,7 +219,9 @@ func TestGetUlboraURIs_orderAdmin(t *testing.T) {
 
 func TestGetUlboraURIs_orderUser(t *testing.T) {
 	var us UlboraSelection
+
 	us.OrderUser = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -212,7 +236,9 @@ func TestGetUlboraURIs_orderUser(t *testing.T) {
 
 func TestGetUlboraURIs_productAdmin(t *testing.T) {
 	var us UlboraSelection
+
 	us.ProductAdmin = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -227,7 +253,9 @@ func TestGetUlboraURIs_productAdmin(t *testing.T) {
 
 func TestGetUlboraURIs_productUser(t *testing.T) {
 	var us UlboraSelection
+
 	us.ProductUser = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -242,7 +270,9 @@ func TestGetUlboraURIs_productUser(t *testing.T) {
 
 func TestGetUlboraURIs_template(t *testing.T) {
 	var us UlboraSelection
+
 	us.Template = true
+
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -257,9 +287,9 @@ func TestGetUlboraURIs_template(t *testing.T) {
 
 func TestGetUlboraURIs_combo(t *testing.T) {
 	var us UlboraSelection
-	us.Template = true
-	us.ProductAdmin = true
-	us.Mail = true
+	us.Template = true     //3
+	us.ProductAdmin = true //22
+	us.Mail = true         //4
 	res := GetUlboraURIs(&us)
 	fmt.Print("uris: ")
 	fmt.Println(res)
@@ -268,6 +298,24 @@ func TestGetUlboraURIs_combo(t *testing.T) {
 	fmt.Println(len(*res))
 
 	if len(*res) != 29 {
+		t.Fail()
+	}
+}
+
+func TestGetUlboraURIs_combo2(t *testing.T) {
+	var us UlboraSelection
+	us.APIGatewaySuper = true //16
+	us.Oauth2Super = true     //11
+	us.Mail = true            //4
+	us.ImageAdmin = true      //6
+	res := GetUlboraURIs(&us)
+	fmt.Print("uris: ")
+	fmt.Println(res)
+
+	fmt.Print("uris len: ")
+	fmt.Println(len(*res))
+
+	if len(*res) != 37 {
 		t.Fail()
 	}
 }

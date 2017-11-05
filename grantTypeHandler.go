@@ -74,7 +74,7 @@ func handleGrantType(w http.ResponseWriter, r *http.Request) {
 			res2 := g.GetGrantTypeList(clientID)
 			page.GrantTypes = res2
 			var sm secSideMenu
-			sm.GrantTypeActive = "active"
+			sm.GrantTypeActive = "active teal"
 			page.SecSideMenu = &sm
 
 			//fmt.Println(page)

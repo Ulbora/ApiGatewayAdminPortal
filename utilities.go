@@ -83,6 +83,16 @@ func getOauthHost() string {
 	}
 	return rtn
 }
+
+func getUserHost() string {
+	var rtn = ""
+	if os.Getenv("USER_HOST") != "" {
+		rtn = os.Getenv("USER_HOST")
+	} else {
+		rtn = "http://localhost:3001"
+	}
+	return rtn
+}
 func getRedirectURI(req *http.Request, path string) string {
 	var scheme = req.URL.Scheme
 	var serverHost string

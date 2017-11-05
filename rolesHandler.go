@@ -77,7 +77,7 @@ func handleRoles(w http.ResponseWriter, r *http.Request) {
 				page.ClientIsSelf = true
 			}
 			var sm secSideMenu
-			sm.RolesActive = "active"
+			sm.RolesActive = "active teal"
 			page.SecSideMenu = &sm
 
 			//fmt.Println(page)
