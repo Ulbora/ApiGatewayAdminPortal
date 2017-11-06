@@ -25,13 +25,23 @@ and open the template in the editor.
                 </div>
             </div>
         </form>
-        <div class="add-inner-form">
+        
+        <i onclick="showAddUserForm();" class="big add user icon"></i>
+        <div id="addUserForm" class="add-inner-form" style="display:none;">
             <form method="POST" class="ui form" action="/newUser">
                 <h4 class="ui dividing header">Add New User</h4>
                 <input type="hidden" name="clientId" value="{{.Client.ClientID}}">
                 <div class="field">
                     <label>Username</label>
                     <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="field">
+                    <label>User Role</label>
+                    <select name="userRoleId" class="ui fluid dropdown">
+                        {{range .UserRoleList}}                            
+                        <option value="{{.ID}}" selected>{{.Role}}</option>
+                        {{end}}
+                    </select>
                 </div>
                 <div class="field">
                     <label>First Name</label>

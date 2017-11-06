@@ -66,7 +66,7 @@ func TestUserService_UpdateUserPassword(t *testing.T) {
 	user.ClientID = CLID
 	user.Password = "bobbby"
 
-	res := u.UpdateUserPW(&user)
+	res := u.UpdateUser(&user)
 	fmt.Print("res: ")
 	fmt.Println(res)
 	if res.Success != true {
@@ -84,7 +84,7 @@ func TestUserService_UpdateUserDisable(t *testing.T) {
 	user.ClientID = CLID
 	user.Enabled = false
 
-	res := u.UpdateUserDisable(&user)
+	res := u.UpdateUser(&user)
 	fmt.Print("res: ")
 	fmt.Println(res)
 	if res.Success != true {
@@ -102,9 +102,28 @@ func TestUserService_UpdateUserInfo(t *testing.T) {
 	user.ClientID = CLID
 	user.EmailAddress = "bobbby@bob.com"
 	user.FirstName = "bobby"
+	user.RoleID = 1
 	user.LastName = "williams"
 
-	res := u.UpdateUserInfo(&user)
+	res := u.UpdateUser(&user)
+	fmt.Print("res: ")
+	fmt.Println(res)
+	if res.Success != true {
+		t.Fail()
+	}
+}
+
+func TestUserService_UpdateUserDisable2(t *testing.T) {
+	var u UserService
+	u.ClientID = "403"
+	u.Host = "http://localhost:3001"
+	u.Token = tempToken
+	var user UserDis
+	user.Username = UID
+	user.ClientID = CLID
+	user.Enabled = true
+
+	res := u.UpdateUser(&user)
 	fmt.Print("res: ")
 	fmt.Println(res)
 	if res.Success != true {
@@ -121,7 +140,7 @@ func TestUserService_GetUser(t *testing.T) {
 	res := u.GetUser(UID, CLID)
 	fmt.Print("res: ")
 	fmt.Println(res)
-	if res.Username != UID {
+	if res.Username != UID || res.Enabled == false {
 		t.Fail()
 	}
 }
@@ -164,6 +183,20 @@ func TestUserService_DeleteUser(t *testing.T) {
 	fmt.Print("res: ")
 	fmt.Println(res)
 	if res.Success != true {
+		t.Fail()
+	}
+}
+
+func TestUserService_GetRoleList(t *testing.T) {
+	var u UserService
+	u.ClientID = "403"
+	u.Host = "http://localhost:3001"
+	u.Token = tempToken
+
+	res := u.GetRoleList()
+	fmt.Print("role res: ")
+	fmt.Println(res)
+	if len(*res) == 0 {
 		t.Fail()
 	}
 }

@@ -175,3 +175,53 @@ var ulborUriAddBntDisable = function(){
 //     .progress('increment')    
 //   ;
 // });
+var addUserFormVisible = false;
+var showAddUserForm = function(){
+    if(addUserFormVisible === false){
+        document.getElementById("addUserForm").style.display = 'block';
+        addUserFormVisible = true;
+    }else{
+        document.getElementById("addUserForm").style.display = 'none';
+        addUserFormVisible = false;
+    }
+    
+}
+
+
+var editUserInfoFormVisible = false;
+var showEditUserInfoForm = function(){
+    if(editUserInfoFormVisible === false){
+        document.getElementById("editUserInfoForm").style.display = 'block';
+        editUserInfoFormVisible = true;
+    }else{
+        document.getElementById("editUserInfoForm").style.display = 'none';
+        editUserInfoFormVisible = false;
+    }
+    
+}
+
+
+var editUserEnableFormVisible = false;
+var showEditUserEnableForm = function(){
+    if(editUserEnableFormVisible === false){
+        document.getElementById("editUserEnableForm").style.display = 'block';
+        editUserEnableFormVisible = true;
+    }else{
+        document.getElementById("editUserEnableForm").style.display = 'none';
+        editUserEnableFormVisible = false;
+    }
+    
+}
+
+
+var editUserPwFormVisible = false;
+var showEditUserPwForm = function(){
+    if(editUserPwFormVisible === false){
+        document.getElementById("editUserPwForm").style.display = 'block';
+        editUserPwFormVisible = true;
+    }else{
+        document.getElementById("editUserPwForm").style.display = 'none';
+        editUserPwFormVisible = false;
+    }
+    
+}

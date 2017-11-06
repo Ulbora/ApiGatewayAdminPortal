@@ -49,7 +49,7 @@ var templates = template.Must(template.ParseFiles("./static/index.html", "./stat
 	"./static/footer.html", "./static/navbar.html", "./static/clients.html", "./static/addClient.html",
 	"./static/editClient.html", "./static/oauth2.html", "./static/redirectUrls.html", "./static/grantTypes.html",
 	"./static/roles.html", "./static/allowedUris.html", "./static/secSideMenu.html", "./static/ulboraUris.html",
-	"./static/users.html"))
+	"./static/users.html", "./static/editUser.html", "./static/gwSideMenu.html", "./static/gateway.html"))
 
 //var username string
 
@@ -67,6 +67,7 @@ func main() {
 
 	router := mux.NewRouter()
 
+	//securety routes
 	router.HandleFunc("/", handleIndex)
 	router.HandleFunc("/clients", handleClients)
 	router.HandleFunc("/addClient", handleAddClient)
@@ -75,6 +76,11 @@ func main() {
 	router.HandleFunc("/updateClient", handleUpdateClient)
 
 	router.HandleFunc("/users/{clientId}", handleUsers)
+	router.HandleFunc("/newUser", handleNewUser)
+	router.HandleFunc("/editUser/{username}/{clientId}", handleEditUser)
+	router.HandleFunc("/updateUserInfo", handleUpdateUserInfo)
+	router.HandleFunc("/updateUserEnable", handleUpdateUserEnable)
+	router.HandleFunc("/updateUserPw", handleUpdateUserPw)
 
 	router.HandleFunc("/oauth2/{clientId}", handleOauth2)
 
@@ -98,7 +104,8 @@ func main() {
 	router.HandleFunc("/ulboraUris/{clientId}", handleUlboraUris)
 	router.HandleFunc("/ulboraUrisAdd", handleUlboraUrisAdd)
 
-	//router.HandleFunc("/gateway/{clientId}", handleGateway)
+	// gateway routes
+	router.HandleFunc("/gateway/{clientId}", handleGateway)
 
 	router.HandleFunc("/tokenHandler", handleToken)
 	router.HandleFunc("/login", handleLogin)

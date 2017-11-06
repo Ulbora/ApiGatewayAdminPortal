@@ -30,7 +30,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -83,10 +82,14 @@ func handleUsers(w http.ResponseWriter, r *http.Request) {
 			res2 := u.SearchUserList(clientID)
 			fmt.Println(res2)
 
+			res3 := u.GetRoleList()
+			fmt.Println(res3)
+
 			var page oauthPage
 			page.OauthActive = "active"
 			page.Client = res
 			page.UserList = res2
+			page.UserRoleList = res3
 			var sm secSideMenu
 			sm.UsersActive = "active teal"
 			page.SecSideMenu = &sm
@@ -96,7 +99,28 @@ func handleUsers(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func handleAddUser(w http.ResponseWriter, r *http.Request) {
+// func handleAddUser(w http.ResponseWriter, r *http.Request) {
+// 	s.InitSessionStore(w, r)
+// 	session, err := s.GetSession(r)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+// 	}
+// 	loggedIn := session.Values["userLoggenIn"]
+// 	token := getToken(w, r)
+// 	fmt.Print("Logged in: ")
+// 	fmt.Println(loggedIn)
+// 	//fmt.Println(token.AccessToken)
+// 	//var res *[]services.Client
+// 	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+// 		authorize(w, r)
+// 	} else {
+// 		templates.ExecuteTemplate(w, "addClient.html", nil)
+// 	}
+
+// }
+
+func handleNewUser(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -105,16 +129,71 @@ func handleAddUser(w http.ResponseWriter, r *http.Request) {
 	}
 	loggedIn := session.Values["userLoggenIn"]
 	token := getToken(w, r)
-	fmt.Print("Logged in: ")
+	fmt.Print("in main page. Logged in: ")
 	fmt.Println(loggedIn)
 	//fmt.Println(token.AccessToken)
 	//var res *[]services.Client
 	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
 		authorize(w, r)
 	} else {
-		templates.ExecuteTemplate(w, "addClient.html", nil)
-	}
+		var uu services.User
+		clientID := r.FormValue("clientId")
+		fmt.Print("clientID: ")
+		fmt.Println(clientID)
+		uu.ClientID = clientID
 
+		username := r.FormValue("username")
+		fmt.Print("username: ")
+		fmt.Println(username)
+		uu.Username = username
+
+		userRoleIDStr := r.FormValue("userRoleId")
+		userRoleID, _ := strconv.ParseInt(userRoleIDStr, 10, 0)
+		fmt.Print("userRoleID: ")
+		fmt.Println(userRoleID)
+		uu.RoleID = userRoleID
+
+		firstName := r.FormValue("firstName")
+		fmt.Print("firstName: ")
+		fmt.Println(firstName)
+		uu.FirstName = firstName
+
+		lastName := r.FormValue("lastName")
+		fmt.Print("lastName: ")
+		fmt.Println(lastName)
+		uu.LastName = lastName
+
+		emailAddress := r.FormValue("emailAddress")
+		fmt.Print("emailAddress: ")
+		fmt.Println(emailAddress)
+		uu.EmailAddress = emailAddress
+
+		password := r.FormValue("password")
+		fmt.Print("password: ")
+		fmt.Println(password)
+		uu.Password = password
+
+		enabled := r.FormValue("enabled")
+		fmt.Print("enabled: ")
+		fmt.Println(enabled)
+		if enabled == "yes" {
+			uu.Enabled = true
+		}
+
+		var u services.UserService
+		token := getToken(w, r)
+		u.ClientID = getAuthCodeClient()
+		u.Host = getUserHost()
+		u.Token = token.AccessToken
+
+		//cc.Secret = generateClientSecret()
+		res := u.AddUser(&uu)
+		if res.Success != true {
+			fmt.Print("Add User Failed: ")
+			fmt.Println(res)
+		}
+		http.Redirect(w, r, "/users/"+clientID, http.StatusFound)
+	}
 }
 
 func handleEditUser(w http.ResponseWriter, r *http.Request) {
@@ -133,8 +212,8 @@ func handleEditUser(w http.ResponseWriter, r *http.Request) {
 	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
 		authorize(w, r)
 	} else {
-		session.Values["userLoggenIn"] = true
 		vars := mux.Vars(r)
+		username := vars["username"]
 		clientID := vars["clientId"]
 
 		if clientID != "" {
@@ -145,18 +224,33 @@ func handleEditUser(w http.ResponseWriter, r *http.Request) {
 			c.Token = token.AccessToken
 
 			res := c.GetClient(clientID)
+
+			var u services.UserService
+			u.ClientID = getAuthCodeClient()
+			u.Host = getUserHost()
+			u.Token = token.AccessToken
+			res2 := u.GetUser(username, clientID)
+			fmt.Println(res2)
+
+			res3 := u.GetRoleList()
+			fmt.Println(res3)
+
 			var page oauthPage
-			page.ClientActive = "active"
+			page.OauthActive = "active"
 			page.Client = res
-			if getAuthCodeClient() == clientID {
-				page.ClientIsSelf = true
-			}
-			templates.ExecuteTemplate(w, "editClient.html", &page)
+			page.User = res2
+			page.UserRoleList = res3
+			page.UserAssignedRole = res2.RoleID
+
+			var sm secSideMenu
+			//sm.UsersActive = "active teal"
+			page.SecSideMenu = &sm
+			templates.ExecuteTemplate(w, "editUser.html", &page)
 		}
 	}
 }
 
-func handleNewUser(w http.ResponseWriter, r *http.Request) {
+func handleUpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -172,134 +266,148 @@ func handleNewUser(w http.ResponseWriter, r *http.Request) {
 	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
 		authorize(w, r)
 	} else {
-		clientName := r.FormValue("clientName")
-		fmt.Print("clientName: ")
-		fmt.Println(clientName)
-
-		webSite := r.FormValue("webSite")
-		fmt.Print("webSite: ")
-		fmt.Println(webSite)
-
-		emailAddress := r.FormValue("emailAddress")
-		fmt.Print("emailAddress: ")
-		fmt.Println(emailAddress)
-
-		redirectURLStr := r.FormValue("redirectURLs")
-		redirectURLStr = strings.Replace(redirectURLStr, " ", "", -1)
-		fmt.Print("redirectURLStr: ")
-		fmt.Println(redirectURLStr)
-		redirectURLs := strings.Split(redirectURLStr, ",")
-		fmt.Println(redirectURLs)
-		enabled := r.FormValue("enabled")
-		fmt.Print("enabled: ")
-		fmt.Println(enabled)
-
-		var c services.ClientService
-		token := getToken(w, r)
-		c.ClientID = getAuthCodeClient()
-		c.Host = getOauthHost()
-		c.Token = token.AccessToken
-
-		var cc services.Client
-		cc.Name = clientName
-		cc.Email = emailAddress
-		if enabled == "yes" {
-			cc.Enabled = true
-		} else {
-			cc.Enabled = false
-		}
-		cc.WebSite = webSite
-
-		var uris []services.RedirectURI
-		for i := range redirectURLs {
-			var uri services.RedirectURI
-			uri.URI = redirectURLs[i]
-			uris = append(uris, uri)
-		}
-		cc.RedirectURIs = uris
-		//cc.Secret = generateClientSecret()
-		res := c.AddClient(&cc)
-		if res.Success == true {
-			http.Redirect(w, r, "/clients", http.StatusFound)
-		} else {
-			http.Redirect(w, r, "/addClient", http.StatusFound)
-		}
-	}
-}
-
-func handleUpdateUser(w http.ResponseWriter, r *http.Request) {
-	s.InitSessionStore(w, r)
-	session, err := s.GetSession(r)
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	loggedIn := session.Values["userLoggenIn"]
-	token := getToken(w, r)
-	fmt.Print("in main page. Logged in: ")
-	fmt.Println(loggedIn)
-	//fmt.Println(token.AccessToken)
-	//var res *[]services.Client
-	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
-		authorize(w, r)
-	} else {
-		clientIDStr := r.FormValue("clientId")
-		clientID, errID := strconv.ParseInt(clientIDStr, 10, 0)
-		if errID != nil {
-			fmt.Print(errID)
-		}
-		fmt.Print("clientId: ")
+		var uu services.UserInfo
+		clientID := r.FormValue("clientId")
+		fmt.Print("clientID: ")
 		fmt.Println(clientID)
+		uu.ClientID = clientID
 
-		clientName := r.FormValue("clientName")
-		fmt.Print("clientName: ")
-		fmt.Println(clientName)
+		username := r.FormValue("username")
+		fmt.Print("username: ")
+		fmt.Println(username)
+		uu.Username = username
 
-		secret := r.FormValue("secret")
-		fmt.Print("secret: ")
-		fmt.Println(secret)
+		userRoleIDStr := r.FormValue("userRoleId")
+		userRoleID, _ := strconv.ParseInt(userRoleIDStr, 10, 0)
+		fmt.Print("userRoleID: ")
+		fmt.Println(userRoleID)
+		uu.RoleID = userRoleID
 
-		webSite := r.FormValue("webSite")
-		fmt.Print("webSite: ")
-		fmt.Println(webSite)
+		firstName := r.FormValue("firstName")
+		fmt.Print("firstName: ")
+		fmt.Println(firstName)
+		uu.FirstName = firstName
+
+		lastName := r.FormValue("lastName")
+		fmt.Print("lastName: ")
+		fmt.Println(lastName)
+		uu.LastName = lastName
 
 		emailAddress := r.FormValue("emailAddress")
 		fmt.Print("emailAddress: ")
 		fmt.Println(emailAddress)
+		uu.EmailAddress = emailAddress
 
-		// redirectURLStr := r.FormValue("redirectURLs")
-		// fmt.Print("redirectURLStr: ")
-		// fmt.Println(redirectURLStr)
-		// redirectURLs := strings.Split(redirectURLStr, ",")
-		//fmt.Println(redirectURLs)
+		var u services.UserService
+		token := getToken(w, r)
+		u.ClientID = getAuthCodeClient()
+		u.Host = getUserHost()
+		u.Token = token.AccessToken
+
+		//cc.Secret = generateClientSecret()
+		res := u.UpdateUser(&uu)
+		if res.Success != true {
+			fmt.Print("Update User Info Failed: ")
+			fmt.Println(res)
+		}
+		http.Redirect(w, r, "/editUser/"+username+"/"+clientID, http.StatusFound)
+	}
+}
+
+func handleUpdateUserEnable(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("in main page. Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		var uu services.UserDis
+		clientID := r.FormValue("clientId")
+		fmt.Print("clientID: ")
+		fmt.Println(clientID)
+		uu.ClientID = clientID
+
+		username := r.FormValue("username")
+		fmt.Print("username: ")
+		fmt.Println(username)
+		uu.Username = username
+
 		enabled := r.FormValue("enabled")
 		fmt.Print("enabled: ")
 		fmt.Println(enabled)
-
-		var c services.ClientService
-		token := getToken(w, r)
-		c.ClientID = getAuthCodeClient()
-		c.Host = getOauthHost()
-		c.Token = token.AccessToken
-
-		var cc services.Client
-		cc.ClientID = clientID
-		cc.Secret = secret
-		cc.Name = clientName
-		cc.Email = emailAddress
 		if enabled == "yes" {
-			cc.Enabled = true
-		} else {
-			cc.Enabled = false
+			uu.Enabled = true
 		}
-		cc.WebSite = webSite
 
-		res := c.UpdateClient(&cc)
-		if res.Success == true {
-			http.Redirect(w, r, "/clients", http.StatusFound)
-		} else {
+		var u services.UserService
+		token := getToken(w, r)
+		u.ClientID = getAuthCodeClient()
+		u.Host = getUserHost()
+		u.Token = token.AccessToken
+
+		//cc.Secret = generateClientSecret()
+		res := u.UpdateUser(&uu)
+		if res.Success != true {
+			fmt.Print("Update User Enabled Failed: ")
 			fmt.Println(res)
-			http.Redirect(w, r, "/editClient/"+clientIDStr, http.StatusFound)
 		}
+		http.Redirect(w, r, "/editUser/"+username+"/"+clientID, http.StatusFound)
+	}
+}
+
+func handleUpdateUserPw(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("in main page. Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		var uu services.UserPW
+		clientID := r.FormValue("clientId")
+		fmt.Print("clientID: ")
+		fmt.Println(clientID)
+		uu.ClientID = clientID
+
+		username := r.FormValue("username")
+		fmt.Print("username: ")
+		fmt.Println(username)
+		uu.Username = username
+
+		password := r.FormValue("password")
+		fmt.Print("password: ")
+		fmt.Println(password)
+		uu.Password = password
+
+		var u services.UserService
+		token := getToken(w, r)
+		u.ClientID = getAuthCodeClient()
+		u.Host = getUserHost()
+		u.Token = token.AccessToken
+
+		//cc.Secret = generateClientSecret()
+		res := u.UpdateUser(&uu)
+		if res.Success != true {
+			fmt.Print("Update User Password Failed: ")
+			fmt.Println(res)
+		}
+		http.Redirect(w, r, "/editUser/"+username+"/"+clientID, http.StatusFound)
 	}
 }

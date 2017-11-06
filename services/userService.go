@@ -55,11 +55,21 @@ type User struct {
 	ClientID     string `json:"clientId"`
 }
 
+//UpdateUser interface
+type UpdateUser interface {
+	GetType() string
+}
+
 //UserPW user
 type UserPW struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	ClientID string `json:"clientId"`
+}
+
+//GetType type
+func (u *UserPW) GetType() string {
+	return "PW"
 }
 
 //UserDis user
@@ -69,13 +79,30 @@ type UserDis struct {
 	ClientID string `json:"clientId"`
 }
 
+//GetType type
+func (u *UserDis) GetType() string {
+	return "DIS"
+}
+
 //UserInfo user
 type UserInfo struct {
 	Username     string `json:"username"`
 	EmailAddress string `json:"emailAddress"`
 	FirstName    string `json:"firstName"`
 	LastName     string `json:"lastName"`
+	RoleID       int64  `json:"roleId"`
 	ClientID     string `json:"clientId"`
+}
+
+//GetType type
+func (u *UserInfo) GetType() string {
+	return "INFO"
+}
+
+//Role user role
+type Role struct {
+	ID   int64  `json:"id"`
+	Role string `json:"role"`
 }
 
 //UserResponse resp
@@ -126,88 +153,8 @@ func (u *UserService) AddUser(user *User) *UserResponse {
 	return rtn
 }
 
-//UpdateUserPW update
-func (u *UserService) UpdateUserPW(user *UserPW) *UserResponse {
-	var rtn = new(UserResponse)
-	var upURL = u.Host + "/rs/user/update"
-
-	//fmt.Println(content.Text)
-	aJSON, err := json.Marshal(user)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		req, rErr := http.NewRequest("PUT", upURL, bytes.NewBuffer(aJSON))
-		if rErr != nil {
-			fmt.Print("request err: ")
-			fmt.Println(rErr)
-		} else {
-			req.Header.Set("Content-Type", "application/json")
-			req.Header.Set("Authorization", "Bearer "+u.Token)
-			req.Header.Set("clientId", u.ClientID)
-			//req.Header.Set("userId", c.UserID)
-			//req.Header.Set("hashed", c.Hashed)
-			req.Header.Set("apiKey", u.APIKey)
-			client := &http.Client{}
-			resp, cErr := client.Do(req)
-			if cErr != nil {
-				fmt.Print("User Service Update err: ")
-				fmt.Println(cErr)
-			} else {
-				defer resp.Body.Close()
-				decoder := json.NewDecoder(resp.Body)
-				error := decoder.Decode(&rtn)
-				if error != nil {
-					log.Println(error.Error())
-				}
-				rtn.Code = resp.StatusCode
-			}
-		}
-	}
-	return rtn
-}
-
-//UpdateUserDisable update
-func (u *UserService) UpdateUserDisable(user *UserDis) *UserResponse {
-	var rtn = new(UserResponse)
-	var upURL = u.Host + "/rs/user/update"
-
-	//fmt.Println(content.Text)
-	aJSON, err := json.Marshal(user)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		req, rErr := http.NewRequest("PUT", upURL, bytes.NewBuffer(aJSON))
-		if rErr != nil {
-			fmt.Print("request err: ")
-			fmt.Println(rErr)
-		} else {
-			req.Header.Set("Content-Type", "application/json")
-			req.Header.Set("Authorization", "Bearer "+u.Token)
-			req.Header.Set("clientId", u.ClientID)
-			//req.Header.Set("userId", c.UserID)
-			//req.Header.Set("hashed", c.Hashed)
-			req.Header.Set("apiKey", u.APIKey)
-			client := &http.Client{}
-			resp, cErr := client.Do(req)
-			if cErr != nil {
-				fmt.Print("User Service Update err: ")
-				fmt.Println(cErr)
-			} else {
-				defer resp.Body.Close()
-				decoder := json.NewDecoder(resp.Body)
-				error := decoder.Decode(&rtn)
-				if error != nil {
-					log.Println(error.Error())
-				}
-				rtn.Code = resp.StatusCode
-			}
-		}
-	}
-	return rtn
-}
-
-//UpdateUserInfo update
-func (u *UserService) UpdateUserInfo(user *UserInfo) *UserResponse {
+//UpdateUser update
+func (u *UserService) UpdateUser(user UpdateUser) *UserResponse {
 	var rtn = new(UserResponse)
 	var upURL = u.Host + "/rs/user/update"
 
@@ -370,4 +317,34 @@ func (u *UserService) DeleteUser(username string, clientID string) *UserResponse
 		}
 	}
 	return rtn
+}
+
+// GetRoleList get role list
+func (u *UserService) GetRoleList() *[]Role {
+	var rtn = make([]Role, 0)
+	var gURL = u.Host + "/rs/role/list"
+	//fmt.Println(gURL)
+	req, rErr := http.NewRequest("GET", gURL, nil)
+	if rErr != nil {
+		fmt.Print("request err: ")
+		fmt.Println(rErr)
+	} else {
+		req.Header.Set("clientId", u.ClientID)
+		req.Header.Set("Authorization", "Bearer "+u.Token)
+		req.Header.Set("apiKey", u.APIKey)
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("role list Service read err: ")
+			fmt.Println(cErr)
+		} else {
+			defer resp.Body.Close()
+			decoder := json.NewDecoder(resp.Body)
+			error := decoder.Decode(&rtn)
+			if error != nil {
+				log.Println(error.Error())
+			}
+		}
+	}
+	return &rtn
 }

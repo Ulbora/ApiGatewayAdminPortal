@@ -33,37 +33,24 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type secSideMenu struct {
-	RedirectURLActive string
-	GrantTypeActive   string
-	RolesActive       string
-	AllowedURIActive  string
-	ClientActive      string
-	UlboraURIsActive  string
-	UsersActive       string
+type gwSideMenu struct {
+	GWActive        string
+	GWClientActive  string
+	RouteActive     string
+	RouteURLsActive string
 }
 
-type oauthPage struct {
-	ClientActive         string
-	OauthActive          string
-	GwActive             string
-	CanDeleteRedirectURI bool
-	ClientIsSelf         bool
-	SecSideMenu          *secSideMenu
-	ClientList           *[]services.Client
-	Client               *services.Client
-	RedirectURLs         *[]services.RedirectURI
-	GrantTypes           *[]services.GrantType
-	ClientRoles          *[]services.ClientRole
-	AllowedURIs          *[]allowedURIDisplay
-	RoleURIs             *[]services.RoleURI
-	UserList             *[]services.User
-	User                 *services.User
-	UserRoleList         *[]services.Role
-	UserAssignedRole     int64
+type gwPage struct {
+	ClientActive string
+	OauthActive  string
+	GwActive     string
+	ClientIsSelf bool
+	GwSideMenu   *gwSideMenu
+	Client       *services.Client
+	User         *services.User
 }
 
-func handleOauth2(w http.ResponseWriter, r *http.Request) {
+func handleGateway(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -92,14 +79,14 @@ func handleOauth2(w http.ResponseWriter, r *http.Request) {
 
 			res := c.GetClient(clientID)
 			//fmt.Println(res)
-			var page oauthPage
-			page.OauthActive = "active"
+			var page gwPage
+			page.GwActive = "active"
 			page.Client = res
-			var sm secSideMenu
-			sm.ClientActive = "active teal"
-			page.SecSideMenu = &sm
+			var sm gwSideMenu
+			sm.GWActive = "active teal"
+			page.GwSideMenu = &sm
 			//fmt.Println(page)
-			templates.ExecuteTemplate(w, "oauth2.html", &page)
+			templates.ExecuteTemplate(w, "gateway.html", &page)
 		}
 	}
 }

@@ -42,7 +42,7 @@ func TestGetUlboraURIs_oauth2_super(t *testing.T) {
 	fmt.Print("uris len: ")
 	fmt.Println(len(*res))
 
-	if len(*res) != 11 {
+	if len(*res) != 12 {
 		t.Fail()
 	}
 }
@@ -76,7 +76,7 @@ func TestGetUlboraURIs_oauth2(t *testing.T) {
 	fmt.Print("uris len: ")
 	fmt.Println(len(*res))
 
-	if len(*res) != 22 {
+	if len(*res) != 23 {
 		t.Fail()
 	}
 }
@@ -305,7 +305,7 @@ func TestGetUlboraURIs_combo(t *testing.T) {
 func TestGetUlboraURIs_combo2(t *testing.T) {
 	var us UlboraSelection
 	us.APIGatewaySuper = true //16
-	us.Oauth2Super = true     //11
+	us.Oauth2Super = true     //12
 	us.Mail = true            //4
 	us.ImageAdmin = true      //6
 	res := GetUlboraURIs(&us)
@@ -315,7 +315,7 @@ func TestGetUlboraURIs_combo2(t *testing.T) {
 	fmt.Print("uris len: ")
 	fmt.Println(len(*res))
 
-	if len(*res) != 37 {
+	if len(*res) != 38 {
 		t.Fail()
 	}
 }
