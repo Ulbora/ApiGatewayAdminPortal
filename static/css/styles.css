@@ -53,3 +53,13 @@
   width: 100%;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.05));
 }
+.gen-secret {
+  width: 100%;
+  float: left;
+  margin: 3px 0 3px 0;
+}
+.gen-secret-icon {
+  width: 60%;
+  float: right;
+  margin: 0 0 0 0;
+}

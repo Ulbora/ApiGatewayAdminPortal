@@ -33,25 +33,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type gwSideMenu struct {
-	GWActive        string
-	GWClientActive  string
-	RouteActive     string
-	RouteURLsActive string
-}
-
-type gwPage struct {
-	ClientActive  string
-	OauthActive   string
-	GwActive      string
-	ClientIsSelf  bool
-	GwSideMenu    *gwSideMenu
-	Client        *services.Client
-	User          *services.User
-	GatewayClient *services.GatewayClient
-}
-
-func handleGateway(w http.ResponseWriter, r *http.Request) {
+func handleGatewayClient(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -84,10 +66,10 @@ func handleGateway(w http.ResponseWriter, r *http.Request) {
 			page.GwActive = "active"
 			page.Client = res
 			var sm gwSideMenu
-			sm.GWActive = "active teal"
+			sm.GWClientActive = "active teal"
 			page.GwSideMenu = &sm
 			//fmt.Println(page)
-			templates.ExecuteTemplate(w, "gateway.html", &page)
+			templates.ExecuteTemplate(w, "gatewayClient.html", &page)
 		}
 	}
 }

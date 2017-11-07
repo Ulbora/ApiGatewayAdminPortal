@@ -49,7 +49,8 @@ var templates = template.Must(template.ParseFiles("./static/index.html", "./stat
 	"./static/footer.html", "./static/navbar.html", "./static/clients.html", "./static/addClient.html",
 	"./static/editClient.html", "./static/oauth2.html", "./static/redirectUrls.html", "./static/grantTypes.html",
 	"./static/roles.html", "./static/allowedUris.html", "./static/secSideMenu.html", "./static/ulboraUris.html",
-	"./static/users.html", "./static/editUser.html", "./static/gwSideMenu.html", "./static/gateway.html"))
+	"./static/users.html", "./static/editUser.html", "./static/gwSideMenu.html", "./static/gateway.html",
+	"./static/gatewayClient.html"))
 
 //var username string
 
@@ -106,6 +107,7 @@ func main() {
 
 	// gateway routes
 	router.HandleFunc("/gateway/{clientId}", handleGateway)
+	router.HandleFunc("/gatewayClient/{clientId}", handleGatewayClient)
 
 	router.HandleFunc("/tokenHandler", handleToken)
 	router.HandleFunc("/login", handleLogin)
