@@ -8,8 +8,7 @@ and open the template in the editor.
 {{template "header"}}
 
 <body>
-    {{template "navbar" .}}
-    {{template "gwSideMenu" .}}
+    {{template "navbar" .}} {{template "gwSideMenu" .}}
     <div class="client-edit-form">
         <form class="ui form">
             <h4 class="ui dividing header">Client Information</h4>
@@ -30,6 +29,90 @@ and open the template in the editor.
                 <input type="text" value="{{.Client.Secret}}" disabled>
             </div>
         </form>
+        {{if eq .GatewayClient.ClientID 0}}
+        <div id="addGatewayAccountMsg" class="add-inner-form">
+            <div class="ui yellow message">Client does not have an API Gateway account!</div>
+            <button onclick="showAddGatewayAccountForm();" class="ui secondary button">
+                Create Account
+            </button>
+        </div>
+        <div id="addGatewayAccountForm" class="add-inner-form" style="display: none;">
+            <form method="POST" class="ui form" action="/addGatewayClient">
+                <h4 class="ui dividing header">Add API Gateway Account</h4>
+                <div class="field">
+                    <label>Level</label>
+                    <select name="level" class="ui fluid dropdown">
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                    </select>
+                </div>
+                <input type="hidden" name="clientId" value="{{.Client.ClientID}}">
+                <button class="ui button" type="submit">Add</button>
+            </form>
+        </div>
+        {{else}}
+        <div class="add-inner-form">
+            <form method="POST" class="ui form" action="/updateGatewayClient">
+                <h4 class="ui dividing header">Update API Gateway Account</h4>
+
+                <div class="field">
+                    <label>API Key</label>
+                    <input type="text" value="{{.GatewayClient.APIKey}}" disabled>
+                    <input type="hidden" name="apiKey" value="{{.GatewayClient.APIKey}}">
+                </div>
+                <div class="grouped fields">
+                    <label for="enabled">API Gateway Enabled:</label>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            {{if .GatewayClient.Enabled}}
+                            <input type="radio" name="enabled" checked="" tabindex="0" class="hidden" value="yes">
+                            <label>Yes</label>
+                            {{else}}
+                            <input type="radio" name="enabled" tabindex="0" class="hidden" value="yes">
+                            <label>Yes</label>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            {{if .GatewayClient.Enabled}}
+                            <input type="radio" name="enabled" tabindex="0" class="hidden" value="no">
+                            <label>No</label>
+                            {{else}}
+                            <input type="radio" name="enabled" checked="" tabindex="0" class="hidden" value="no">
+                            <label>No</label>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Level</label>
+                    <select name="level" class="ui fluid dropdown">
+                        {{if eq .GatewayClient.Level "small" }}
+                        <option value="small" selected>Small</option>
+                        {{else}} 
+                        <option value="small">Small</option>
+                        {{end}}
+
+                        {{if eq .GatewayClient.Level "medium" }}
+                        <option value="medium" selected>Medium</option>
+                        {{else}}
+                        <option value="medium">Medium</option>
+                        {{end}}
+
+                        {{if eq .GatewayClient.Level "large" }}
+                        <option value="large" selected>Large</option>
+                        {{else}}
+                        <option value="large">Large</option>
+                        {{end}}                       
+                    </select>
+                </div>
+                <input type="hidden" name="clientId" value="{{.GatewayClient.ClientID}}">
+                <button class="ui button" type="submit">Update</button>
+            </form>
+        </div>
+        {{end}}
     </div>
 </body>
 

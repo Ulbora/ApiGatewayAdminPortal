@@ -60,7 +60,7 @@ func getGatewayAPIKey() string {
 	if os.Getenv("GATEWAY_API_KEY") != "" {
 		rtn = os.Getenv("GATEWAY_API_KEY")
 	} else {
-		rtn = authCodeClient // fix this
+		rtn = gwAPIKey // fix this
 	}
 	return rtn
 }
@@ -80,6 +80,16 @@ func getOauthHost() string {
 		rtn = os.Getenv("AUTH_HOST")
 	} else {
 		rtn = "http://localhost:3000"
+	}
+	return rtn
+}
+
+func getGatewayHost() string {
+	var rtn = ""
+	if os.Getenv("GATEWAY_HOST") != "" {
+		rtn = os.Getenv("GATEWAY_HOST")
+	} else {
+		rtn = "http://localhost:3011"
 	}
 	return rtn
 }
@@ -240,6 +250,10 @@ func getCredentialsToken() {
 
 func generateTokenKey() string {
 	return RandStringRunes(9)
+}
+
+func generateAPIKey() string {
+	return RandStringRunes(35)
 }
 
 // func generateClientSecret() string {

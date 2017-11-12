@@ -37,4 +37,5 @@ const (
 	authCodeSecret      = "554444vfg55ggfff22454sw2fff2dsfd"
 	authCodeState       = "ghh66555h"
 	authCodeRedirectURI = "/tokenHandler"
+	gwAPIKey            = "403"
 )

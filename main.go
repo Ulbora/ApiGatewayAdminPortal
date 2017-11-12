@@ -108,6 +108,8 @@ func main() {
 	// gateway routes
 	router.HandleFunc("/gateway/{clientId}", handleGateway)
 	router.HandleFunc("/gatewayClient/{clientId}", handleGatewayClient)
+	router.HandleFunc("/addGatewayClient", handleAddGatewayClient)
+	router.HandleFunc("/updateGatewayClient", handleUpdateGatewayClient)
 
 	router.HandleFunc("/tokenHandler", handleToken)
 	router.HandleFunc("/login", handleLogin)

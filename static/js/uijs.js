@@ -29,43 +29,43 @@ $(function () {
 
 $(function () {
     $('.activating.element')
-    .popup()
-  ;
+        .popup()
+        ;
 });
 
 
 
 $(function () {
     $('.ui.radio.checkbox')
-    .checkbox()
-  ;
+        .checkbox()
+        ;
 });
 
 
 $(function () {
     $('.ui.checkbox')
-    .checkbox()
-  ;
+        .checkbox()
+        ;
 });
 
 var urlId;
 var urlName;
-var showModel = function(id, name){  
+var showModel = function (id, name) {
     urlId = id;
     urlName = name;
-    $(function(){
+    $(function () {
         $('.ui.modal').modal('show');
     });
     $(".ui.modal").modal({
-		closable: true
+        closable: true
     });
     document.getElementById("cont").innerHTML = "Delete URL " + name + "?";
 }
 
-var getUrlName = function(){    
+var getUrlName = function () {
     return urlName;
 }
-var getRedirectUriId = function(){
+var getRedirectUriId = function () {
     return urlId;
 }
 
@@ -75,32 +75,32 @@ var getRedirectUriId = function(){
 //     .modal()
 // });
 
-$(function(){
-	$("#delete").click(function(){
-		$(".ui.modal").modal('show');
-	});
-	$(".ui.modal").modal({
-		closable: true
-	});
+$(function () {
+    $("#delete").click(function () {
+        $(".ui.modal").modal('show');
+    });
+    $(".ui.modal").modal({
+        closable: true
+    });
 });
 
 
 
 var grantTypeId;
 var grantType;
-var showGrantTypeModel = function(id, gt){  
+var showGrantTypeModel = function (id, gt) {
     grantTypeId = id;
     grantType = gt;
-    $(function(){
+    $(function () {
         $('.ui.modal').modal('show');
     });
     $(".ui.modal").modal({
-		closable: true
+        closable: true
     });
     document.getElementById("cont").innerHTML = "Delete Grant Type " + gt + "?";
 }
 
-var getGrantTypeId = function(){
+var getGrantTypeId = function () {
     return grantTypeId;
 }
 
@@ -108,19 +108,19 @@ var getGrantTypeId = function(){
 
 var roleId;
 var clientRole;
-var showRoleModel = function(id, rl){  
+var showRoleModel = function (id, rl) {
     roleId = id;
     clientRole = rl;
-    $(function(){
+    $(function () {
         $('.ui.modal').modal('show');
     });
     $(".ui.modal").modal({
-		closable: true
+        closable: true
     });
     document.getElementById("cont").innerHTML = "Delete Client Role " + rl + "?";
 }
 
-var getRoleId = function(){
+var getRoleId = function () {
     return roleId;
 }
 
@@ -128,45 +128,45 @@ var getRoleId = function(){
 var uriId;
 var clientUir;
 var allowedUriRoleId
-var showAllowedUriModel = function(id, ri, rid){  
+var showAllowedUriModel = function (id, ri, rid) {
     uriId = id;
     clientUir = ri;
     allowedUriRoleId = rid;
-    $(function(){
+    $(function () {
         $('.ui.modal').modal('show');
     });
     $(".ui.modal").modal({
-		closable: true
+        closable: true
     });
     document.getElementById("cont").innerHTML = "Delete Client URI " + ri + "?";
 }
 
-var getAllowedUriId = function(){
+var getAllowedUriId = function () {
     return uriId;
 }
 
-var getAllowedUriRoleId = function(){
+var getAllowedUriRoleId = function () {
     return allowedUriRoleId;
 }
 
 
-var unHideAllowedUri = function(id){
+var unHideAllowedUri = function (id) {
     document.getElementById(id).disabled = false
-    document.getElementById("del"+ id).style.display = 'none';
-    document.getElementById("sub"+ id).style.display = 'block';
+    document.getElementById("del" + id).style.display = 'none';
+    document.getElementById("sub" + id).style.display = 'block';
 }
 
-var ulborUriAddBntDisable = function(){
+var ulborUriAddBntDisable = function () {
     document.getElementById("ulborUriAddBnt").disabled = false
     document.getElementById("progBar").style.display = 'block';
     $('#progBar')
-    .progress('increment')    
-  ;
-  setInterval(function(){
-    $('#progBar')
-    .progress('increment')    
-  ;
-  }, 500)
+        .progress('increment')
+        ;
+    setInterval(function () {
+        $('#progBar')
+            .progress('increment')
+            ;
+    }, 500)
 }
 
 
@@ -176,52 +176,58 @@ var ulborUriAddBntDisable = function(){
 //   ;
 // });
 var addUserFormVisible = false;
-var showAddUserForm = function(){
-    if(addUserFormVisible === false){
+var showAddUserForm = function () {
+    if (addUserFormVisible === false) {
         document.getElementById("addUserForm").style.display = 'block';
         addUserFormVisible = true;
-    }else{
+    } else {
         document.getElementById("addUserForm").style.display = 'none';
         addUserFormVisible = false;
     }
-    
+
 }
 
 
 var editUserInfoFormVisible = false;
-var showEditUserInfoForm = function(){
-    if(editUserInfoFormVisible === false){
+var showEditUserInfoForm = function () {
+    if (editUserInfoFormVisible === false) {
         document.getElementById("editUserInfoForm").style.display = 'block';
         editUserInfoFormVisible = true;
-    }else{
+    } else {
         document.getElementById("editUserInfoForm").style.display = 'none';
         editUserInfoFormVisible = false;
     }
-    
+
 }
 
 
 var editUserEnableFormVisible = false;
-var showEditUserEnableForm = function(){
-    if(editUserEnableFormVisible === false){
+var showEditUserEnableForm = function () {
+    if (editUserEnableFormVisible === false) {
         document.getElementById("editUserEnableForm").style.display = 'block';
         editUserEnableFormVisible = true;
-    }else{
+    } else {
         document.getElementById("editUserEnableForm").style.display = 'none';
         editUserEnableFormVisible = false;
     }
-    
+
 }
 
 
 var editUserPwFormVisible = false;
-var showEditUserPwForm = function(){
-    if(editUserPwFormVisible === false){
+var showEditUserPwForm = function () {
+    if (editUserPwFormVisible === false) {
         document.getElementById("editUserPwForm").style.display = 'block';
         editUserPwFormVisible = true;
-    }else{
+    } else {
         document.getElementById("editUserPwForm").style.display = 'none';
         editUserPwFormVisible = false;
     }
-    
+
+}
+
+
+var showAddGatewayAccountForm = function () {
+    document.getElementById("addGatewayAccountMsg").style.display = 'none';
+    document.getElementById("addGatewayAccountForm").style.display = 'block';
 }

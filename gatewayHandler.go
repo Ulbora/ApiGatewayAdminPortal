@@ -79,10 +79,19 @@ func handleGateway(w http.ResponseWriter, r *http.Request) {
 			c.Token = token.AccessToken
 
 			res := c.GetClient(clientID)
+
+			var g services.GatewayClientService
+			//token := getToken(w, r)
+			g.ClientID = getAuthCodeClient()
+			g.Host = getGatewayHost()
+			g.Token = token.AccessToken
+
+			gres := g.GetClient(clientID)
 			//fmt.Println(res)
 			var page gwPage
 			page.GwActive = "active"
 			page.Client = res
+			page.GatewayClient = gres
 			var sm gwSideMenu
 			sm.GWActive = "active teal"
 			page.GwSideMenu = &sm
