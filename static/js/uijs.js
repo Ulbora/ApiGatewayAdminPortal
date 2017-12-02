@@ -231,3 +231,26 @@ var showAddGatewayAccountForm = function () {
     document.getElementById("addGatewayAccountMsg").style.display = 'none';
     document.getElementById("addGatewayAccountForm").style.display = 'block';
 }
+
+
+var gwRouteId;
+var gwRoute;
+var showGwRouteModel = function (id, name) {
+    gwRouteId = id;
+    gwRoute = name;
+    $(function () {
+        $('.ui.modal').modal('show');
+    });
+    $(".ui.modal").modal({
+        closable: true
+    });
+    document.getElementById("cont").innerHTML = "Delete Gateway Route " + name + "?";
+}
+
+
+var getGwRoute = function () {
+    return gwRoute;
+}
+var getGwRouteId = function () {
+    return gwRouteId;
+}

@@ -12,9 +12,23 @@
 }
 
 .add-button{ 
-    float: left;
-    width: 10%;
+    float: left;   
     text-align: center;
+    @media (min-width: 1024px) { 
+        width: 10%;      
+    }
+    @media (max-width: 1024px) {
+        width: 10%;
+    }
+    @media (max-height: 700px) {
+        width: 10%;
+    }
+    @media (max-width: 768px) {
+        width: 20%;
+    }
+    @media (max-width: 480px) {
+        width: 25%;
+    }
 }
 .page-content{  
     float: left; 

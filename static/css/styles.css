@@ -13,8 +13,32 @@
 }
 .add-button {
   float: left;
-  width: 10%;
   text-align: center;
+}
+@media (min-width: 1024px) {
+  .add-button {
+    width: 10%;
+  }
+}
+@media (max-width: 1024px) {
+  .add-button {
+    width: 10%;
+  }
+}
+@media (max-height: 700px) {
+  .add-button {
+    width: 10%;
+  }
+}
+@media (max-width: 768px) {
+  .add-button {
+    width: 20%;
+  }
+}
+@media (max-width: 480px) {
+  .add-button {
+    width: 25%;
+  }
 }
 .page-content {
   float: left;

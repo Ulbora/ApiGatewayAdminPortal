@@ -60,6 +60,15 @@ var apiGatewaySuperURIs = []UlborURIs{
 	{"/ulbora/rs/gwRestRouteSuper/get", "superAdmin"},
 	{"/ulbora/rs/gwRestRouteSuper/list", "superAdmin"},
 	{"/ulbora/rs/gwRestRouteSuper/delete", "superAdmin"},
+
+	{"/ulbora/rs/gwPerformanceSuper", "superAdmin"},
+
+	{"/ulbora/rs/gwErrorsSuper", "superAdmin"},
+
+	{"/ulbora/rs/gwBreakerSuper/add", "superAdmin"},
+	{"/ulbora/rs/gwBreakerSuper/update", "superAdmin"},
+	{"/ulbora/rs/gwBreakerSuper/get", "superAdmin"},
+	{"/ulbora/rs/gwBreakerSuper/delete", "superAdmin"},
 }
 
 var oauthURIs = []UlborURIs{
@@ -107,6 +116,15 @@ var apiGatewayURIs = []UlborURIs{
 	{"/ulbora/rs/gwRestRoute/get", "admin"},
 	{"/ulbora/rs/gwRestRoute/list", "admin"},
 	{"/ulbora/rs/gwRestRoute/delete", "admin"},
+
+	{"/ulbora/rs/gwPerformance", "admin"},
+
+	{"/ulbora/rs/gwErrors", "admin"},
+
+	{"/ulbora/rs/gwBreaker/add", "admin"},
+	{"/ulbora/rs/gwBreaker/update", "admin"},
+	{"/ulbora/rs/gwBreaker/get", "admin"},
+	{"/ulbora/rs/gwBreaker/delete", "admin"},
 }
 
 var contentURIs = []UlborURIs{

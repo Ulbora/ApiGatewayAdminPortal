@@ -49,6 +49,8 @@ type gwPage struct {
 	Client        *services.Client
 	User          *services.User
 	GatewayClient *services.GatewayClient
+	GatewayRoutes *[]services.GatewayRoute
+	GatewayRoute  *services.GatewayRoute
 }
 
 func handleGateway(w http.ResponseWriter, r *http.Request) {
