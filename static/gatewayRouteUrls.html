@@ -29,19 +29,20 @@ and open the template in the editor.
             <table class="ui selectable celled table">
                 <thead>
                     <tr>
-                        <th>Gateway Route</th>                        
+                        <th>Gateway Route</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{range .GatewayRoutes}}
                     <tr>
-                        <td onclick="window.location.href='/gatewayRouteUrlsByRoute/{{.ID}}/{{$.Client.ClientID}}'">{{.Route}}</td>
+                        <td onclick="window.location.href='/gatewayRouteUrlsByRoute/{{.ID}}/{{$.Client.ClientID}}'" data-inverted="" data-tooltip="Click to edit URLs for route"
+                            data-position="bottom left">{{.Route}}</td>
                     </tr>
                     {{end}}
                 </tbody>
             </table>
-        </div>   
-    </div>    
+        </div>
+    </div>
 </body>
 
 </html>

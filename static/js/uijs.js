@@ -260,6 +260,8 @@ var gwRouteUrlId;
 var urlName;
 var rtUrl
 var showGwRouteUrlModel = function (id, name, url) {
+    document.getElementById("del").style.display = 'block';
+    document.getElementById("act").style.display = 'none';
     gwRouteUrlId = id;
     urlName = name;
     rtUrl = url;
@@ -269,10 +271,39 @@ var showGwRouteUrlModel = function (id, name, url) {
     $(".ui.modal").modal({
         closable: true
     });
+    document.getElementById("hd").innerHTML = "Delete this URL?";
     document.getElementById("cont").innerHTML = "Delete Route URL Name: " + name + "; URL: " + rtUrl+ " ?";
+    
 }
 
 
 var getGwRouteUrlId = function () {
     return gwRouteUrlId;
+}
+
+
+
+var gwRouteUrlId2;
+//var urlName2;
+//var rtUrl2
+var showGwRouteUrlActiveModel = function (id, name, url) {
+    document.getElementById("act").style.display = 'block';
+    document.getElementById("del").style.display = 'none';
+    gwRouteUrlId2 = id;
+    //urlName2 = name;
+   // rtUrl2 = url;
+    $(function () {
+        $('.ui.modal').modal('show');
+    });
+    $(".ui.modal").modal({
+        closable: true
+    });
+    document.getElementById("hd").innerHTML = "Activate URL?";
+    document.getElementById("cont").innerHTML = "Activate URL: " + name + " " + url+ " ?";
+    
+}
+
+
+var getGwRouteUrlId2 = function () {
+    return gwRouteUrlId2;
 }

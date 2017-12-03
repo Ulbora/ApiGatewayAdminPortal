@@ -36,10 +36,12 @@ and open the template in the editor.
                 <tbody>
                     {{range .GatewayRoutes}}
                     <tr>
-                        <td onclick="window.location.href='/editGatewayRoute/{{.ID}}/{{$.Client.ClientID}}'">{{.Route}}</td>                        
-                        <td onclick="showGwRouteModel({{.ID}},{{.Route}});">
+                        <td onclick="window.location.href='/editGatewayRoute/{{.ID}}/{{$.Client.ClientID}}'" data-inverted="" data-tooltip="Click to edit route"
+                            data-position="bottom left">{{.Route}}</td>
+                        <td onclick="showGwRouteModel({{.ID}},{{.Route}});" data-inverted="" data-tooltip="Remove"
+                        data-position="bottom left">
                             <i class="remove circle icon"></i>
-                        </td>                       
+                        </td>
                     </tr>
                     {{end}}
                 </tbody>
@@ -69,8 +71,7 @@ and open the template in the editor.
         </div>
         <div class="actions">
             <div class="ui black cancel button">Cancel</div>
-            <div onclick="location.href='/deleteGatewayRoute/' + getGwRouteId() + '/' + {{.Client.ClientID}};"
-                class="ui negative button">Delete</div>
+            <div onclick="location.href='/deleteGatewayRoute/' + getGwRouteId() + '/' + {{.Client.ClientID}};" class="ui negative button">Delete</div>
         </div>
     </div>
 </body>

@@ -52,6 +52,7 @@ type gwPage struct {
 	GatewayRoutes    *[]services.GatewayRoute
 	GatewayRoute     *services.GatewayRoute
 	GatewayRouteURIs *[]services.GatewayRouteURL
+	GatewayRouteURI  *services.GatewayRouteURL
 }
 
 func handleGateway(w http.ResponseWriter, r *http.Request) {

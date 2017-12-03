@@ -239,47 +239,80 @@ func handleRouteURLEdit(w http.ResponseWriter, r *http.Request) {
 		session.Values["userLoggenIn"] = true
 		vars := mux.Vars(r)
 
-		routeID := vars["id"]
-		clientID := vars["clientId"]
+		IDStr := vars["id"]
+		ID, _ := strconv.ParseInt(IDStr, 10, 0)
+		fmt.Println(IDStr)
 
-		if clientID != "" && routeID != "" {
+		routeIDStr := vars["routeId"]
+		routeID, _ := strconv.ParseInt(routeIDStr, 10, 0)
+		fmt.Println(routeIDStr)
+
+		clientIDStr := vars["clientId"]
+		clientID, _ := strconv.ParseInt(clientIDStr, 10, 0)
+
+		fmt.Print("clientId: ")
+		fmt.Println(clientIDStr)
+
+		if IDStr != "" && routeIDStr != "" && clientIDStr != "" {
 			var c services.ClientService
 			token := getToken(w, r)
 			c.ClientID = getAuthCodeClient()
 			c.Host = getOauthHost()
 			c.Token = token.AccessToken
-
-			res := c.GetClient(clientID)
+			res := c.GetClient(clientIDStr)
 
 			var g services.GatewayClientService
 			//token := getToken(w, r)
 			g.ClientID = getAuthCodeClient()
 			g.Host = getGatewayHost()
 			g.Token = token.AccessToken
-
-			gres := g.GetClient(clientID)
+			gres := g.GetClient(clientIDStr)
 			fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()
 			gr.Host = getGatewayHost()
 			gr.Token = token.AccessToken
-			grr := gr.GetRoute(routeID, clientID)
+			grr := gr.GetRoute(routeIDStr, clientIDStr)
+
+			var gu services.GatewayRouteURLService
+			gu.ClientID = getAuthCodeClient()
+			gu.Host = getGatewayHost()
+			gu.Token = token.AccessToken
+
+			var guu services.GatewayRouteURL
+			guu.ClientID = clientID
+			guu.RouteID = routeID
+			guu.ID = ID
+			//guu.Name = name
+			//guu.URL = gwURL
+
+			guRes := gu.GetRouteURL(IDStr, routeIDStr, clientIDStr)
+			// if guRes {
+			// 	fmt.Println(guRes)
+			// }
+
+			// var gr services.GatewayRouteService
+			// gr.ClientID = getAuthCodeClient()
+			// gr.Host = getGatewayHost()
+			// gr.Token = token.AccessToken
+			// grr := gr.GetRoute(routeID, clientID)
 			var page gwPage
 			page.GwActive = "active"
 			page.Client = res
-			page.GatewayClient = gres
 			page.GatewayRoute = grr
+			page.GatewayClient = gres
+			page.GatewayRouteURI = guRes
 			var sm gwSideMenu
 			//sm.RouteActive = "active teal"
 			page.GwSideMenu = &sm
 			//fmt.Println(page)
-			templates.ExecuteTemplate(w, "editGatewayRoute.html", &page)
+			templates.ExecuteTemplate(w, "gatewayRouteUrl.html", &page)
 		}
 	}
 }
 
-func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
+func handleRouteURLActivate(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -296,38 +329,44 @@ func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
 		authorize(w, r)
 	} else {
 		session.Values["userLoggenIn"] = true
+		vars := mux.Vars(r)
 
-		IDStr := r.FormValue("id")
-		fmt.Println(IDStr)
+		IDStr := vars["id"]
 		ID, _ := strconv.ParseInt(IDStr, 10, 0)
-		fmt.Println(ID)
+		fmt.Println(IDStr)
 
-		clientIDStr := r.FormValue("clientId")
+		routeIDStr := vars["routeId"]
+		routeID, _ := strconv.ParseInt(routeIDStr, 10, 0)
+		fmt.Println(routeIDStr)
+
+		clientIDStr := vars["clientId"]
 		clientID, _ := strconv.ParseInt(clientIDStr, 10, 0)
+
 		fmt.Print("clientId: ")
-		fmt.Println(clientID)
+		fmt.Println(clientIDStr)
 
-		gwRoute := r.FormValue("gwRoute")
-		fmt.Print("gwRoute: ")
-		fmt.Println(gwRoute)
+		if IDStr != "" && routeIDStr != "" && clientIDStr != "" {
+			token := getToken(w, r)
 
-		if IDStr != "" && clientIDStr != "" && gwRoute != "" {
-			var gr services.GatewayRouteService
-			gr.ClientID = getAuthCodeClient()
-			gr.Host = getGatewayHost()
-			gr.Token = token.AccessToken
+			var gu services.GatewayRouteURLService
+			gu.ClientID = getAuthCodeClient()
+			gu.Host = getGatewayHost()
+			gu.Token = token.AccessToken
 
-			var grr services.GatewayRoute
-			grr.ClientID = clientID
-			grr.Route = gwRoute
-			grr.ID = ID
-			grRes := gr.UpdateRoute(&grr)
-			if grRes.Success != true {
-				fmt.Println(grRes)
+			var guu services.GatewayRouteURL
+			guu.ClientID = clientID
+			guu.RouteID = routeID
+			guu.ID = ID
+			//guu.Name = name
+			//guu.URL = gwURL
+
+			guRes := gu.ActivateRouteURL(&guu)
+			if guRes.Success != true {
+				fmt.Println(guRes)
 			}
+			fmt.Println(guRes)
+			http.Redirect(w, r, "/gatewayRouteUrlsByRoute/"+routeIDStr+"/"+clientIDStr, http.StatusFound)
 		}
-		http.Redirect(w, r, "/gatewayRoutes/"+clientIDStr, http.StatusFound)
-
 	}
 }
 

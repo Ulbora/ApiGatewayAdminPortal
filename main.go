@@ -51,7 +51,7 @@ var templates = template.Must(template.ParseFiles("./static/index.html", "./stat
 	"./static/roles.html", "./static/allowedUris.html", "./static/secSideMenu.html", "./static/ulboraUris.html",
 	"./static/users.html", "./static/editUser.html", "./static/gwSideMenu.html", "./static/gateway.html",
 	"./static/gatewayClient.html", "./static/gatewayRoutes.html", "./static/editGatewayRoute.html",
-	"./static/gatewayRouteUrls.html", "./static/gatewayRouteUrlsByRoute.html"))
+	"./static/gatewayRouteUrls.html", "./static/gatewayRouteUrlsByRoute.html", "./static/gatewayRouteUrl.html"))
 
 //var username string
 
@@ -123,6 +123,8 @@ func main() {
 	router.HandleFunc("/gatewayRouteUrls/{clientId}", handleRouteURLs)
 	router.HandleFunc("/gatewayRouteUrlsByRoute/{id}/{clientId}", handleRouteURLsByRoute)
 	router.HandleFunc("/addGatewayRouteUrl", handleRouteURLAdd)
+	router.HandleFunc("/activateGatewayRouteUrl/{id}/{routeId}/{clientId}", handleRouteURLActivate)
+	router.HandleFunc("/editGatewayRouteUrl/{id}/{routeId}/{clientId}", handleRouteURLEdit)
 	router.HandleFunc("/deleteGatewayRouteUrl/{id}/{routeId}/{clientId}", handleRouteURLDelete)
 
 	router.HandleFunc("/tokenHandler", handleToken)

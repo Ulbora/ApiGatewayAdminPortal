@@ -24,10 +24,13 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
+            <div class="field">
+                <label>Route</label>
+                <input type="text" value="{{.GatewayRoute.Route}}" disabled>
+            </div>
         </form>
         <div class="client-table">
             <h4 class="ui dividing header">Gateway Route URLs</h4>
-            <h5 class="ui dividing header">Route: {{.GatewayRoute.Route}}</h5>
             <table class="ui selectable celled table">
                 <thead>
                     <tr>
@@ -40,22 +43,26 @@ and open the template in the editor.
                 <tbody>
                     {{range .GatewayRouteURIs}}
                     <tr>
-                        <td onclick="window.location.href='/editGatewayRoute/{{.ID}}/{{.RouteID}}/{{$.Client.ClientID}}'">{{.Name}}</td>
-                        <td> {{.URL}}</td>
+                        <td onclick="window.location.href='/editGatewayRouteUrl/{{.ID}}/{{.RouteID}}/{{$.Client.ClientID}}'" data-inverted="" data-tooltip="Click to edit URL and settings"
+                            data-position="bottom left">{{.Name}}</td>
                         {{if .Active}}
+                        <td data-inverted="" data-tooltip="Call: https://********.com/{{$.GatewayRoute.Route}}/***" data-position="bottom left"> {{.URL}}</td>
+                        {{else}}
+                        <td data-inverted="" data-tooltip="Call: https://********.com/np/{{$.GatewayRoute.Route}}/{{.Name}}/***" data-position="bottom left"> {{.URL}}</td>
+                        {{end}} {{if .Active}}
                         <td class="positive">
                             Active
                         </td>
                         {{else}}
-                        <td onclick="showGwRouteUrlActiveModel({{.ID}},{{.RouteID}}, {{$.Client.ClientID}});">
-                            <i class="remove circle icon"></i>
+                        <td onclick="showGwRouteUrlActiveModel({{.ID}},{{.Name}}, {{.URL}});" data-inverted="" data-tooltip="Make Active" data-position="bottom left">
+                            <i class="toggle on icon"></i>
                         </td>
                         {{end}} {{if .Active}}
                         <td class="positive">
                             Active
                         </td>
                         {{else}}
-                        <td onclick="showGwRouteUrlModel({{.ID}},{{.Name}}, {{.URL}});">
+                        <td onclick="showGwRouteUrlModel({{.ID}},{{.Name}}, {{.URL}});" data-inverted="" data-tooltip="Remove" data-position="bottom left">
                             <i class="remove circle icon"></i>
                         </td>
                         {{end}}
@@ -85,17 +92,25 @@ and open the template in the editor.
     <div class="ui modal">
         <i class="close icon"></i>
         <div class="header">
-            Delete Route URL
+            <p id="hd">Delete this URL?</p>
         </div>
         <div class="content">
             <p id="cont">Delete this URL?</p>
 
         </div>
-        <div class="actions">
+        <div id="del" style="display: none;" class="actions">
             <div class="ui black cancel button">Cancel</div>
-            <div onclick="location.href='/deleteGatewayRouteUrl/'+getGwRouteUrlId()+ '/'  + {{.GatewayRoute.ID}} + '/' + {{.Client.ClientID}};" class="ui negative button">Delete</div>
+            <div onclick="location.href='/deleteGatewayRouteUrl/'+getGwRouteUrlId()+ '/'  + {{.GatewayRoute.ID}} + '/' + {{.Client.ClientID}};"
+                class="ui negative button">Delete</div>
+        </div>
+
+        <div id="act" style="display: none;" class="actions">
+            <div class="ui negative button">No</div>
+            <div onclick="location.href='/activateGatewayRouteUrl/'+getGwRouteUrlId2()+ '/'  + {{.GatewayRoute.ID}} + '/' + {{.Client.ClientID}};"
+                class="ui positive button">Yes</div>
         </div>
     </div>
+
 </body>
 
 </html>
