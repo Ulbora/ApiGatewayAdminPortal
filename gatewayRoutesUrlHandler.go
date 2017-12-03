@@ -85,12 +85,6 @@ func handleRouteURLs(w http.ResponseWriter, r *http.Request) {
 			gr.Token = token.AccessToken
 			grr := gr.GetRouteList(clientID)
 
-			// var gu services.GatewayRouteURLService
-			// gu.ClientID = getAuthCodeClient()
-			// gu.Host = getGatewayHost()
-			// gu.Token = token.AccessToken
-			// gu.GetRouteURLList
-
 			var page gwPage
 			page.GwActive = "active"
 			page.Client = res
@@ -221,7 +215,6 @@ func handleRouteURLAdd(w http.ResponseWriter, r *http.Request) {
 			if guRes.Success != true {
 				fmt.Println(guRes)
 			}
-			//fmt.Println(aures)
 		}
 		http.Redirect(w, r, "/gatewayRouteUrlsByRoute/"+routeIDStr+"/"+clientIDStr, http.StatusFound)
 	}
