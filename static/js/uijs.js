@@ -254,3 +254,25 @@ var getGwRoute = function () {
 var getGwRouteId = function () {
     return gwRouteId;
 }
+
+
+var gwRouteUrlId;
+var urlName;
+var rtUrl
+var showGwRouteUrlModel = function (id, name, url) {
+    gwRouteUrlId = id;
+    urlName = name;
+    rtUrl = url;
+    $(function () {
+        $('.ui.modal').modal('show');
+    });
+    $(".ui.modal").modal({
+        closable: true
+    });
+    document.getElementById("cont").innerHTML = "Delete Route URL Name: " + name + "; URL: " + rtUrl+ " ?";
+}
+
+
+var getGwRouteUrlId = function () {
+    return gwRouteUrlId;
+}

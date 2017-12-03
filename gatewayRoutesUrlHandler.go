@@ -34,14 +34,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type gwRoutesDisplay struct {
+type gwRouteURLDisplay struct {
 	ID           int64
 	URI          string
 	ClientID     int64
 	AssignedRole int64
 }
 
-func handleRoutes(w http.ResponseWriter, r *http.Request) {
+func handleRouteURLs(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -84,21 +84,28 @@ func handleRoutes(w http.ResponseWriter, r *http.Request) {
 			gr.Host = getGatewayHost()
 			gr.Token = token.AccessToken
 			grr := gr.GetRouteList(clientID)
+
+			// var gu services.GatewayRouteURLService
+			// gu.ClientID = getAuthCodeClient()
+			// gu.Host = getGatewayHost()
+			// gu.Token = token.AccessToken
+			// gu.GetRouteURLList
+
 			var page gwPage
 			page.GwActive = "active"
 			page.Client = res
 			page.GatewayClient = gres
 			page.GatewayRoutes = grr
 			var sm gwSideMenu
-			sm.RouteActive = "active teal"
+			sm.RouteURLsActive = "active teal"
 			page.GwSideMenu = &sm
 			//fmt.Println(page)
-			templates.ExecuteTemplate(w, "gatewayRoutes.html", &page)
+			templates.ExecuteTemplate(w, "gatewayRouteUrls.html", &page)
 		}
 	}
 }
 
-func handleRoutesAdd(w http.ResponseWriter, r *http.Request) {
+func handleRouteURLsByRoute(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -115,33 +122,112 @@ func handleRoutesAdd(w http.ResponseWriter, r *http.Request) {
 		authorize(w, r)
 	} else {
 		session.Values["userLoggenIn"] = true
-		gwRoute := r.FormValue("gwRoute")
-		fmt.Println(gwRoute)
+		vars := mux.Vars(r)
+		ID := vars["id"]
+		clientID := vars["clientId"]
+
+		if clientID != "" && ID != "" {
+			var c services.ClientService
+			token := getToken(w, r)
+			c.ClientID = getAuthCodeClient()
+			c.Host = getOauthHost()
+			c.Token = token.AccessToken
+
+			res := c.GetClient(clientID)
+
+			var g services.GatewayClientService
+			//token := getToken(w, r)
+			g.ClientID = getAuthCodeClient()
+			g.Host = getGatewayHost()
+			g.Token = token.AccessToken
+
+			gres := g.GetClient(clientID)
+			fmt.Println(gres)
+
+			var gr services.GatewayRouteService
+			gr.ClientID = getAuthCodeClient()
+			gr.Host = getGatewayHost()
+			gr.Token = token.AccessToken
+			grr := gr.GetRoute(ID, clientID)
+
+			var gu services.GatewayRouteURLService
+			gu.ClientID = getAuthCodeClient()
+			gu.Host = getGatewayHost()
+			gu.Token = token.AccessToken
+			grus := gu.GetRouteURLList(ID, clientID)
+
+			var page gwPage
+			page.GwActive = "active"
+			page.Client = res
+			page.GatewayClient = gres
+			page.GatewayRoute = grr
+			page.GatewayRouteURIs = grus
+			var sm gwSideMenu
+			//sm.RouteURLsActive = "active teal"
+			page.GwSideMenu = &sm
+			//fmt.Println(page)
+			templates.ExecuteTemplate(w, "gatewayRouteUrlsByRoute.html", &page)
+		}
+	}
+}
+
+func handleRouteURLAdd(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("in main page. Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		session.Values["userLoggenIn"] = true
+
+		routeIDStr := r.FormValue("routeId")
+		routeID, _ := strconv.ParseInt(routeIDStr, 10, 0)
+		fmt.Println(routeID)
 
 		clientIDStr := r.FormValue("clientId")
 		clientID, _ := strconv.ParseInt(clientIDStr, 10, 0)
 		fmt.Print("clientId: ")
 		fmt.Println(clientID)
-		if gwRoute != "" && clientIDStr != "" {
-			var gr services.GatewayRouteService
-			gr.ClientID = getAuthCodeClient()
-			gr.Host = getGatewayHost()
-			gr.Token = token.AccessToken
 
-			var grr services.GatewayRoute
-			grr.ClientID = clientID
-			grr.Route = gwRoute
-			grRes := gr.AddRoute(&grr)
-			if grRes.Success != true {
-				fmt.Println(grRes)
+		name := r.FormValue("name")
+		fmt.Print("name: ")
+		fmt.Println(name)
+
+		gwURL := r.FormValue("gwUrl")
+		fmt.Print("gwUrl: ")
+		fmt.Println(gwURL)
+
+		if routeIDStr != "" && clientIDStr != "" {
+			var gu services.GatewayRouteURLService
+			gu.ClientID = getAuthCodeClient()
+			gu.Host = getGatewayHost()
+			gu.Token = token.AccessToken
+
+			var guu services.GatewayRouteURL
+			guu.ClientID = clientID
+			guu.RouteID = routeID
+			guu.Name = name
+			guu.URL = gwURL
+			guRes := gu.AddRouteURL(&guu)
+			if guRes.Success != true {
+				fmt.Println(guRes)
 			}
 			//fmt.Println(aures)
 		}
-		http.Redirect(w, r, "/gatewayRoutes/"+clientIDStr, http.StatusFound)
+		http.Redirect(w, r, "/gatewayRouteUrlsByRoute/"+routeIDStr+"/"+clientIDStr, http.StatusFound)
 	}
 }
 
-func handleRouteEdit(w http.ResponseWriter, r *http.Request) {
+func handleRouteURLEdit(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -200,7 +286,7 @@ func handleRouteEdit(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleRouteUpdate(w http.ResponseWriter, r *http.Request) {
+func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -252,7 +338,7 @@ func handleRouteUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleRoutesDelete(w http.ResponseWriter, r *http.Request) {
+func handleRouteURLDelete(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
 	session, err := s.GetSession(r)
 	if err != nil {
@@ -275,6 +361,9 @@ func handleRoutesDelete(w http.ResponseWriter, r *http.Request) {
 		IDStr := vars["id"]
 		fmt.Println(IDStr)
 
+		routeID := vars["routeId"]
+		fmt.Println(routeID)
+
 		clientIDStr := vars["clientId"]
 
 		fmt.Print("clientId: ")
@@ -283,15 +372,17 @@ func handleRoutesDelete(w http.ResponseWriter, r *http.Request) {
 		if IDStr != "" && clientIDStr != "" {
 			token := getToken(w, r)
 
-			var gr services.GatewayRouteService
-			gr.ClientID = getAuthCodeClient()
-			gr.Host = getGatewayHost()
-			gr.Token = token.AccessToken
+			var gu services.GatewayRouteURLService
+			gu.ClientID = getAuthCodeClient()
+			gu.Host = getGatewayHost()
+			gu.Token = token.AccessToken
 
-			gres := gr.DeleteRoute(IDStr, clientIDStr)
-
-			fmt.Println(gres)
-			http.Redirect(w, r, "/gatewayRoutes/"+clientIDStr, http.StatusFound)
+			guRes := gu.DeleteRouteURL(IDStr, routeID, clientIDStr)
+			if guRes.Success != true {
+				fmt.Println(guRes)
+			}
+			fmt.Println(guRes)
+			http.Redirect(w, r, "/gatewayRouteUrlsByRoute/"+routeID+"/"+clientIDStr, http.StatusFound)
 		}
 	}
 }

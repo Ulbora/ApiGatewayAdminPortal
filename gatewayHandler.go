@@ -41,16 +41,17 @@ type gwSideMenu struct {
 }
 
 type gwPage struct {
-	ClientActive  string
-	OauthActive   string
-	GwActive      string
-	ClientIsSelf  bool
-	GwSideMenu    *gwSideMenu
-	Client        *services.Client
-	User          *services.User
-	GatewayClient *services.GatewayClient
-	GatewayRoutes *[]services.GatewayRoute
-	GatewayRoute  *services.GatewayRoute
+	ClientActive     string
+	OauthActive      string
+	GwActive         string
+	ClientIsSelf     bool
+	GwSideMenu       *gwSideMenu
+	Client           *services.Client
+	User             *services.User
+	GatewayClient    *services.GatewayClient
+	GatewayRoutes    *[]services.GatewayRoute
+	GatewayRoute     *services.GatewayRoute
+	GatewayRouteURIs *[]services.GatewayRouteURL
 }
 
 func handleGateway(w http.ResponseWriter, r *http.Request) {
