@@ -67,7 +67,9 @@ var apiGatewaySuperURIs = []UlborURIs{
 
 	{"/ulbora/rs/gwBreakerSuper/add", "superAdmin"},
 	{"/ulbora/rs/gwBreakerSuper/update", "superAdmin"},
+	{"/ulbora/rs/gwBreakerSuper/reset", "superAdmin"},
 	{"/ulbora/rs/gwBreakerSuper/get", "superAdmin"},
+	{"/ulbora/rs/gwBreakerSuper/status", "superAdmin"},
 	{"/ulbora/rs/gwBreakerSuper/delete", "superAdmin"},
 }
 
@@ -123,7 +125,9 @@ var apiGatewayURIs = []UlborURIs{
 
 	{"/ulbora/rs/gwBreaker/add", "admin"},
 	{"/ulbora/rs/gwBreaker/update", "admin"},
+	{"/ulbora/rs/gwBreaker/reset", "admin"},
 	{"/ulbora/rs/gwBreaker/get", "admin"},
+	{"/ulbora/rs/gwBreaker/status", "admin"},
 	{"/ulbora/rs/gwBreaker/delete", "admin"},
 }
 
