@@ -279,9 +279,9 @@ func (r *GatewayBreakerService) GetBreakerStatus(routeURLID string, clientID str
 // }
 
 // DeleteBreaker delete
-func (r *GatewayBreakerService) DeleteBreaker(id string, routeID string, clientID string) *GatewayResponse {
+func (r *GatewayBreakerService) DeleteBreaker(urlID string, routeID string, clientID string) *GatewayResponse {
 	var rtn = new(GatewayResponse)
-	var gURL = r.Host + "/rs/gwBreakerSuper/delete/" + id + "/" + routeID + "/" + clientID
+	var gURL = r.Host + "/rs/gwBreakerSuper/delete/" + urlID + "/" + routeID + "/" + clientID
 	//fmt.Println(gURL)
 	req, rErr := http.NewRequest("DELETE", gURL, nil)
 	if rErr != nil {

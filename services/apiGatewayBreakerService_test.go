@@ -183,54 +183,37 @@ func TestGatewayBreakerService_GetBreakerStatus(t *testing.T) {
 	}
 }
 
-// add reset and delete=====================================================================
+func TestGatewayBreakerService_ResetBreakerStatus(t *testing.T) {
+	var b GatewayBreakerService
+	b.ClientID = "403"
+	b.Host = "http://localhost:3011"
+	b.Token = tempToken
 
-// func TestGatewayBreakerService_ActivateRouteURL(t *testing.T) {
-// 	var r GatewayRouteURLService
-// 	r.ClientID = "403"
-// 	r.Host = "http://localhost:3011"
-// 	r.Token = tempToken
+	var bb GatewayBreaker
+	bb.ClientID = GwCid33
+	bb.RestRouteID = RTID22
+	bb.RouteURIID = RUID22
+	res := b.ResetBreaker(&bb)
+	fmt.Print("reset breaker res: ")
+	fmt.Println(res)
+	if res.Success != true {
+		t.Fail()
+	}
+}
 
-// 	var rr GatewayRouteURL
-// 	rr.ID = RUID2
-// 	rr.ClientID = GwCid3
-// 	rr.RouteID = RTID2
+func TestGatewayBreakerService_DeleteBreakerStatus(t *testing.T) {
+	var b GatewayBreakerService
+	b.ClientID = "403"
+	b.Host = "http://localhost:3011"
+	b.Token = tempToken
 
-// 	res := r.ActivateRouteURL(&rr)
-// 	fmt.Print("res: ")
-// 	fmt.Println(res)
-// 	if res.Success != true {
-// 		t.Fail()
-// 	}
-// }
-
-// func TestGatewayBreakerService_GetRouteURL2(t *testing.T) {
-// 	var r GatewayRouteURLService
-// 	r.ClientID = "403"
-// 	r.Host = "http://localhost:3011"
-// 	r.Token = tempToken
-
-// 	res := r.GetRouteURL(strconv.FormatInt(RUID2, 10), strconv.FormatInt(RTID2, 10), GwCidStr3)
-// 	fmt.Print("res: ")
-// 	fmt.Println(res)
-// 	if res.Name != "blue" || res.URL != "http://www.google.com/test" || res.Active != true {
-// 		t.Fail()
-// 	}
-// }
-
-// func TestGatewayBreakerService_DeleteRouteURL(t *testing.T) {
-// 	var r GatewayRouteURLService
-// 	r.ClientID = "403"
-// 	r.Host = "http://localhost:3011"
-// 	r.Token = tempToken
-
-// 	res := r.DeleteRouteURL(strconv.FormatInt(RUID, 10), strconv.FormatInt(RTID2, 10), GwCidStr3)
-// 	fmt.Print("res: ")
-// 	fmt.Println(res)
-// 	if res.Success != false {
-// 		t.Fail()
-// 	}
-// }
+	res := b.DeleteBreaker(strconv.FormatInt(RUID22, 10), strconv.FormatInt(RTID22, 10), strconv.FormatInt(GwCid33, 10))
+	fmt.Print("delete breaker res: ")
+	fmt.Println(res)
+	if res.Success != true {
+		t.Fail()
+	}
+}
 
 func TestGatewayBreakerService_DeleteClient(t *testing.T) {
 	var c GatewayClientService
