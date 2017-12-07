@@ -34,8 +34,8 @@ import (
 	"time"
 )
 
-//GatewayPerformanceService service
-type GatewayPerformanceService struct {
+//GatewayErrorsService service
+type GatewayErrorsService struct {
 	Token    string
 	ClientID string
 	APIKey   string
@@ -44,22 +44,22 @@ type GatewayPerformanceService struct {
 	Host     string
 }
 
-//GatewayPerformance GatewayPerformance
-type GatewayPerformance struct {
-	ID             int64     `json:"id"`
-	Calls          int64     `json:"calls"`
-	LatencyMsTotal int64     `json:"latencyMsTotal"`
-	Entered        time.Time `json:"entered"`
-	RouteURIID     int64     `json:"routeUriId"`
-	RestRouteID    int64     `json:"routeId"`
-	ClientID       int64     `json:"clientId"`
+//GatewayError GatewayError
+type GatewayError struct {
+	ID          int64     `json:"id"`
+	Code        int       `json:"code"`
+	Message     string    `json:"message"`
+	Entered     time.Time `json:"entered"`
+	RouteURIID  int64     `json:"routeUriId"`
+	RestRouteID int64     `json:"routeId"`
+	ClientID    int64     `json:"clientId"`
 }
 
-//GetRoutePerformance GetRoutePerformance
-func (p *GatewayPerformanceService) GetRoutePerformance(pp *GatewayPerformance) *[]GatewayPerformance {
-	var rtn = make([]GatewayPerformance, 0)
-	var pURL = p.Host + "/rs/gwPerformanceSuper"
-	aJSON, err := json.Marshal(pp)
+//GetRouteErrors GetRouteErrors
+func (e *GatewayErrorsService) GetRouteErrors(ee *GatewayError) *[]GatewayError {
+	var rtn = make([]GatewayError, 0)
+	var pURL = e.Host + "/rs/gwErrorsSuper"
+	aJSON, err := json.Marshal(ee)
 
 	if err != nil {
 		fmt.Println(err)
@@ -70,11 +70,11 @@ func (p *GatewayPerformanceService) GetRoutePerformance(pp *GatewayPerformance) 
 			fmt.Println(rErr)
 		} else {
 			req.Header.Set("Content-Type", "application/json")
-			req.Header.Set("Authorization", "Bearer "+p.Token)
-			req.Header.Set("clientId", p.ClientID)
+			req.Header.Set("Authorization", "Bearer "+e.Token)
+			req.Header.Set("clientId", e.ClientID)
 			//req.Header.Set("userId", c.UserID)
 			//req.Header.Set("hashed", c.Hashed)
-			req.Header.Set("apiKey", p.APIKey)
+			req.Header.Set("apiKey", e.APIKey)
 			client := &http.Client{}
 			resp, cErr := client.Do(req)
 			if cErr != nil {
