@@ -124,6 +124,7 @@ func main() {
 	router.HandleFunc("/gatewayRouteUrlsByRoute/{id}/{clientId}", handleRouteURLsByRoute)
 	router.HandleFunc("/addGatewayRouteUrl", handleRouteURLAdd)
 	router.HandleFunc("/activateGatewayRouteUrl/{id}/{routeId}/{clientId}", handleRouteURLActivate)
+	router.HandleFunc("/updateGatewayRouteUrl", handleRouteURLUpdate)
 	router.HandleFunc("/editGatewayRouteUrl/{id}/{routeId}/{clientId}", handleRouteURLEdit)
 	router.HandleFunc("/deleteGatewayRouteUrl/{id}/{routeId}/{clientId}", handleRouteURLDelete)
 

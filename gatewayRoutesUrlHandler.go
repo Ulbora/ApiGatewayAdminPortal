@@ -157,7 +157,7 @@ func handleRouteURLsByRoute(w http.ResponseWriter, r *http.Request) {
 			page.GatewayRoute = grr
 			page.GatewayRouteURIs = grus
 			var sm gwSideMenu
-			//sm.RouteURLsActive = "active teal"
+			sm.EditRoute = "active teal"
 			page.GwSideMenu = &sm
 			//fmt.Println(page)
 			templates.ExecuteTemplate(w, "gatewayRouteUrlsByRoute.html", &page)
@@ -304,7 +304,7 @@ func handleRouteURLEdit(w http.ResponseWriter, r *http.Request) {
 			page.GatewayClient = gres
 			page.GatewayRouteURI = guRes
 			var sm gwSideMenu
-			//sm.RouteActive = "active teal"
+			sm.EditURL = "active teal"
 			page.GwSideMenu = &sm
 			//fmt.Println(page)
 			templates.ExecuteTemplate(w, "gatewayRouteUrl.html", &page)
@@ -361,6 +361,70 @@ func handleRouteURLActivate(w http.ResponseWriter, r *http.Request) {
 			//guu.URL = gwURL
 
 			guRes := gu.ActivateRouteURL(&guu)
+			if guRes.Success != true {
+				fmt.Println(guRes)
+			}
+			fmt.Println(guRes)
+			http.Redirect(w, r, "/gatewayRouteUrlsByRoute/"+routeIDStr+"/"+clientIDStr, http.StatusFound)
+		}
+	}
+}
+
+func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("in main page. Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		session.Values["userLoggenIn"] = true
+
+		IDStr := r.FormValue("id")
+		ID, _ := strconv.ParseInt(IDStr, 10, 0)
+		fmt.Println(IDStr)
+
+		routeIDStr := r.FormValue("routeId")
+		routeID, _ := strconv.ParseInt(routeIDStr, 10, 0)
+		fmt.Println(routeID)
+
+		clientIDStr := r.FormValue("clientId")
+		clientID, _ := strconv.ParseInt(clientIDStr, 10, 0)
+		fmt.Print("clientId: ")
+		fmt.Println(clientID)
+
+		name := r.FormValue("name")
+		fmt.Print("name: ")
+		fmt.Println(name)
+
+		gwURL := r.FormValue("gwUrl")
+		fmt.Print("gwUrl: ")
+		fmt.Println(gwURL)
+
+		if IDStr != "" && routeIDStr != "" && clientIDStr != "" {
+			token := getToken(w, r)
+
+			var gu services.GatewayRouteURLService
+			gu.ClientID = getAuthCodeClient()
+			gu.Host = getGatewayHost()
+			gu.Token = token.AccessToken
+
+			var guu services.GatewayRouteURL
+			guu.ClientID = clientID
+			guu.RouteID = routeID
+			guu.ID = ID
+			guu.Name = name
+			guu.URL = gwURL
+
+			guRes := gu.UpdateRouteURL(&guu)
 			if guRes.Success != true {
 				fmt.Println(guRes)
 			}

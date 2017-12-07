@@ -8,7 +8,32 @@ and open the template in the editor.
 {{template "header"}}
 
 <body>
-    {{template "navbar" .}} {{template "gwSideMenu" .}}
+    {{template "navbar" .}}
+    <div class="side-menu">
+        <div class="ui vertical menu">
+            <a class="item" href="/editClient/{{.Client.ClientID}}">
+                Client Info
+            </a>
+            <a class="item" href="/oauth2/{{.Client.ClientID}}">
+                Security
+            </a>
+            <a class="{{.GwSideMenu.GWActive}} item" href="/gateway/{{.Client.ClientID}}">
+                ApiGateway
+            </a>
+            <a class="{{.GwSideMenu.GWClientActive}}  item" href="/gatewayClient/{{.Client.ClientID}}">
+                -- Gateway Client
+            </a>
+            <a class="{{.GwSideMenu.RouteActive}} item" href="/gatewayRoutes/{{.Client.ClientID}}">
+                -- Routes
+            </a>
+            <a class="{{.GwSideMenu.RouteURLsActive}} item" href="/gatewayRouteUrls/{{.Client.ClientID}}">
+                -- Route Mapping
+            </a>
+            <a class="{{.GwSideMenu.EditRoute}} item" href="/gatewayRouteUrlsByRoute/{{.GatewayRoute.ID}}/{{.Client.ClientID}}">
+            --> {{.GatewayRoute.Route}}
+            </a>  
+        </div>
+    </div>
     <div class="client-edit-form">
         <form class="ui form">
             <h4 class="ui dividing header">Client Information</h4>
@@ -46,9 +71,11 @@ and open the template in the editor.
                         <td onclick="window.location.href='/editGatewayRouteUrl/{{.ID}}/{{.RouteID}}/{{$.Client.ClientID}}'" data-inverted="" data-tooltip="Click to edit URL and settings"
                             data-position="bottom left">{{.Name}}</td>
                         {{if .Active}}
-                        <td data-inverted="" data-tooltip="Call: https://********.com/{{$.GatewayRoute.Route}}/***" data-position="bottom left"> {{.URL}}</td>
+                        <td data-inverted="" data-tooltip="Call: https://********.com/{{$.GatewayRoute.Route}}/***" data-position="bottom left">
+                        {{.URL}}</td>
                         {{else}}
-                        <td data-inverted="" data-tooltip="Call: https://********.com/np/{{$.GatewayRoute.Route}}/{{.Name}}/***" data-position="bottom left"> {{.URL}}</td>
+                        <td data-inverted="" data-tooltip="Call: https://********.com/np/{{$.GatewayRoute.Route}}/{{.Name}}/***" data-position="bottom left">
+                        {{.URL}}</td>
                         {{end}} {{if .Active}}
                         <td class="positive">
                             Active
@@ -59,7 +86,7 @@ and open the template in the editor.
                         </td>
                         {{end}} {{if .Active}}
                         <td>
-                            
+
                         </td>
                         {{else}}
                         <td onclick="showGwRouteUrlModel({{.ID}},{{.Name}}, {{.URL}});" data-inverted="" data-tooltip="Remove" data-position="bottom left">

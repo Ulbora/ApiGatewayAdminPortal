@@ -38,6 +38,8 @@ type gwSideMenu struct {
 	GWClientActive  string
 	RouteActive     string
 	RouteURLsActive string
+	EditRoute       string
+	EditURL         string
 }
 
 type gwPage struct {
