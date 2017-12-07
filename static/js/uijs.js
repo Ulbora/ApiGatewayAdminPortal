@@ -307,3 +307,16 @@ var showGwRouteUrlActiveModel = function (id, name, url) {
 var getGwRouteUrlId2 = function () {
     return gwRouteUrlId2;
 }
+
+var showCb = false;
+var showCircuitBreaker = function () {
+    if(showCb === false){
+        document.getElementById("cb").style.display = 'block';
+        document.getElementById("onoff").innerHTML = "On";
+        showCb = true;
+    }else{
+        document.getElementById("cb").style.display = 'none';
+        document.getElementById("onoff").innerHTML = "Off";
+        showCb = false;
+    }    
+}
