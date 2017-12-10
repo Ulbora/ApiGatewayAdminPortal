@@ -61,25 +61,79 @@ and open the template in the editor.
             <form method="POST" class="ui form" action="/updateGatewayRouteUrl">
                 <div class="field">
                     <label>URL Name</label>
-                    <input type="text" name="name" value="{{.GatewayRouteURI.Name}}" required>
+                    <input style="background: lightgreen;" type="text" name="name" value="{{.GatewayRouteURI.Name}}" required>
                 </div>
                 <div class="field">
                     <label>URL</label>
                     <input type="text" name="gwUrl" value="{{.GatewayRouteURI.URL}}" required>
                 </div>
-                
-                <div class="field" onclick="showCircuitBreaker();" data-inverted="" data-tooltip="Circuit Breaker" data-position="bottom left">
-                    <label>Circuit Breaker</label>
-                    <i class="toggle on icon"></i> <span id="onoff">Off</span>
-                </div>
 
+
+                <div class="grouped fields">
+                    <label for="enabled">Circuit Breaker:</label>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            {{if .CircuitBreakerEnabled}}
+                            <input onchange="showCircuitBreaker(false);" type="radio" name="cbEnabled" checked="" tabindex="0" class="hidden"
+                                value="on">
+                            <label>On</label>
+                            {{else}}
+                            <input onchange="showCircuitBreaker(false);" type="radio" name="cbEnabled" tabindex="0" class="hidden"
+                                value="on">
+                            <label>On</label>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            {{if .CircuitBreakerEnabled}}
+                            <input onchange="showCircuitBreaker(true);" type="radio" name="cbEnabled" tabindex="0" class="hidden"
+                                value="off">
+                            <label>Off</label>
+                            {{else}}
+                            <input onchange="showCircuitBreaker(false);" type="radio" name="cbEnabled" checked="" tabindex="0" class="hidden"
+                                value="off">
+                            <label>Off</label>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                {{if .CircuitBreakerEnabled}}
+                <div id="cb" style="display: block">
+                    <input type="hidden" name="cbId" value="{{.CircuitBreaker.ID}}">
+                    <div class="field" data-inverted="" data-tooltip="Number of times service call can fail before breaker opens" data-position="bottom left">
+                        <label>Failure Threshold</label>
+                        <input type="number" name="failureThreshold" value="{{.CircuitBreaker.FailureThreshold}}">
+                    </div>
+                    <div class="field" data-inverted="" data-tooltip="Number seconds before service call retries after breaker opens" data-position="bottom left">
+                        <label>HealthCheck Time in Seconds</label>
+                        <input type="number" name="healthCheckTimeSeconds" value="{{.CircuitBreaker.HealthCheckTimeSeconds}}">
+                    </div>
+                    <div class="field" data-inverted="" data-tooltip="Failover route when breaker opens" data-position="bottom left">
+                        <label>Failover Route Name</label>
+                        <input type="text" name="failoverRouteName" value="{{.CircuitBreaker.FailoverRouteName}}" >
+                    </div>
+                </div>
+                {{else}}
                 <div id="cb" style="display: none">
-                    cb config
+                    <div class="field" data-inverted="" data-tooltip="Number of times service call can fail before breaker opens" data-position="bottom left">
+                        <label>Failure Threshold</label>
+                        <input type="number" name="failureThreshold" value="3">
+                    </div>
+                    <div class="field" data-inverted="" data-tooltip="Number seconds before service call retries after breaker opens" data-position="bottom left">
+                        <label>HealthCheck Time in Seconds</label>
+                        <input type="number" name="healthCheckTimeSeconds" value="120">
+                    </div>
+                    <div class="field" data-inverted="" data-tooltip="Failover route when breaker opens" data-position="bottom left">
+                        <label>Failover Route Name</label>
+                        <input type="text" name="failoverRouteName" placeholder="blue" >
+                    </div>
                 </div>
-
+                {{end}}
                 <input type="hidden" name="id" value="{{.GatewayRouteURI.ID}}">
                 <input type="hidden" name="routeId" value="{{.GatewayRoute.ID}}">
                 <input type="hidden" name="clientId" value="{{.Client.ClientID}}">
+                <br/>
                 <button class="ui button" type="submit">Update</button>
             </form>
         </div>

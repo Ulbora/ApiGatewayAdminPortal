@@ -309,14 +309,17 @@ var getGwRouteUrlId2 = function () {
 }
 
 var showCb = false;
-var showCircuitBreaker = function () {
+var showCircuitBreaker = function (cbEnabled) {
+    if(showCb == false){
+        showCb = cbEnabled;
+    }    
     if(showCb === false){
         document.getElementById("cb").style.display = 'block';
-        document.getElementById("onoff").innerHTML = "On";
+        //document.getElementById("onoff").innerHTML = "On";
         showCb = true;
     }else{
         document.getElementById("cb").style.display = 'none';
-        document.getElementById("onoff").innerHTML = "Off";
+       // document.getElementById("onoff").innerHTML = "Off";
         showCb = false;
     }    
 }

@@ -30,6 +30,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"sync"
 
 	"github.com/gorilla/mux"
 )
@@ -121,34 +122,56 @@ func handleRouteURLsByRoute(w http.ResponseWriter, r *http.Request) {
 		clientID := vars["clientId"]
 
 		if clientID != "" && ID != "" {
+			var wg sync.WaitGroup
+
 			var c services.ClientService
 			token := getToken(w, r)
 			c.ClientID = getAuthCodeClient()
 			c.Host = getOauthHost()
 			c.Token = token.AccessToken
-
-			res := c.GetClient(clientID)
+			wg.Add(1)
+			var res *services.Client
+			go func(clientID string) {
+				res = c.GetClient(clientID)
+				defer wg.Done()
+			}(clientID)
 
 			var g services.GatewayClientService
 			//token := getToken(w, r)
 			g.ClientID = getAuthCodeClient()
 			g.Host = getGatewayHost()
 			g.Token = token.AccessToken
+			var gres *services.GatewayClient
+			wg.Add(1)
+			go func(clientID string) {
+				gres = g.GetClient(clientID)
+				defer wg.Done()
+			}(clientID)
 
-			gres := g.GetClient(clientID)
 			fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()
 			gr.Host = getGatewayHost()
 			gr.Token = token.AccessToken
-			grr := gr.GetRoute(ID, clientID)
+			var grr *services.GatewayRoute
+			wg.Add(1)
+			go func(routeID string, clientID string) {
+				grr = gr.GetRoute(routeID, clientID)
+				defer wg.Done()
+			}(ID, clientID)
 
 			var gu services.GatewayRouteURLService
 			gu.ClientID = getAuthCodeClient()
 			gu.Host = getGatewayHost()
 			gu.Token = token.AccessToken
-			grus := gu.GetRouteURLList(ID, clientID)
+			wg.Add(1)
+			var grus *[]services.GatewayRouteURL
+			go func(routeID string, clientID string) {
+				grus = gu.GetRouteURLList(ID, clientID)
+				defer wg.Done()
+			}(ID, clientID)
+			wg.Wait()
 
 			var page gwPage
 			page.GwActive = "active"
@@ -240,69 +263,92 @@ func handleRouteURLEdit(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 
 		IDStr := vars["id"]
-		ID, _ := strconv.ParseInt(IDStr, 10, 0)
+		//ID, _ := strconv.ParseInt(IDStr, 10, 0)
 		fmt.Println(IDStr)
 
 		routeIDStr := vars["routeId"]
-		routeID, _ := strconv.ParseInt(routeIDStr, 10, 0)
+		//routeID, _ := strconv.ParseInt(routeIDStr, 10, 0)
 		fmt.Println(routeIDStr)
 
 		clientIDStr := vars["clientId"]
-		clientID, _ := strconv.ParseInt(clientIDStr, 10, 0)
+		//clientID, _ := strconv.ParseInt(clientIDStr, 10, 0)
 
 		fmt.Print("clientId: ")
 		fmt.Println(clientIDStr)
 
 		if IDStr != "" && routeIDStr != "" && clientIDStr != "" {
+			var wg sync.WaitGroup
+
 			var c services.ClientService
 			token := getToken(w, r)
 			c.ClientID = getAuthCodeClient()
 			c.Host = getOauthHost()
 			c.Token = token.AccessToken
-			res := c.GetClient(clientIDStr)
+			wg.Add(1)
+			var res *services.Client
+			go func(clientID string) {
+				res = c.GetClient(clientIDStr)
+				defer wg.Done()
+			}(clientIDStr)
 
 			var g services.GatewayClientService
 			//token := getToken(w, r)
 			g.ClientID = getAuthCodeClient()
 			g.Host = getGatewayHost()
 			g.Token = token.AccessToken
-			gres := g.GetClient(clientIDStr)
+			var gres *services.GatewayClient
+			wg.Add(1)
+			go func(clientID string) {
+				gres = g.GetClient(clientIDStr)
+				defer wg.Done()
+			}(clientIDStr)
+
 			fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()
 			gr.Host = getGatewayHost()
 			gr.Token = token.AccessToken
-			grr := gr.GetRoute(routeIDStr, clientIDStr)
+			var grr *services.GatewayRoute
+			wg.Add(1)
+			go func(routeID string, clientID string) {
+				grr = gr.GetRoute(routeIDStr, clientIDStr)
+				defer wg.Done()
+			}(routeIDStr, clientIDStr)
 
 			var gu services.GatewayRouteURLService
 			gu.ClientID = getAuthCodeClient()
 			gu.Host = getGatewayHost()
 			gu.Token = token.AccessToken
+			var guRes *services.GatewayRouteURL
+			wg.Add(1)
+			go func(id string, routeID string, clientID string) {
+				guRes = gu.GetRouteURL(IDStr, routeIDStr, clientIDStr)
+				defer wg.Done()
+			}(IDStr, routeIDStr, clientIDStr)
 
-			var guu services.GatewayRouteURL
-			guu.ClientID = clientID
-			guu.RouteID = routeID
-			guu.ID = ID
-			//guu.Name = name
-			//guu.URL = gwURL
+			var cu services.GatewayBreakerService
+			cu.ClientID = getAuthCodeClient()
+			cu.Host = getGatewayHost()
+			cu.Token = token.AccessToken
+			var cRes *services.GatewayBreaker
+			wg.Add(1)
+			go func(urlID string, routeID string, clientID string) {
+				cRes = cu.GetBreaker(IDStr, routeIDStr, clientIDStr)
+				defer wg.Done()
+			}(IDStr, routeIDStr, clientIDStr)
 
-			guRes := gu.GetRouteURL(IDStr, routeIDStr, clientIDStr)
-			// if guRes {
-			// 	fmt.Println(guRes)
-			// }
-
-			// var gr services.GatewayRouteService
-			// gr.ClientID = getAuthCodeClient()
-			// gr.Host = getGatewayHost()
-			// gr.Token = token.AccessToken
-			// grr := gr.GetRoute(routeID, clientID)
+			wg.Wait()
 			var page gwPage
 			page.GwActive = "active"
 			page.Client = res
 			page.GatewayRoute = grr
 			page.GatewayClient = gres
 			page.GatewayRouteURI = guRes
+			page.CircuitBreaker = cRes
+			if cRes.ID != 0 {
+				page.CircuitBreakerEnabled = true
+			}
 			var sm gwSideMenu
 			sm.EditURL = "active teal"
 			page.GwSideMenu = &sm
@@ -409,6 +455,35 @@ func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
 		fmt.Print("gwUrl: ")
 		fmt.Println(gwURL)
 
+		cbEnabled := r.FormValue("cbEnabled")
+		fmt.Print("cbEnabled: ")
+		fmt.Println(cbEnabled)
+
+		cbIDStr := r.FormValue("cbId")
+		var cbID int64
+		if cbIDStr != "" {
+			cbID, _ = strconv.ParseInt(cbIDStr, 10, 0)
+		}
+		fmt.Println(cbID)
+
+		ftStr := r.FormValue("failureThreshold")
+		var ft int
+		if ftStr != "" {
+			ft, _ = strconv.Atoi(ftStr)
+		}
+		fmt.Println(ft)
+
+		htStr := r.FormValue("healthCheckTimeSeconds")
+		var ht int
+		if htStr != "" {
+			ht, _ = strconv.Atoi(htStr)
+		}
+		fmt.Println(ht)
+
+		fname := r.FormValue("failoverRouteName")
+		fmt.Print("fname: ")
+		fmt.Println(fname)
+
 		if IDStr != "" && routeIDStr != "" && clientIDStr != "" {
 			token := getToken(w, r)
 
@@ -428,6 +503,44 @@ func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
 			if guRes.Success != true {
 				fmt.Println(guRes)
 			}
+
+			var cbs services.GatewayBreakerService
+			cbs.ClientID = getAuthCodeClient()
+			cbs.Host = getGatewayHost()
+			cbs.Token = token.AccessToken
+			if cbEnabled == "on" {
+				var cb services.GatewayBreaker
+				cb.ClientID = clientID
+				cb.RestRouteID = routeID
+				cb.RouteURIID = ID
+				if cbID != 0 {
+					cb.ID = cbID
+					cb.FailureThreshold = ft
+					cb.HealthCheckTimeSeconds = ht
+					cb.FailoverRouteName = fname
+					cbRes := cbs.UpdateBreaker(&cb)
+					if cbRes.Success != true {
+						fmt.Println(cbRes)
+					}
+				} else {
+					cb.FailureThreshold = ft
+					cb.HealthCheckTimeSeconds = ht
+					cb.FailoverRouteName = fname
+					cbRes := cbs.InsertBreaker(&cb)
+					if cbRes.Success != true {
+						fmt.Println(cbRes)
+					}
+				}
+
+			} else {
+				if cbID != 0 {
+					cbdRes := cbs.DeleteBreaker(IDStr, routeIDStr, clientIDStr)
+					if cbdRes.Success != true {
+						fmt.Println(cbdRes)
+					}
+				}
+			}
+
 			fmt.Println(guRes)
 			http.Redirect(w, r, "/gatewayRouteUrlsByRoute/"+routeIDStr+"/"+clientIDStr, http.StatusFound)
 		}

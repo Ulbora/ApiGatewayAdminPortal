@@ -30,6 +30,9 @@ and open the template in the editor.
                 <thead>
                     <tr>
                         <th>Gateway Route</th>
+                        <th>Status</th>
+                        <th>Performance</th>
+                        <th>Errors</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,7 +40,25 @@ and open the template in the editor.
                     <tr>
                         <td onclick="window.location.href='/gatewayRouteUrlsByRoute/{{.ID}}/{{$.Client.ClientID}}'" data-inverted="" data-tooltip="Click to edit URLs for route"
                             data-position="bottom left">{{.Route}}</td>
+
+                        <td onclick="window.location.href='/gatewayRouteUrlsStatus/{{.ID}}/{{$.Client.ClientID}}'" data-inverted="" data-tooltip="Click for status of route URLs"
+                            data-position="bottom left">
+                            <i class="large heartbeat icon"></i>
+                        </td>
+
+
+                        <td onclick="window.location.href='/gatewayRouteUrlsPermformance/{{.ID}}/{{$.Client.ClientID}}'" data-inverted="" data-tooltip="Click to view performance of route URLs"
+                            data-position="bottom left">
+                            <i class="large bar chart icon"></i>
+                        </td>
+
+
+                        <td onclick="window.location.href='/gatewayRouteUrlsErrors/{{.ID}}/{{$.Client.ClientID}}'" data-inverted="" data-tooltip="Click to view errors on route URLs"
+                            data-position="bottom left">
+                            <i class="large warning sign icon"></i>
+                        </td>
                     </tr>
+
                     {{end}}
                 </tbody>
             </table>
