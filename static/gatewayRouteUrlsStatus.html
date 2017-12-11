@@ -61,6 +61,7 @@ and open the template in the editor.
                     <tr>
                         <th>URL Name</th>
                         <th>URL</th>
+                        <th>Active</th>
                         <th>Breaker Status</th>
                         <th></th>
                     </tr>
@@ -70,6 +71,14 @@ and open the template in the editor.
                     <tr>
                         <td>{{.Name}}</td>
                         <td>{{.URL}}</td>
+                        {{if .Active}}
+                        <td class="positive">
+                            Active
+                        </td>
+                        {{else}}
+                        <td>  
+                        </td>
+                        {{end}}
                         {{if .Healthy}}
                         <td class="positive">
                             {{.BreakerStatus}}

@@ -122,6 +122,7 @@ func handleRouteURLsStatus(w http.ResponseWriter, r *http.Request) {
 				gudisp.URL = u.URL
 				gudisp.RouteID = u.RouteID
 				gudisp.ClientID = u.ClientID
+				gudisp.Active = u.Active
 				cRes := cu.GetBreakerStatus(strconv.FormatInt(u.ID, 10), clientID)
 				if cRes.Open == true {
 					gudisp.Healthy = false

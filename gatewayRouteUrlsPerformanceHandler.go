@@ -121,6 +121,7 @@ func handleRouteURLsPerformance(w http.ResponseWriter, r *http.Request) {
 				gudisp.URL = u.URL
 				gudisp.RouteID = u.RouteID
 				gudisp.ClientID = u.ClientID
+				gudisp.Active = u.Active
 
 				var pss services.GatewayPerformance
 				pss.ClientID = u.ClientID

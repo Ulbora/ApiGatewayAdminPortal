@@ -55,13 +55,14 @@ and open the template in the editor.
             </div>
         </form>
         <div class="client-table">
-            <h4 class="ui dividing header">Gateway Route URL Status</h4>
+            <h4 class="ui dividing header">Gateway Route URL Performance</h4>
             <table class="ui selectable celled table">
                 <thead>
                     <tr>
                         <th>URL Name</th>
                         <th>URL</th>
-                        <th>Average Latency</th>
+                        <th>Active</th>
+                        <th>Average Latency</th>                        
                     </tr>
                 </thead>
                 <tbody>
@@ -69,6 +70,14 @@ and open the template in the editor.
                     <tr onclick="window.location.href='/viewPerformanceByDate/{{.ID}}/{{.RouteID}}/{{.ClientID}}'">
                         <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">{{.Name}}</td>
                         <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">{{.URL}}</td>
+                        {{if .Active}}
+                        <td class="positive">
+                            Active
+                        </td>
+                        {{else}}
+                        <td>  
+                        </td>
+                        {{end}}
                         {{if eq .AverageLatency 0}}
                         <td>No Calls</td>
                         {{else}}
