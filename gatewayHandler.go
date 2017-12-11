@@ -61,14 +61,15 @@ type gwPage struct {
 }
 
 type gatewayRouteURLDisp struct {
-	ID            int64  `json:"id"`
-	RouteID       int64  `json:"routeId"`
-	ClientID      int64  `json:"clientId"`
-	Name          string `json:"name"`
-	URL           string `json:"url"`
-	Active        bool   `json:"active"`
-	BreakerStatus string `json:"status"`
-	Healthy       bool   `json:"healthy"`
+	ID             int64  `json:"id"`
+	RouteID        int64  `json:"routeId"`
+	ClientID       int64  `json:"clientId"`
+	Name           string `json:"name"`
+	URL            string `json:"url"`
+	Active         bool   `json:"active"`
+	BreakerStatus  string `json:"status"`
+	Healthy        bool   `json:"healthy"`
+	AverageLatency int64
 }
 
 func handleGateway(w http.ResponseWriter, r *http.Request) {
