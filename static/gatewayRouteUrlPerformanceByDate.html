@@ -32,6 +32,9 @@ and open the template in the editor.
             <a class="{{.GwSideMenu.EditRoute}} item" href="/gatewayRouteUrlsPermformance/{{.GatewayRoute.ID}}/{{.Client.ClientID}}">
                 --> {{.GatewayRoute.Route}}
             </a>
+            <a class="{{.GwSideMenu.EditURL}} item" href="/viewPerformanceByDate/{{.GatewayRouteURLDisp.ID}}/{{.GatewayRoute.ID}}/{{.Client.ClientID}}">
+                ---> {{.GatewayRouteURLDisp.Name}}
+            </a>
         </div>
     </div>
     <div class="client-edit-form">
@@ -51,43 +54,20 @@ and open the template in the editor.
             </div>
             <div class="field">
                 <label>Route</label>
-                <input style="background: lightgreen;" type="text" value="{{.GatewayRoute.Route}}" disabled>
+                <input type="text" value="{{.GatewayRoute.Route}}" disabled>
+            </div>
+            <div class="field">
+                <label>URL Name</label>
+                <input style="background: lightgreen;" type="text" value="{{.GatewayRouteURLDisp.Name}}" disabled>
+            </div>
+            <div class="field">
+                <label>URL</label>
+                <input style="background: lightgreen;" type="text" value="{{.GatewayRouteURLDisp.URL}}" disabled>
             </div>
         </form>
         <div class="client-table">
             <h4 class="ui dividing header">Gateway Route URL Performance</h4>
-            <table class="ui selectable celled table">
-                <thead>
-                    <tr>
-                        <th>URL Name</th>
-                        <th>URL</th>
-                        <th>Active</th>
-                        <th>Average Latency</th>                        
-                    </tr>
-                </thead>
-                <tbody>
-                    {{range .GatewayRouteURLsDisp}}
-                    <tr onclick="window.location.href='/viewPerformanceByDate/{{.ID}}/{{.RouteID}}/{{.ClientID}}'">
-                        <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">{{.Name}}</td>
-                        <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">{{.URL}}</td>
-                        {{if .Active}}
-                        <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left" class="positive">
-                            Active
-                        </td>
-                        {{else}}
-                        <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">  
-                        </td>
-                        {{end}}
-                        {{if eq .AverageLatency 0}}
-                        <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">No Calls</td>
-                        {{else}}
-                        <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">{{.AverageLatency}} microseconds</td>
-                        {{end}}
 
-                    </tr>
-                    {{end}}
-                </tbody>
-            </table>
         </div>
     </div>
 </body>

@@ -139,21 +139,6 @@ func handleRouteURLsPerformance(w http.ResponseWriter, r *http.Request) {
 					gudisp.AverageLatency = aveLat
 				}
 
-				// cRes := cu.GetBreakerStatus(strconv.FormatInt(u.ID, 10), clientID)
-				// if cRes.Open == true {
-				// 	gudisp.Healthy = false
-				// 	gudisp.BreakerStatus = "Open"
-				// } else if cRes.PartialOpen == true {
-				// 	gudisp.Healthy = true
-				// 	gudisp.BreakerStatus = "Partially Open"
-				// } else if cRes.Warning == true {
-				// 	gudisp.Healthy = true
-				// 	gudisp.BreakerStatus = "Warning"
-				// } else {
-				// 	gudisp.Healthy = true
-				// 	gudisp.BreakerStatus = "Normal"
-				// }
-
 				grusDisp = append(grusDisp, gudisp)
 			}
 
@@ -173,59 +158,135 @@ func handleRouteURLsPerformance(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func handleResetBreaker(w http.ResponseWriter, r *http.Request) {
-// 	s.InitSessionStore(w, r)
-// 	session, err := s.GetSession(r)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-// 	}
-// 	loggedIn := session.Values["userLoggenIn"]
-// 	token := getToken(w, r)
-// 	fmt.Print("in main page. Logged in: ")
-// 	fmt.Println(loggedIn)
-// 	//fmt.Println(token.AccessToken)
-// 	//var res *[]services.Client
-// 	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
-// 		authorize(w, r)
-// 	} else {
-// 		session.Values["userLoggenIn"] = true
-// 		vars := mux.Vars(r)
+func handleRouteURLPerformanceByDate(w http.ResponseWriter, r *http.Request) {
+	s.InitSessionStore(w, r)
+	session, err := s.GetSession(r)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	loggedIn := session.Values["userLoggenIn"]
+	token := getToken(w, r)
+	fmt.Print("in main page. Logged in: ")
+	fmt.Println(loggedIn)
+	//fmt.Println(token.AccessToken)
+	//var res *[]services.Client
+	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
+		authorize(w, r)
+	} else {
+		session.Values["userLoggenIn"] = true
+		vars := mux.Vars(r)
+		urlID := vars["urlId"]
+		routeID := vars["routeId"]
+		clientID := vars["clientId"]
+		fmt.Print("urlId: ")
+		fmt.Println(urlID)
+		fmt.Print("routeId: ")
+		fmt.Println(routeID)
 
-// 		IDStr := vars["urlId"]
-// 		ID, _ := strconv.ParseInt(IDStr, 10, 0)
-// 		fmt.Println(IDStr)
+		if clientID != "" && routeID != "" && urlID != "" {
+			var wg sync.WaitGroup
 
-// 		routeIDStr := vars["routeId"]
-// 		//routeID, _ := strconv.ParseInt(routeIDStr, 10, 0)
-// 		fmt.Println(routeIDStr)
+			var c services.ClientService
+			token := getToken(w, r)
+			c.ClientID = getAuthCodeClient()
+			c.Host = getOauthHost()
+			c.Token = token.AccessToken
+			wg.Add(1)
+			var res *services.Client
+			go func(clientID string) {
+				res = c.GetClient(clientID)
+				defer wg.Done()
+			}(clientID)
 
-// 		clientIDStr := vars["clientId"]
-// 		clientID, _ := strconv.ParseInt(clientIDStr, 10, 0)
+			var g services.GatewayClientService
+			//token := getToken(w, r)
+			g.ClientID = getAuthCodeClient()
+			g.Host = getGatewayHost()
+			g.Token = token.AccessToken
+			var gres *services.GatewayClient
+			wg.Add(1)
+			go func(clientID string) {
+				gres = g.GetClient(clientID)
+				defer wg.Done()
+			}(clientID)
 
-// 		fmt.Print("clientId: ")
-// 		fmt.Println(clientIDStr)
+			fmt.Println(gres)
 
-// 		if IDStr != "" && clientIDStr != "" {
-// 			token := getToken(w, r)
+			var gr services.GatewayRouteService
+			gr.ClientID = getAuthCodeClient()
+			gr.Host = getGatewayHost()
+			gr.Token = token.AccessToken
+			var grr *services.GatewayRoute
+			wg.Add(1)
+			go func(routeID string, clientID string) {
+				grr = gr.GetRoute(routeID, clientID)
+				defer wg.Done()
+			}(routeID, clientID)
 
-// 			var cu services.GatewayBreakerService
-// 			cu.ClientID = getAuthCodeClient()
-// 			cu.Host = getGatewayHost()
-// 			cu.Token = token.AccessToken
+			var gu services.GatewayRouteURLService
+			gu.ClientID = getAuthCodeClient()
+			gu.Host = getGatewayHost()
+			gu.Token = token.AccessToken
+			wg.Add(1)
+			var u *services.GatewayRouteURL
+			go func(urlID string, routeID string, clientID string) {
+				u = gu.GetRouteURL(urlID, routeID, clientID)
+				defer wg.Done()
+			}(urlID, routeID, clientID)
+			wg.Wait()
 
-// 			var cuu services.GatewayBreaker
-// 			cuu.ClientID = clientID
-// 			cuu.RouteURIID = ID
+			fmt.Print("route: ")
+			fmt.Println(grr)
 
-// 			//guu.Name = name
-// 			//guu.URL = gwURL
+			var ps services.GatewayPerformanceService
+			ps.ClientID = getAuthCodeClient()
+			ps.Host = getGatewayHost()
+			ps.Token = token.AccessToken
+			//var cRes *services.GatewayBreaker
 
-// 			cuRes := cu.ResetBreaker(&cuu)
-// 			if cuRes.Success != true {
-// 				fmt.Println(cuRes)
-// 			}
-// 			http.Redirect(w, r, "/gatewayRouteUrlsStatus/"+routeIDStr+"/"+clientIDStr, http.StatusFound)
-// 		}
-// 	}
-// }
+			//var grusDisp = make([]gatewayRouteURLDisp, 0)
+			//for _, u := range *grus {
+			var gudisp gatewayRouteURLDisp
+			gudisp.ID = u.ID
+			gudisp.Name = u.Name
+			gudisp.URL = u.URL
+			gudisp.RouteID = u.RouteID
+			gudisp.ClientID = u.ClientID
+			gudisp.Active = u.Active
+
+			var pss services.GatewayPerformance
+			pss.ClientID = u.ClientID
+			pss.RouteURIID = u.ID
+			pss.RestRouteID = u.RouteID
+			pRes := ps.GetRoutePerformance(&pss)
+			// var lat int64
+			// var cnt int64
+			// for _, p := range *pRes {
+			// 	lat += p.LatencyMsTotal
+			// 	cnt += p.Calls
+			// }
+			// if lat > 0 && cnt > 0 {
+			// 	aveLat := (lat / cnt)
+			// 	gudisp.AverageLatency = aveLat
+			// }
+
+			//grusDisp = append(grusDisp, gudisp)
+			//}
+
+			var page gwPage
+			page.GwActive = "active"
+			page.Client = res
+			page.GatewayClient = gres
+			page.GatewayRoute = grr
+			page.GatewayRouteURLDisp = &gudisp
+			page.URLPerformance = pRes
+
+			var sm gwSideMenu
+			sm.EditURL = "active teal"
+			page.GwSideMenu = &sm
+			//fmt.Println(page)
+			templates.ExecuteTemplate(w, "gatewayRouteUrlPerformanceByDate.html", &page)
+		}
+	}
+}

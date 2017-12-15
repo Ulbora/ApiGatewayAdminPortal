@@ -58,6 +58,8 @@ type gwPage struct {
 	CircuitBreaker        *services.GatewayBreaker
 	CircuitBreakerEnabled bool
 	GatewayRouteURLsDisp  *[]gatewayRouteURLDisp
+	GatewayRouteURLDisp   *gatewayRouteURLDisp
+	URLPerformance        *[]services.GatewayPerformance
 }
 
 type gatewayRouteURLDisp struct {
