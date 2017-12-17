@@ -77,7 +77,7 @@ func handleRoutes(w http.ResponseWriter, r *http.Request) {
 			g.Token = token.AccessToken
 
 			gres := g.GetClient(clientID)
-			fmt.Println(gres)
+			//fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()
@@ -179,7 +179,7 @@ func handleRouteEdit(w http.ResponseWriter, r *http.Request) {
 			g.Token = token.AccessToken
 
 			gres := g.GetClient(clientID)
-			fmt.Println(gres)
+			//fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()

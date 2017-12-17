@@ -78,10 +78,10 @@ and open the template in the editor.
                         <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">  
                         </td>
                         {{end}}
-                        {{if eq .AverageLatency 0}}
+                        {{if eq .AverageLatency 0.0}}
                         <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">No Calls</td>
                         {{else}}
-                        <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">{{.AverageLatency}} microseconds</td>
+                        <td data-inverted="" data-tooltip="Click to view performance by date" data-position="bottom left">{{.AverageLatency}} milliseconds</td>
                         {{end}}
 
                     </tr>

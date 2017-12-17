@@ -5,9 +5,9 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-{{template "header"}}
+{{template "headerChart"}}
 
-<body>
+<body onload="setTicks({{.ChartDate.Month}}, {{.ChartDate.Year}}), setChartData({{.ChartData}});">
     {{template "navbar" .}}
     <div class="side-menu">
         <div class="ui vertical menu">
@@ -66,8 +66,12 @@ and open the template in the editor.
             </div>
         </form>
         <div class="client-table">
-            <h4 class="ui dividing header">Gateway Route URL Performance</h4>
-
+            <h4 class="ui dividing header">Gateway Route URL Performance</h4>            
+            <div id="chart_div"></div>
+            <br>
+            <br>
+            <br>
+            <br>
         </div>
     </div>
 </body>

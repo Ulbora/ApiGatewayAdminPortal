@@ -59,7 +59,9 @@ type gwPage struct {
 	CircuitBreakerEnabled bool
 	GatewayRouteURLsDisp  *[]gatewayRouteURLDisp
 	GatewayRouteURLDisp   *gatewayRouteURLDisp
-	URLPerformance        *[]services.GatewayPerformance
+	//URLPerformance        *[]services.GatewayPerformance
+	ChartData string
+	ChartDate *chartDate
 }
 
 type gatewayRouteURLDisp struct {
@@ -71,7 +73,31 @@ type gatewayRouteURLDisp struct {
 	Active         bool   `json:"active"`
 	BreakerStatus  string `json:"status"`
 	Healthy        bool   `json:"healthy"`
-	AverageLatency int64
+	AverageLatency float64
+}
+
+type chartDate struct {
+	Month int
+	Year  int
+}
+
+type chartCol struct {
+	ID    string `json:"id"`
+	Label string `json:"label"`
+	Type  string `json:"type"`
+}
+
+type chartRowVal struct {
+	V interface{} `json:"v"`
+}
+
+type chartRow struct {
+	C []chartRowVal `json:"c"`
+}
+
+type chartData struct {
+	Cols []chartCol `json:"cols"`
+	Rows []chartRow `json:"rows"`
 }
 
 func handleGateway(w http.ResponseWriter, r *http.Request) {

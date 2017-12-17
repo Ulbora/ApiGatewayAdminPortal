@@ -78,7 +78,7 @@ func handleRouteURLs(w http.ResponseWriter, r *http.Request) {
 			g.Token = token.AccessToken
 
 			gres := g.GetClient(clientID)
-			fmt.Println(gres)
+			//fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()
@@ -148,7 +148,7 @@ func handleRouteURLsByRoute(w http.ResponseWriter, r *http.Request) {
 				defer wg.Done()
 			}(clientID)
 
-			fmt.Println(gres)
+			//fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()
@@ -303,7 +303,7 @@ func handleRouteURLEdit(w http.ResponseWriter, r *http.Request) {
 				defer wg.Done()
 			}(clientIDStr)
 
-			fmt.Println(gres)
+			//fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()
@@ -410,7 +410,7 @@ func handleRouteURLActivate(w http.ResponseWriter, r *http.Request) {
 			if guRes.Success != true {
 				fmt.Println(guRes)
 			}
-			fmt.Println(guRes)
+			//fmt.Println(guRes)
 			http.Redirect(w, r, "/gatewayRouteUrlsByRoute/"+routeIDStr+"/"+clientIDStr, http.StatusFound)
 		}
 	}
@@ -541,7 +541,7 @@ func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			fmt.Println(guRes)
+			//fmt.Println(guRes)
 			http.Redirect(w, r, "/gatewayRouteUrlsByRoute/"+routeIDStr+"/"+clientIDStr, http.StatusFound)
 		}
 	}

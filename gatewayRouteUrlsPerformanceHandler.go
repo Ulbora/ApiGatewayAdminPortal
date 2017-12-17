@@ -27,9 +27,12 @@ package main
 
 import (
 	services "ApiGatewayAdminPortal/services"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"sync"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -82,7 +85,7 @@ func handleRouteURLsPerformance(w http.ResponseWriter, r *http.Request) {
 				defer wg.Done()
 			}(clientID)
 
-			fmt.Println(gres)
+			//fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()
@@ -130,14 +133,23 @@ func handleRouteURLsPerformance(w http.ResponseWriter, r *http.Request) {
 				pRes := ps.GetRoutePerformance(&pss)
 				var lat int64
 				var cnt int64
+				//var dv float64
+				//dv = 1000
 				for _, p := range *pRes {
 					lat += p.LatencyMsTotal
 					cnt += p.Calls
 				}
 				if lat > 0 && cnt > 0 {
 					aveLat := (lat / cnt)
-					gudisp.AverageLatency = aveLat
+					al := float64(aveLat)
+					al = al / 1000
+					gudisp.AverageLatency = al
+					//gudisp.AverageLatency = 1.000
+					//fmt.Print("latency: ")
+					//fmt.Println(al)
 				}
+				//fmt.Print("latency val: ")
+				//fmt.Println(gudisp.AverageLatency)
 
 				grusDisp = append(grusDisp, gudisp)
 			}
@@ -179,10 +191,10 @@ func handleRouteURLPerformanceByDate(w http.ResponseWriter, r *http.Request) {
 		urlID := vars["urlId"]
 		routeID := vars["routeId"]
 		clientID := vars["clientId"]
-		fmt.Print("urlId: ")
-		fmt.Println(urlID)
-		fmt.Print("routeId: ")
-		fmt.Println(routeID)
+		//fmt.Print("urlId: ")
+		//fmt.Println(urlID)
+		//fmt.Print("routeId: ")
+		//fmt.Println(routeID)
 
 		if clientID != "" && routeID != "" && urlID != "" {
 			var wg sync.WaitGroup
@@ -211,7 +223,7 @@ func handleRouteURLPerformanceByDate(w http.ResponseWriter, r *http.Request) {
 				defer wg.Done()
 			}(clientID)
 
-			fmt.Println(gres)
+			//fmt.Println(gres)
 
 			var gr services.GatewayRouteService
 			gr.ClientID = getAuthCodeClient()
@@ -234,19 +246,30 @@ func handleRouteURLPerformanceByDate(w http.ResponseWriter, r *http.Request) {
 				u = gu.GetRouteURL(urlID, routeID, clientID)
 				defer wg.Done()
 			}(urlID, routeID, clientID)
-			wg.Wait()
-
-			fmt.Print("route: ")
-			fmt.Println(grr)
 
 			var ps services.GatewayPerformanceService
 			ps.ClientID = getAuthCodeClient()
 			ps.Host = getGatewayHost()
 			ps.Token = token.AccessToken
-			//var cRes *services.GatewayBreaker
+			wg.Add(1)
+			var pRes *[]services.GatewayPerformance
+			go func(urlID string, routeID string, clientID string) {
+				var pss services.GatewayPerformance
+				pss.ClientID, _ = strconv.ParseInt(clientID, 10, 0)
+				pss.RouteURIID, _ = strconv.ParseInt(urlID, 10, 0)
+				pss.RestRouteID, _ = strconv.ParseInt(routeID, 10, 0)
+				pRes = ps.GetRoutePerformance(&pss)
+				defer wg.Done()
+			}(urlID, routeID, clientID)
 
-			//var grusDisp = make([]gatewayRouteURLDisp, 0)
-			//for _, u := range *grus {
+			wg.Wait()
+
+			//fmt.Print("route: ")
+			//fmt.Println(grr)
+
+			//fmt.Print("performance: ")
+			//fmt.Println(pRes)
+
 			var gudisp gatewayRouteURLDisp
 			gudisp.ID = u.ID
 			gudisp.Name = u.Name
@@ -255,24 +278,12 @@ func handleRouteURLPerformanceByDate(w http.ResponseWriter, r *http.Request) {
 			gudisp.ClientID = u.ClientID
 			gudisp.Active = u.Active
 
-			var pss services.GatewayPerformance
-			pss.ClientID = u.ClientID
-			pss.RouteURIID = u.ID
-			pss.RestRouteID = u.RouteID
-			pRes := ps.GetRoutePerformance(&pss)
-			// var lat int64
-			// var cnt int64
-			// for _, p := range *pRes {
-			// 	lat += p.LatencyMsTotal
-			// 	cnt += p.Calls
-			// }
-			// if lat > 0 && cnt > 0 {
-			// 	aveLat := (lat / cnt)
-			// 	gudisp.AverageLatency = aveLat
-			// }
-
-			//grusDisp = append(grusDisp, gudisp)
-			//}
+			tnow := time.Now()
+			var cdate chartDate
+			m := tnow.Month()
+			y := tnow.Year()
+			cdate.Month = int(m) - 1
+			cdate.Year = int(y)
 
 			var page gwPage
 			page.GwActive = "active"
@@ -280,7 +291,13 @@ func handleRouteURLPerformanceByDate(w http.ResponseWriter, r *http.Request) {
 			page.GatewayClient = gres
 			page.GatewayRoute = grr
 			page.GatewayRouteURLDisp = &gudisp
-			page.URLPerformance = pRes
+
+			page.ChartDate = &cdate
+			chdata := buildChartData(pRes)
+			aJSON, _ := json.Marshal(chdata)
+			page.ChartData = string(aJSON)
+			//fmt.Println("chart data JSON: ")
+			//fmt.Println(page.ChartData)
 
 			var sm gwSideMenu
 			sm.EditURL = "active teal"
@@ -289,4 +306,64 @@ func handleRouteURLPerformanceByDate(w http.ResponseWriter, r *http.Request) {
 			templates.ExecuteTemplate(w, "gatewayRouteUrlPerformanceByDate.html", &page)
 		}
 	}
+}
+
+func buildChartData(pl *[]services.GatewayPerformance) *chartData {
+	var rtn chartData
+	var c = make([]chartCol, 0)
+
+	var c1 chartCol
+	c1.ID = "month"
+	c1.Label = "Month"
+	c1.Type = "string"
+	c = append(c, c1)
+
+	var c2 chartCol
+	c2.ID = "lat"
+	c2.Label = "Average Latency (Milliseconds)"
+	c2.Type = "number"
+	c = append(c, c2)
+
+	var c3 chartCol
+	c3.ID = "calls"
+	c3.Label = "Call Count"
+	c3.Type = "number"
+	c = append(c, c3)
+
+	rtn.Cols = c
+
+	var rl = make([]chartRow, 0)
+
+	for _, p := range *pl {
+		var rvl = make([]chartRowVal, 0)
+
+		var rvd chartRowVal
+
+		rvd.V = p.Entered
+		rvl = append(rvl, rvd)
+
+		var rvla chartRowVal
+		if p.Calls > 0 {
+			var lat = p.LatencyMsTotal / p.Calls
+			var latf = float64(lat)
+			latf = latf / 1000
+			rvla.V = latf
+		} else {
+			rvla.V = 0
+		}
+		rvl = append(rvl, rvla)
+
+		var rvc chartRowVal
+		rvc.V = p.Calls
+		rvl = append(rvl, rvc)
+
+		var r chartRow
+		r.C = rvl
+		rl = append(rl, r)
+	}
+	rtn.Rows = rl
+	//fmt.Print("chart data: ")
+	//fmt.Println(rtn)
+
+	return &rtn
 }

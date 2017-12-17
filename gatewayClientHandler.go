@@ -70,7 +70,7 @@ func handleGatewayClient(w http.ResponseWriter, r *http.Request) {
 			g.Token = token.AccessToken
 
 			gres := g.GetClient(clientID)
-			fmt.Println(gres)
+			//fmt.Println(gres)
 			var page gwPage
 			page.GwActive = "active"
 			page.Client = res
