@@ -53,7 +53,8 @@ var templates = template.Must(template.ParseFiles("./static/index.html", "./stat
 	"./static/gatewayClient.html", "./static/gatewayRoutes.html", "./static/editGatewayRoute.html",
 	"./static/gatewayRouteUrls.html", "./static/gatewayRouteUrlsByRoute.html", "./static/gatewayRouteUrl.html",
 	"./static/gatewayRouteUrlsStatus.html", "./static/gatewayRouteUrlsPerformance.html",
-	"./static/gatewayRouteUrlPerformanceByDate.html"))
+	"./static/gatewayRouteUrlPerformanceByDate.html", "./static/gatewayRouteUrlsErrors.html",
+	"./static/gatewayRouteUrlViewErrors.html"))
 
 //var username string
 
@@ -137,6 +138,10 @@ func main() {
 	//gateway performance
 	router.HandleFunc("/gatewayRouteUrlsPermformance/{routeId}/{clientId}", handleRouteURLsPerformance)
 	router.HandleFunc("/viewPerformanceByDate/{urlId}/{routeId}/{clientId}", handleRouteURLPerformanceByDate)
+
+	//gateway errors
+	router.HandleFunc("/gatewayRouteUrlsErrors/{routeId}/{clientId}", handleRouteURLsErrors)
+	router.HandleFunc("/viewErrors/{urlId}/{routeId}/{clientId}", handleRouteURLError)
 
 	router.HandleFunc("/tokenHandler", handleToken)
 	router.HandleFunc("/login", handleLogin)

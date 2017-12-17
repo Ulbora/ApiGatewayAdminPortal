@@ -59,21 +59,22 @@ type gwPage struct {
 	CircuitBreakerEnabled bool
 	GatewayRouteURLsDisp  *[]gatewayRouteURLDisp
 	GatewayRouteURLDisp   *gatewayRouteURLDisp
-	//URLPerformance        *[]services.GatewayPerformance
-	ChartData string
-	ChartDate *chartDate
+	ChartData             string
+	ChartDate             *chartDate
+	Errors                *[]services.GatewayError
 }
 
 type gatewayRouteURLDisp struct {
-	ID             int64  `json:"id"`
-	RouteID        int64  `json:"routeId"`
-	ClientID       int64  `json:"clientId"`
-	Name           string `json:"name"`
-	URL            string `json:"url"`
-	Active         bool   `json:"active"`
-	BreakerStatus  string `json:"status"`
-	Healthy        bool   `json:"healthy"`
-	AverageLatency float64
+	ID             int64   `json:"id"`
+	RouteID        int64   `json:"routeId"`
+	ClientID       int64   `json:"clientId"`
+	Name           string  `json:"name"`
+	URL            string  `json:"url"`
+	Active         bool    `json:"active"`
+	BreakerStatus  string  `json:"status"`
+	Healthy        bool    `json:"healthy"`
+	AverageLatency float64 `json:"averageLatency"`
+	ErrorCount     int     `json:"errorCount"`
 }
 
 type chartDate struct {
