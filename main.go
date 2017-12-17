@@ -142,6 +142,7 @@ func main() {
 	//gateway errors
 	router.HandleFunc("/gatewayRouteUrlsErrors/{routeId}/{clientId}", handleRouteURLsErrors)
 	router.HandleFunc("/viewErrors/{urlId}/{routeId}/{clientId}", handleRouteURLError)
+	router.HandleFunc("/viewErrors/{urlId}/{routeId}/{clientId}/{page}", handleRouteURLError)
 
 	router.HandleFunc("/tokenHandler", handleToken)
 	router.HandleFunc("/login", handleLogin)

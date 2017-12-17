@@ -66,8 +66,40 @@ and open the template in the editor.
             </div>
         </form>
         <div class="client-table">
-            <h4 class="ui dividing header">Gateway Route URL Errors</h4>            
-            
+            <h4 class="ui dividing header">Gateway Route URL Errors</h4>
+            <table class="ui selectable celled table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Error Code</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Errors}}
+                    <tr>
+                        <td>{{.Entered}}</td>
+                        <td>{{.Code}}</td>
+                        <td>{{.Message}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{if gt .ErrorPages 1}}
+            <div class="ui pagination menu">
+                {{range .ErrorPageRange}}                     
+                    {{if eq .Pg $.ErrorPageCurrent}}
+                        <a class="active item" href="/viewErrors/{{$.GatewayRouteURLDisp.ID}}/{{$.GatewayRoute.ID}}/{{$.Client.ClientID}}/{{.Pg}}">
+                            {{.Pg}}
+                        </a>
+                    {{else}}
+                        <a class="item" href="/viewErrors/{{$.GatewayRouteURLDisp.ID}}/{{$.GatewayRoute.ID}}/{{$.Client.ClientID}}/{{.Pg}}">
+                            {{.Pg}}
+                        </a>
+                    {{end}}
+                {{end}}
+            </div>
+            {{end}}
             <br>
             <br>
             <br>

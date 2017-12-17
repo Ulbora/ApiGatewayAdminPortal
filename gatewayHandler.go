@@ -62,6 +62,9 @@ type gwPage struct {
 	ChartData             string
 	ChartDate             *chartDate
 	Errors                *[]services.GatewayError
+	ErrorPages            int
+	ErrorPageRange        *[]errorPageRange
+	ErrorPageCurrent      int
 }
 
 type gatewayRouteURLDisp struct {
@@ -99,6 +102,10 @@ type chartRow struct {
 type chartData struct {
 	Cols []chartCol `json:"cols"`
 	Rows []chartRow `json:"rows"`
+}
+
+type errorPageRange struct {
+	Pg int
 }
 
 func handleGateway(w http.ResponseWriter, r *http.Request) {

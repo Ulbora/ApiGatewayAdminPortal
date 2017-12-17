@@ -28,6 +28,7 @@ package main
 import (
 	services "ApiGatewayAdminPortal/services"
 	"fmt"
+	"math"
 	"net/http"
 	"strconv"
 	"sync"
@@ -35,6 +36,8 @@ import (
 
 	"github.com/gorilla/mux"
 )
+
+var pageSize = 20
 
 func handleRouteURLsErrors(w http.ResponseWriter, r *http.Request) {
 	s.InitSessionStore(w, r)
@@ -191,6 +194,16 @@ func handleRouteURLError(w http.ResponseWriter, r *http.Request) {
 		urlID := vars["urlId"]
 		routeID := vars["routeId"]
 		clientID := vars["clientId"]
+		pageStr := vars["page"]
+		var pageNum int
+		var err error
+		if pageStr != "" {
+			if pageNum, err = strconv.Atoi(pageStr); err != nil {
+				pageNum = 1
+			}
+		} else {
+			pageNum = 1
+		}
 		//fmt.Print("urlId: ")
 		//fmt.Println(urlID)
 		//fmt.Print("routeId: ")
@@ -267,8 +280,8 @@ func handleRouteURLError(w http.ResponseWriter, r *http.Request) {
 			//fmt.Print("route: ")
 			//fmt.Println(grr)
 
-			//fmt.Print("performance: ")
-			//fmt.Println(pRes)
+			//fmt.Print("errors: ")
+			//fmt.Println(eRes)
 
 			var gudisp gatewayRouteURLDisp
 			gudisp.ID = u.ID
@@ -291,14 +304,36 @@ func handleRouteURLError(w http.ResponseWriter, r *http.Request) {
 			page.GatewayClient = gres
 			page.GatewayRoute = grr
 			page.GatewayRouteURLDisp = &gudisp
-			page.Errors = eRes
+			ep := make([]services.GatewayError, 0)
+			epr := make([]errorPageRange, 0)
+			////page.Errors = eRes
+			//for (pageSize * page)
+			pcf := float64(len(*eRes)) / float64(pageSize)
+			pc := math.Ceil(pcf)
+			pcint := int(pc)
+			page.ErrorPages = pcint
+			page.ErrorPageCurrent = pageNum
+			//var pcrng int
+			//pcrng = 1
 
-			//page.ChartDate = &cdate
-			//chdata := buildChartData(pRes)
-			//aJSON, _ := json.Marshal(chdata)
-			//page.ChartData = string(aJSON)
-			//fmt.Println("chart data JSON: ")
-			//fmt.Println(page.ChartData)
+			//fmt.Print("error page number: ")
+			//fmt.Println(page.ErrorPages)
+
+			for pcrng := 1; pcrng <= pcint; pcrng++ {
+				var eprr errorPageRange
+				eprr.Pg = pcrng
+				epr = append(epr, eprr)
+			}
+			//fmt.Print("error page range: ")
+			//fmt.Println(epr)
+
+			for i, e := range *eRes {
+				if (i < (pageSize * pageNum)) && (i >= (pageSize * (pageNum - 1))) {
+					ep = append(ep, e)
+				}
+			}
+			page.Errors = &ep
+			page.ErrorPageRange = &epr
 
 			var sm gwSideMenu
 			sm.EditURL = "active teal"
@@ -308,63 +343,3 @@ func handleRouteURLError(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-
-// func buildChartData(pl *[]services.GatewayPerformance) *chartData {
-// 	var rtn chartData
-// 	var c = make([]chartCol, 0)
-
-// 	var c1 chartCol
-// 	c1.ID = "month"
-// 	c1.Label = "Month"
-// 	c1.Type = "string"
-// 	c = append(c, c1)
-
-// 	var c2 chartCol
-// 	c2.ID = "lat"
-// 	c2.Label = "Average Latency (Milliseconds)"
-// 	c2.Type = "number"
-// 	c = append(c, c2)
-
-// 	var c3 chartCol
-// 	c3.ID = "calls"
-// 	c3.Label = "Call Count"
-// 	c3.Type = "number"
-// 	c = append(c, c3)
-
-// 	rtn.Cols = c
-
-// 	var rl = make([]chartRow, 0)
-
-// 	for _, p := range *pl {
-// 		var rvl = make([]chartRowVal, 0)
-
-// 		var rvd chartRowVal
-
-// 		rvd.V = p.Entered
-// 		rvl = append(rvl, rvd)
-
-// 		var rvla chartRowVal
-// 		if p.Calls > 0 {
-// 			var lat = p.LatencyMsTotal / p.Calls
-// 			var latf = float64(lat)
-// 			latf = latf / 1000
-// 			rvla.V = latf
-// 		} else {
-// 			rvla.V = 0
-// 		}
-// 		rvl = append(rvl, rvla)
-
-// 		var rvc chartRowVal
-// 		rvc.V = p.Calls
-// 		rvl = append(rvl, rvc)
-
-// 		var r chartRow
-// 		r.C = rvl
-// 		rl = append(rl, r)
-// 	}
-// 	rtn.Rows = rl
-// 	//fmt.Print("chart data: ")
-// 	//fmt.Println(rtn)
-
-// 	return &rtn
-// }
