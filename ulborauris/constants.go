@@ -75,6 +75,8 @@ var apiGatewaySuperURIs = []UlborURIs{
 
 var oauthURIs = []UlborURIs{
 
+	{"/ulbora/rs/client/admin/get", "admin"},
+
 	{"/ulbora/rs/clientRoleUri/add", "admin"},
 	{"/ulbora/rs/clientRoleUri/list", "admin"},
 	{"/ulbora/rs/clientRoleUri/delete", "admin"},
