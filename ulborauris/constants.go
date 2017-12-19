@@ -39,6 +39,11 @@ var oauthSuperURIs = []UlborURIs{
 	{"/ulbora/rs/user/search", "superAdmin"},
 	{"/ulbora/rs/user/delete", "superAdmin"},
 	{"/ulbora/rs/role/list", "admin"},
+
+	{"/ulbora/rs/clientRoleSuper/add", "superAdmin"},
+
+	{"/ulbora/rs/clientAllowedUriSuper/add", "superAdmin"},
+	{"/ulbora/rs/clientAllowedUriSuper/update", "superAdmin"},
 }
 
 var apiGatewaySuperURIs = []UlborURIs{

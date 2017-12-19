@@ -60,7 +60,7 @@ type AllowedURIResponse struct {
 //AddAllowedURI add
 func (a *AllowedURIService) AddAllowedURI(au *AllowedURI) *AllowedURIResponse {
 	var rtn = new(AllowedURIResponse)
-	var addURL = a.Host + "/rs/clientAllowedUri/add"
+	var addURL = a.Host + "/rs/clientAllowedUriSuper/add"
 	aJSON, err := json.Marshal(au)
 
 	if err != nil {
@@ -101,7 +101,7 @@ func (a *AllowedURIService) AddAllowedURI(au *AllowedURI) *AllowedURIResponse {
 //UpdateAllowedURI update UpdateAllowedURI
 func (a *AllowedURIService) UpdateAllowedURI(au *AllowedURI) *AllowedURIResponse {
 	var rtn = new(AllowedURIResponse)
-	var upURL = a.Host + "/rs/clientAllowedUri/update"
+	var upURL = a.Host + "/rs/clientAllowedUriSuper/update"
 
 	//fmt.Println(content.Text)
 	aJSON, err := json.Marshal(au)

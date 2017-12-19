@@ -60,7 +60,7 @@ type ClientRoleResponse struct {
 //AddClientRole AddClientRole
 func (r *ClientRoleService) AddClientRole(cr *ClientRole) *ClientRoleResponse {
 	var rtn = new(ClientRoleResponse)
-	var addURL = r.Host + "/rs/clientRole/add"
+	var addURL = r.Host + "/rs/clientRoleSuper/add"
 	aJSON, err := json.Marshal(cr)
 
 	if err != nil {
@@ -84,8 +84,8 @@ func (r *ClientRoleService) AddClientRole(cr *ClientRole) *ClientRoleResponse {
 				fmt.Println(cErr)
 			} else {
 				defer resp.Body.Close()
-				//fmt.Print("resp: ")
-				//fmt.Println(resp)
+				fmt.Print("resp: ")
+				fmt.Println(resp)
 				decoder := json.NewDecoder(resp.Body)
 				error := decoder.Decode(&rtn)
 				if error != nil {
