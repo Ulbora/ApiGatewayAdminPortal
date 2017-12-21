@@ -113,6 +113,9 @@ var oauthURIs = []UlborURIs{
 }
 
 var apiGatewayURIs = []UlborURIs{
+
+	{"/ulbora/rs/gwClientUser/get", "admin"},
+
 	{"/ulbora/rs/gwRouteUrl/add", "admin"},
 	{"/ulbora/rs/gwRouteUrl/update", "admin"},
 	{"/ulbora/rs/gwRouteUrl/activate", "admin"},
