@@ -484,6 +484,13 @@ func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
 		fmt.Print("fname: ")
 		fmt.Println(fname)
 
+		fcodeStr := r.FormValue("openFailCode")
+		var fcode int
+		if fcodeStr != "" {
+			fcode, _ = strconv.Atoi(fcodeStr)
+		}
+		fmt.Println(fcode)
+
 		if IDStr != "" && routeIDStr != "" && clientIDStr != "" {
 			token := getToken(w, r)
 
@@ -518,6 +525,7 @@ func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
 					cb.FailureThreshold = ft
 					cb.HealthCheckTimeSeconds = ht
 					cb.FailoverRouteName = fname
+					cb.OpenFailCode = fcode
 					cbRes := cbs.UpdateBreaker(&cb)
 					if cbRes.Success != true {
 						fmt.Println(cbRes)
@@ -526,6 +534,7 @@ func handleRouteURLUpdate(w http.ResponseWriter, r *http.Request) {
 					cb.FailureThreshold = ft
 					cb.HealthCheckTimeSeconds = ht
 					cb.FailoverRouteName = fname
+					cb.OpenFailCode = fcode
 					cbRes := cbs.InsertBreaker(&cb)
 					if cbRes.Success != true {
 						fmt.Println(cbRes)

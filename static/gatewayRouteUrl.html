@@ -109,6 +109,10 @@ and open the template in the editor.
                         <label>HealthCheck Time in Seconds</label>
                         <input type="number" name="healthCheckTimeSeconds" value="{{.CircuitBreaker.HealthCheckTimeSeconds}}">
                     </div>
+                    <div class="field" data-inverted="" data-tooltip="HTTP code to return when breaker is open" data-position="bottom left">
+                        <label>Open Fail Code</label>
+                        <input type="number" name="openFailCode" value="{{.CircuitBreaker.OpenFailCode}}">
+                    </div>
                     <div class="field" data-inverted="" data-tooltip="Failover route when breaker opens" data-position="bottom left">
                         <label>Failover Route Name</label>
                         <input type="text" name="failoverRouteName" value="{{.CircuitBreaker.FailoverRouteName}}" >
@@ -123,6 +127,10 @@ and open the template in the editor.
                     <div class="field" data-inverted="" data-tooltip="Number seconds before service call retries after breaker opens" data-position="bottom left">
                         <label>HealthCheck Time in Seconds</label>
                         <input type="number" name="healthCheckTimeSeconds" value="120">
+                    </div>
+                    <div class="field" data-inverted="" data-tooltip="HTTP code to return when breaker is open" data-position="bottom left">
+                        <label>Open Fail Code</label>
+                        <input type="number" name="openFailCode" value="500">
                     </div>
                     <div class="field" data-inverted="" data-tooltip="Failover route when breaker opens" data-position="bottom left">
                         <label>Failover Route Name</label>
