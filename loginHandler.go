@@ -80,7 +80,7 @@ func authorize(res http.ResponseWriter, req *http.Request) bool {
 func handleToken(res http.ResponseWriter, req *http.Request) {
 	code := req.URL.Query().Get("code")
 	state := req.URL.Query().Get("state")
-	//fmt.Println("handle token")
+	fmt.Println("handle token")
 	if state == authCodeState {
 		var tn oauth2.AuthCodeToken
 		tn.OauthHost = getOauthHost()
@@ -88,7 +88,7 @@ func handleToken(res http.ResponseWriter, req *http.Request) {
 		tn.Secret = getAuthCodeSecret()
 		tn.Code = code
 		tn.RedirectURI = getRedirectURI(req, authCodeRedirectURI)
-		//fmt.Println("getting token")
+		fmt.Println("getting token")
 		resp := tn.AuthCodeToken()
 		fmt.Print("token len: ")
 		fmt.Println(len(resp.AccessToken))
