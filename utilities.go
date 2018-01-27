@@ -111,6 +111,8 @@ func getRedirectURI(req *http.Request, path string) string {
 	} else {
 		serverHost = schemeDefault + req.Host + path
 	}
+	fmt.Print("login redirect url: ")
+	fmt.Println(serverHost)
 	return serverHost
 }
 
