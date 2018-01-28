@@ -83,7 +83,7 @@ func handleToken(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("handle token")
 	if state == authCodeState {
 		var tn oauth2.AuthCodeToken
-		tn.OauthHost = getOauthHost()
+		tn.OauthHost = getOauthPostHost()
 		tn.ClientID = getAuthCodeClient()
 		tn.Secret = getAuthCodeSecret()
 		tn.Code = code

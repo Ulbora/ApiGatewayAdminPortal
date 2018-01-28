@@ -84,6 +84,16 @@ func getOauthHost() string {
 	return rtn
 }
 
+func getOauthPostHost() string {
+	var rtn = ""
+	if os.Getenv("AUTH_POST_HOST") != "" {
+		rtn = os.Getenv("AUTH_POST_HOST")
+	} else {
+		rtn = "http://localhost:3000"
+	}
+	return rtn
+}
+
 func getGatewayHost() string {
 	var rtn = ""
 	if os.Getenv("GATEWAY_HOST") != "" {
