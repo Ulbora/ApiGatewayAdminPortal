@@ -62,7 +62,7 @@ func authorize(res http.ResponseWriter, req *http.Request) bool {
 	fmt.Println(schemeDefault)
 	var a oauth2.AuthCodeAuthorize
 	a.ClientID = getAuthCodeClient()
-	a.OauthHost = getOauthHost()
+	a.OauthHost = getOauthRedirectHost()
 	a.RedirectURI = getRedirectURI(req, authCodeRedirectURI)
 	a.Scope = "write"
 	a.State = authCodeState
@@ -83,7 +83,7 @@ func handleToken(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("handle token")
 	if state == authCodeState {
 		var tn oauth2.AuthCodeToken
-		tn.OauthHost = getOauthPostHost()
+		tn.OauthHost = getOauthHost()
 		tn.ClientID = getAuthCodeClient()
 		tn.Secret = getAuthCodeSecret()
 		tn.Code = code
