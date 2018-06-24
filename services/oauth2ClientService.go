@@ -51,6 +51,7 @@ type Client struct {
 	WebSite      string        `json:"webSite"`
 	Email        string        `json:"email"`
 	Enabled      bool          `json:"enabled"`
+	Paid         bool          `json:"paid"`
 	RedirectURIs []RedirectURI `json:"redirectUrls"`
 }
 

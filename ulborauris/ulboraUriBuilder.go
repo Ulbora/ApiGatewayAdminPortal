@@ -53,91 +53,91 @@ type UlboraSelection struct {
 //GetUlboraURIs GetUlboraURIs
 func GetUlboraURIs(s *UlboraSelection) *[]UlborURIs {
 	var rtn = make([]UlborURIs, 0)
-	if s.Oauth2Super == true {
+	if s != nil && s.Oauth2Super == true {
 		for i := range oauthSuperURIs {
 			rtn = append(rtn, oauthSuperURIs[i])
 		}
 	}
 
-	if s.APIGatewaySuper == true {
+	if s != nil && s.APIGatewaySuper == true {
 		for i := range apiGatewaySuperURIs {
 			rtn = append(rtn, apiGatewaySuperURIs[i])
 		}
 	}
 
-	if s.Oauth2 == true {
+	if s != nil && s.Oauth2 == true {
 		for i := range oauthURIs {
 			rtn = append(rtn, oauthURIs[i])
 		}
 	}
 
-	if s.APIGateway == true {
+	if s != nil && s.APIGateway == true {
 		for i := range apiGatewayURIs {
 			rtn = append(rtn, apiGatewayURIs[i])
 		}
 	}
 
-	if s.Content == true {
+	if s != nil && s.Content == true {
 		for i := range contentURIs {
 			rtn = append(rtn, contentURIs[i])
 		}
 	}
 
-	if s.CustomerAdmin == true {
+	if s != nil && s.CustomerAdmin == true {
 		for i := range customerURIsAdmin {
 			rtn = append(rtn, customerURIsAdmin[i])
 		}
 	}
 
-	if s.CustomerUser == true {
+	if s != nil && s.CustomerUser == true {
 		for i := range customerURIsUser {
 			rtn = append(rtn, customerURIsUser[i])
 		}
 	}
 
-	if s.ImageAdmin == true {
+	if s != nil && s.ImageAdmin == true {
 		for i := range imageURIsAdmin {
 			rtn = append(rtn, imageURIsAdmin[i])
 		}
 	}
 
-	if s.ImageUser == true {
+	if s != nil && s.ImageUser == true {
 		for i := range imageURIsUser {
 			rtn = append(rtn, imageURIsUser[i])
 		}
 	}
 
-	if s.Mail == true {
+	if s != nil && s.Mail == true {
 		for i := range mailURIs {
 			rtn = append(rtn, mailURIs[i])
 		}
 	}
 
-	if s.OrderAdmin == true {
+	if s != nil && s.OrderAdmin == true {
 		for i := range orderURIsAdmin {
 			rtn = append(rtn, orderURIsAdmin[i])
 		}
 	}
 
-	if s.OrderUser == true {
+	if s != nil && s.OrderUser == true {
 		for i := range orderURIsUser {
 			rtn = append(rtn, orderURIsUser[i])
 		}
 	}
 
-	if s.ProductAdmin == true {
+	if s != nil && s.ProductAdmin == true {
 		for i := range productURIsAdmin {
 			rtn = append(rtn, productURIsAdmin[i])
 		}
 	}
 
-	if s.ProductUser == true {
+	if s != nil && s.ProductUser == true {
 		for i := range productURIsUser {
 			rtn = append(rtn, productURIsUser[i])
 		}
 	}
 
-	if s.Template == true {
+	if s != nil && s.Template == true {
 		for i := range templateURIs {
 			rtn = append(rtn, templateURIs[i])
 		}

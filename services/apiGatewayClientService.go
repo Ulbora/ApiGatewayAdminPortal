@@ -49,6 +49,7 @@ type GatewayClient struct {
 	APIKey   string `json:"apiKey"`
 	Enabled  bool   `json:"enabled"`
 	Level    string `json:"level"`
+	Paid     bool   `json:"paid"`
 }
 
 //GatewayResponse resp
