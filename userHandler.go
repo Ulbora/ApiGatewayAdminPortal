@@ -142,7 +142,8 @@ func handleNewUser(w http.ResponseWriter, r *http.Request) {
 		clientID := r.FormValue("clientId")
 		fmt.Print("clientID: ")
 		fmt.Println(clientID)
-		uu.ClientID = clientID
+		clientIDD, _ := strconv.ParseInt(clientID, 10, 0)
+		uu.ClientID = clientIDD
 
 		username := r.FormValue("username")
 		fmt.Print("username: ")
@@ -272,7 +273,8 @@ func handleUpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 		clientID := r.FormValue("clientId")
 		fmt.Print("clientID: ")
 		fmt.Println(clientID)
-		uu.ClientID = clientID
+		clientIDD, _ := strconv.ParseInt(clientID, 10, 0)
+		uu.ClientID = clientIDD
 
 		username := r.FormValue("username")
 		fmt.Print("username: ")
@@ -336,7 +338,8 @@ func handleUpdateUserEnable(w http.ResponseWriter, r *http.Request) {
 		clientID := r.FormValue("clientId")
 		fmt.Print("clientID: ")
 		fmt.Println(clientID)
-		uu.ClientID = clientID
+		clientIDD, _ := strconv.ParseInt(clientID, 10, 0)
+		uu.ClientID = clientIDD
 
 		username := r.FormValue("username")
 		fmt.Print("username: ")
@@ -386,7 +389,8 @@ func handleUpdateUserPw(w http.ResponseWriter, r *http.Request) {
 		clientID := r.FormValue("clientId")
 		fmt.Print("clientID: ")
 		fmt.Println(clientID)
-		uu.ClientID = clientID
+		clientIDD, _ := strconv.ParseInt(clientID, 10, 0)
+		uu.ClientID = clientIDD
 
 		username := r.FormValue("username")
 		fmt.Print("username: ")

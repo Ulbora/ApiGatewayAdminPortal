@@ -32,6 +32,7 @@ import (
 
 var UID = "bob123456789"
 var CLID = "555589999999922222"
+var CLIDINT int64 = 555589999999922222
 
 func TestUserService_AddUser(t *testing.T) {
 	var u UserService
@@ -39,7 +40,7 @@ func TestUserService_AddUser(t *testing.T) {
 	u.Host = "http://localhost:3001"
 	u.Token = tempToken
 	var user User
-	user.ClientID = CLID
+	user.ClientID = CLIDINT
 	user.EmailAddress = "bob@bob.com"
 	user.Enabled = true
 	user.FirstName = "bob"
@@ -99,7 +100,7 @@ func TestUserService_UpdateUserInfo(t *testing.T) {
 	u.Token = tempToken
 	var user UserInfo
 	user.Username = UID
-	user.ClientID = CLID
+	user.ClientID = CLIDINT
 	user.EmailAddress = "bobbby@bob.com"
 	user.FirstName = "bobby"
 	user.RoleID = 1

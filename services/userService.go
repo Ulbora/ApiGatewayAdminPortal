@@ -52,7 +52,7 @@ type User struct {
 	FirstName    string `json:"firstName"`
 	LastName     string `json:"lastName"`
 	RoleID       int64  `json:"roleId"`
-	ClientID     string `json:"clientId"`
+	ClientID     int64  `json:"clientId"`
 }
 
 //UpdateUser interface
@@ -64,7 +64,7 @@ type UpdateUser interface {
 type UserPW struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	ClientID string `json:"clientId"`
+	ClientID int64  `json:"clientId"`
 }
 
 //GetType type
@@ -76,7 +76,7 @@ func (u *UserPW) GetType() string {
 type UserDis struct {
 	Username string `json:"username"`
 	Enabled  bool   `json:"enabled"`
-	ClientID string `json:"clientId"`
+	ClientID int64  `json:"clientId"`
 }
 
 //GetType type
@@ -91,7 +91,7 @@ type UserInfo struct {
 	FirstName    string `json:"firstName"`
 	LastName     string `json:"lastName"`
 	RoleID       int64  `json:"roleId"`
-	ClientID     string `json:"clientId"`
+	ClientID     int64  `json:"clientId"`
 }
 
 //GetType type
