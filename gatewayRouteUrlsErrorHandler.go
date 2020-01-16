@@ -26,8 +26,8 @@
 package main
 
 import (
-	services "ApiGatewayAdminPortal/services"
 	"fmt"
+	services "github.com/Ulbora/ApiGatewayAdminPortal/services"
 	"math"
 	"net/http"
 	"strconv"
@@ -36,6 +36,7 @@ import (
 
 	"github.com/gorilla/mux"
 )
+
 
 var pageSize = 20
 

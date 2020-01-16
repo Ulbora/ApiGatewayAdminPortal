@@ -1,0 +1,13 @@
+github.com/Ulbora/GoAuth2 v0.0.0-20191226185346-f3d046b0933c h1:yVT80zNxdTkooKqELLEC0vJFr2mCChumfnASWp+mnKs=
+github.com/Ulbora/go-better-sessions v0.0.0-20171017015311-d7a36cf12dd2 h1:2rjxs/00s/GOK+XlnsLaF/Re0ghCwA0NKn0a0RrIR9M=
+github.com/Ulbora/go-better-sessions v0.0.0-20171017015311-d7a36cf12dd2/go.mod h1:0OsRfzATkpDdFO5iT1gVeMER/An3eqbDBOs0btiTJ3k=
+github.com/Ulbora/go-oauth2-client v0.0.0-20180127225028-4fedc5ebe0ec h1:0LpdP0anMqbDlku26HW6zQRPVp0mY9EFu/A262EkQ0A=
+github.com/Ulbora/go-oauth2-client v0.0.0-20180127225028-4fedc5ebe0ec/go.mod h1:VEOVjsy+8LYqPwaX0sAtI9AMICysevZPMFPRxZdNOd8=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
+github.com/gorilla/mux v1.7.3 h1:gnP5JzjVOuiZD07fKKToCAOjS0yOpj/qPETTXCCS6hw=
+github.com/gorilla/mux v1.7.3/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
+github.com/gorilla/securecookie v1.1.1 h1:miw7JPhV+b/lAHSXz4qd/nN9jRiAFV5FwjeKyCS8BvQ=
+github.com/gorilla/securecookie v1.1.1/go.mod h1:ra0sb63/xPlUeL+yeDciTfxMRAA+MP+HVt/4epWDjd4=
+github.com/gorilla/sessions v1.2.0 h1:S7P+1Hm5V/AT9cjEcUD5uDaQSX0OE577aCXgoaKpYbQ=
+github.com/gorilla/sessions v1.2.0/go.mod h1:dk2InVEVJ0sfLlnXv9EAgkf6ecYs/i80K/zI+bUmuGM=

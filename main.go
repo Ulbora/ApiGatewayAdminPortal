@@ -1,3 +1,5 @@
+package main
+
 /*
  Copyright (C) 2017 Ulbora Labs LLC. (www.ulboralabs.com)
  All rights reserved.
@@ -22,8 +24,6 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-package main
 
 import (
 	"fmt"
@@ -58,6 +58,7 @@ var templates = template.Must(template.ParseFiles("./static/index.html", "./stat
 
 //var username string
 
+//go mod init github.com/Ulbora/ApiGatewayAdminPortal
 func main() {
 	//gob.Register(oauth2.Token)
 	s.MaxAge = sessingTimeToLive

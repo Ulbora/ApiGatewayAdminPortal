@@ -1,3 +1,5 @@
+package main
+
 /*
  Copyright (C) 2017 Ulbora Labs LLC. (www.ulboralabs.com)
  All rights reserved.
@@ -23,11 +25,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package main
-
 import (
-	services "ApiGatewayAdminPortal/services"
 	"fmt"
+	services "github.com/Ulbora/ApiGatewayAdminPortal/services"
 	"net/http"
 	"strconv"
 
@@ -62,6 +62,7 @@ func handleUsers(w http.ResponseWriter, r *http.Request) {
 	if loggedIn == nil || loggedIn.(bool) == false || token == nil {
 		authorize(w, r)
 	} else {
+		fmt.Println("inside user else")
 		session.Values["userLoggenIn"] = true
 		vars := mux.Vars(r)
 		clientID := vars["clientId"]
@@ -74,6 +75,7 @@ func handleUsers(w http.ResponseWriter, r *http.Request) {
 			c.Token = token.AccessToken
 
 			res := c.GetClient(clientID)
+			fmt.Println("res", res)
 
 			var u services.UserService
 			u.ClientID = getAuthCodeClient()

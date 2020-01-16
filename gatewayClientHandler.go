@@ -26,8 +26,8 @@
 package main
 
 import (
-	services "ApiGatewayAdminPortal/services"
 	"fmt"
+	services "github.com/Ulbora/ApiGatewayAdminPortal/services"
 	"net/http"
 	"strconv"
 

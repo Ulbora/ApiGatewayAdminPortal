@@ -26,9 +26,9 @@
 package main
 
 import (
-	services "ApiGatewayAdminPortal/services"
 	"encoding/json"
 	"fmt"
+	services "github.com/Ulbora/ApiGatewayAdminPortal/services"
 	"net/http"
 	"strconv"
 	"sync"

@@ -92,6 +92,7 @@ func handleToken(res http.ResponseWriter, req *http.Request) {
 		resp := tn.AuthCodeToken()
 		fmt.Print("token len: ")
 		fmt.Println(len(resp.AccessToken))
+		fmt.Println(resp.AccessToken)
 		if resp != nil && resp.AccessToken != "" {
 			//fmt.Println(resp.AccessToken)
 			//token = resp

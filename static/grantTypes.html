@@ -42,6 +42,8 @@ and open the template in the editor.
                         <td>Implicit</td>
                         {{else if eq .GrantType "client_credentials"}}
                         <td>Client Credentials</td>
+                        {{else if eq .GrantType "password"}}
+                        <td>Password</td>
                         {{end}}
                         <td onclick="showGrantTypeModel({{.ID}},{{.GrantType}});">
                             <i class="remove circle icon"></i>
@@ -62,6 +64,7 @@ and open the template in the editor.
                             <option value="code">Auth Code</option>
                             <option value="implicit">Implicit</option>
                             <option value="client_credentials">Client Credentials</option>
+                            <option value="password">Password</option>
                         </select>
                     </div>
                 </div>

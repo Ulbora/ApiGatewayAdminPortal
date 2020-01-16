@@ -103,7 +103,7 @@ func (a *AllowedURIService) UpdateAllowedURI(au *AllowedURI) *AllowedURIResponse
 	var rtn = new(AllowedURIResponse)
 	var upURL = a.Host + "/rs/clientAllowedUriSuper/update"
 
-	//fmt.Println(content.Text)
+	fmt.Println("in update uri service------------------")
 	aJSON, err := json.Marshal(au)
 	if err != nil {
 		fmt.Println(err)

@@ -26,8 +26,8 @@
 package main
 
 import (
-	services "ApiGatewayAdminPortal/services"
 	"fmt"
+	services "github.com/Ulbora/ApiGatewayAdminPortal/services"
 	"net/http"
 	"strconv"
 
@@ -109,6 +109,7 @@ func handleAllowedUris(w http.ResponseWriter, r *http.Request) {
 			a.Host = getOauthHost()
 			a.Token = token.AccessToken
 			ares := a.GetAllowedURIList(clientID)
+			fmt.Println("ares", ares)
 
 			var newAres []allowedURIDisplay
 
