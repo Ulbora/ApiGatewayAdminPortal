@@ -37,7 +37,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-
 var pageSize = 20
 
 func handleRouteURLsErrors(w http.ResponseWriter, r *http.Request) {
